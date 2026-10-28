@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-editorial: "Playfair Display", Georgia, serif;
+  --font-calligraphy: "Great Vibes", cursive;
+  --font-script: "Pinyon Script", cursive;
+  --font-brush: "Alex Brush", cursive;
+  --font-roman: "Cinzel", serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  --color-gold-50: #FBF7EE;
+  --color-gold-100: #F6ECCB;
+  --color-gold-200: #EED697;
+  --color-gold-300: #E3BC5D;
+  --color-gold-400: #C5A059;
+  --color-gold-500: #A8813B;
+  --color-gold-600: #886228;
+  
+  --color-parchment: #FAF8F5;
+  --color-parchment-deep: #F3EFE6;
+  --color-wax-bordeaux: #6E1A24;
+  --color-wax-emerald: #1B4332;
+  --color-wax-gold: #C5A059;
+  --color-wax-black: #1A1918;
+}
+
+/* Custom Paper textures and subtle craft grain */
+.paper-texture {
+  background-color: #FAF8F5;
+  background-image: radial-gradient(#d3cabb 0.75px, transparent 0.75px), radial-gradient(#d3cabb 0.75px, #FAF8F5 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+.paper-deckle-edge {
+  box-shadow: 
+    0 1px 1px rgba(0,0,0,0.06), 
+    0 4px 6px rgba(0,0,0,0.05),
+    0 24px 38px rgba(78, 59, 39, 0.08);
+  position: relative;
+}
+
+/* Shimmering Metallic Gold Foil Effect */
+.gold-foil-shimmer {
+  background: linear-gradient(
+    135deg,
+    #9B7A38 0%,
+    #E8D08D 25%,
+    #FFF6D5 50%,
+    #C5A059 75%,
+    #886228 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: foilShimmer 6s ease-in-out infinite;
+}
+
+.gold-border-foil {
+  border-image: linear-gradient(135deg, #c5a059, #fff2be, #9e7529, #ffd984) 1;
+}
+
+@keyframes foilShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 3D perspective transforms */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #D9CEBA;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A059;
+}
