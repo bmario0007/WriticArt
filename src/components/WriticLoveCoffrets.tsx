@@ -34,7 +34,7 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
   };
 
   return (
-    <section id="writiclove" className="py-24 bg-[#FAF8F5] relative overflow-hidden">
+    <section id="writiclove" className="py-24 bg-[#FAF8F5] dark:bg-[#121110] relative overflow-hidden transition-colors duration-300">
       
       {/* Background radial atmosphere */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-gradient-to-tr from-[#E68314]/10 via-[#FAF8F5]/0 to-[#C5A059]/15 blur-3xl pointer-events-none rounded-full" />
@@ -43,26 +43,26 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#E68314]/10 border border-[#E68314]/30 text-[#B86209] text-xs uppercase tracking-[0.2em] font-['Cinzel'] font-bold">
+          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#E68314]/10 border border-[#E68314]/30 text-[#B86209] dark:text-[#E68314] text-xs uppercase tracking-[0.2em] font-['Cinzel'] font-bold">
             <Heart className="w-3.5 h-3.5 fill-[#E68314] text-[#E68314]" />
             <span>La Collection Phare • 365 Jours d'Amour</span>
           </div>
 
-          <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-5xl font-light text-[#181716] leading-tight">
+          <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-5xl font-light text-[#181716] dark:text-[#FAF8F5] leading-tight">
             365 Jours, 365 Cartes <br />
-            <span className="italic font-serif text-[#C46A0B]">
+            <span className="italic font-serif text-[#C46A0B] dark:text-[#E68314]">
               Pour nourrir l’amour et renforcer les liens.
             </span>
           </h2>
 
-          <p className="font-sans text-sm sm:text-base text-[#61584F] font-light max-w-2xl mx-auto leading-relaxed">
+          <p className="font-sans text-sm sm:text-base text-[#61584F] dark:text-[#B5ABA0] font-light max-w-2xl mx-auto leading-relaxed">
             « De petits mots pour de grands changements ». Découvrez le rituel quotidien conçu par WriticArt pour cultiver la complicité, le respect et la tendresse au sein du couple, jour après jour.
           </p>
 
-          <div className="flex items-center justify-center space-x-6 pt-2 text-xs text-[#7A7167]">
+          <div className="flex items-center justify-center space-x-6 pt-2 text-xs text-[#7A7167] dark:text-[#9A9084]">
             <span className="flex items-center space-x-1.5">
               <Star className="w-4 h-4 fill-[#E68314] text-[#E68314]" />
-              <strong className="text-[#181716]">+500 couples conquis</strong>
+              <strong className="text-[#181716] dark:text-white">+500 couples conquis</strong>
             </span>
             <span>•</span>
             <span className="flex items-center space-x-1.5">
@@ -85,8 +85,8 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
                   isDuo
                     ? 'bg-gradient-to-b from-[#181716] to-[#25221F] text-[#FAF8F5] border-[#E68314] shadow-2xl scale-105 z-20'
                     : isFemme
-                    ? 'bg-gradient-to-b from-[#FFF5F7] to-[#FAF8F5] text-[#1E1C1A] border-[#F2D0D9] shadow-lg hover:shadow-xl'
-                    : 'bg-white text-[#1E1C1A] border-[#E8DFD1] shadow-lg hover:shadow-xl'
+                    ? 'bg-gradient-to-b from-[#FFF5F7] to-[#FAF8F5] dark:from-[#24171A] dark:to-[#1A1315] text-[#1E1C1A] dark:text-white border-[#F2D0D9] dark:border-[#4A2D34] shadow-lg hover:shadow-xl'
+                    : 'bg-white dark:bg-[#1C1A18] text-[#1E1C1A] dark:text-white border-[#E8DFD1] dark:border-[#332E29] shadow-lg hover:shadow-xl'
                 }`}
               >
                 
@@ -99,29 +99,29 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
 
                 <div>
                   {/* Top Header */}
-                  <div className="text-center pb-6 border-b border-white/10 border-[#E8DFD1]/80">
+                  <div className="text-center pb-6 border-b border-white/10 border-[#E8DFD1]/80 dark:border-white/10">
                     <span className={`text-[10px] uppercase font-['Cinzel'] tracking-[0.25em] font-semibold block mb-1 ${
-                      isDuo ? 'text-[#E68314]' : 'text-[#8C8074]'
+                      isDuo ? 'text-[#E68314]' : 'text-[#8C8074] dark:text-[#A69C91]'
                     }`}>
                       Coffret Luxe WriticArt
                     </span>
                     <h3 className={`font-['Cormorant_Garamond'] text-3xl font-semibold mb-1 ${
-                      isDuo ? 'text-white' : 'text-[#181716]'
+                      isDuo ? 'text-white' : 'text-[#181716] dark:text-white'
                     }`}>
                       {prod.name}
                     </h3>
-                    <p className={`text-xs ${isDuo ? 'text-white/70' : 'text-[#70675E]'}`}>
+                    <p className={`text-xs ${isDuo ? 'text-white/70' : 'text-[#70675E] dark:text-[#B5ABA0]'}`}>
                       {prod.subtitle}
                     </p>
 
                     {/* Price Tag in FCFA with international equivalent */}
                     <div className="mt-5 flex items-baseline justify-center space-x-2">
                       <span className={`text-3xl sm:text-4xl font-bold font-['Cinzel'] ${
-                        isDuo ? 'text-[#E68314]' : 'text-[#181716]'
+                        isDuo ? 'text-[#E68314]' : 'text-[#181716] dark:text-[#E68314]'
                       }`}>
                         {prod.priceFCFA.toLocaleString('fr-FR')} FCFA
                       </span>
-                      <span className={`text-xs ${isDuo ? 'text-white/50' : 'text-[#8C8074]'}`}>
+                      <span className={`text-xs ${isDuo ? 'text-white/50' : 'text-[#8C8074] dark:text-[#9A9084]'}`}>
                         (~{prod.priceEUR} €)
                       </span>
                     </div>
@@ -132,8 +132,8 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
                     isDuo
                       ? 'bg-white/5 border-white/10 text-white/90'
                       : isFemme
-                      ? 'bg-[#FFF0F4] border-[#FAD4E0] text-[#7A3E50]'
-                      : 'bg-[#F9F5EC] border-[#ECE2D0] text-[#554C42]'
+                      ? 'bg-[#FFF0F4] dark:bg-[#2C1A20] border-[#FAD4E0] dark:border-[#4D2934] text-[#7A3E50] dark:text-[#F3BAC9]'
+                      : 'bg-[#F9F5EC] dark:bg-[#25221F] border-[#ECE2D0] dark:border-[#3A3530] text-[#554C42] dark:text-[#D5CDBD]'
                   }`}>
                     <span className="text-[10px] uppercase font-['Cinzel'] tracking-wider block opacity-75 mb-1">
                       Exemple d’attention du coffret :
@@ -148,9 +148,9 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
                     {prod.features.map((feat, idx) => (
                       <li key={idx} className="flex items-start space-x-2.5">
                         <Check className={`w-4 h-4 shrink-0 mt-0.5 ${
-                          isDuo ? 'text-[#E68314]' : 'text-emerald-600'
+                          isDuo ? 'text-[#E68314]' : 'text-emerald-600 dark:text-[#E68314]'
                         }`} />
-                        <span className={isDuo ? 'text-white/85' : 'text-[#554E46]'}>
+                        <span className={isDuo ? 'text-white/85' : 'text-[#554E46] dark:text-[#D5CDBD]'}>
                           {feat}
                         </span>
                       </li>
@@ -159,13 +159,13 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
                 </div>
 
                 {/* Bottom Order Actions */}
-                <div className="mt-8 pt-6 border-t border-white/10 border-[#E8DFD1]/80 space-y-3">
+                <div className="mt-8 pt-6 border-t border-white/10 border-[#E8DFD1]/80 dark:border-white/10 space-y-3">
                   <button
                     onClick={() => handleOrderWhatsApp(prod)}
                     className={`w-full py-4 rounded-full font-['Cinzel'] text-xs uppercase tracking-wider font-bold flex items-center justify-center space-x-2.5 transition-all shadow-lg hover:shadow-xl ${
                       isDuo
                         ? 'bg-[#25D366] text-white hover:bg-[#1EBE5D]'
-                        : 'bg-[#181716] text-[#FAF8F5] hover:bg-[#E68314]'
+                        : 'bg-[#181716] dark:bg-[#24211E] text-[#FAF8F5] hover:bg-[#E68314]'
                     }`}
                   >
                     <PhoneCall className="w-4 h-4" />
@@ -175,7 +175,7 @@ export const WriticLoveCoffrets: React.FC<WriticLoveCoffretsProps> = ({
                   <button
                     onClick={() => onConfigureCustomVows(prod)}
                     className={`w-full py-2.5 text-center text-xs font-['Cinzel'] tracking-wider transition-colors ${
-                      isDuo ? 'text-white/60 hover:text-white' : 'text-[#7A7167] hover:text-[#181716]'
+                      isDuo ? 'text-white/60 hover:text-white' : 'text-[#7A7167] dark:text-[#9A9084] hover:text-[#181716] dark:hover:text-white'
                     }`}
                   >
                     Personnaliser avec un mot dédié →

@@ -155,7 +155,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
   };
 
   return (
-    <section id="studio" className="py-24 bg-[#FAF8F5] relative">
+    <section id="studio" className="py-24 bg-[#FAF8F5] dark:bg-[#0F0E0D] relative transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -164,10 +164,10 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             <Sparkles className="w-4 h-4 text-[#E68314]" />
             <span>Configurateur d'Atelier • Sur-Mesure WriticArt</span>
           </div>
-          <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl lg:text-5xl font-light text-[#181716]">
+          <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl lg:text-5xl font-light text-[#181716] dark:text-[#FAF8F5]">
             Configurez Votre Création Unique
           </h2>
-          <p className="font-sans text-sm sm:text-base text-[#6B635B] font-light">
+          <p className="font-sans text-sm sm:text-base text-[#6B635B] dark:text-[#A8A096] font-light">
             Tableau d'art, cadre poétique, coffret personnalisé ou papeterie nuptiale : composez votre support, vos pigments et vos vœux avec devis instantané en FCFA.
           </p>
         </div>
@@ -179,7 +179,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
           <div className="lg:col-span-7 lg:sticky lg:top-28 space-y-6">
             
             {/* Canvas controls header */}
-            <div className="flex items-center justify-between bg-white/80 p-3 rounded-2xl border border-[#E8DFD1] shadow-sm">
+            <div className="flex items-center justify-between bg-white/80 dark:bg-[#1A1816]/90 p-3 rounded-2xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm backdrop-blur-sm">
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => {
@@ -188,8 +188,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   }}
                   className={`px-4 py-2 rounded-xl text-xs font-['Cinzel'] tracking-wider transition-all ${
                     viewMode === 'card'
-                      ? 'bg-[#181716] text-white shadow-sm'
-                      : 'text-[#70675E] hover:text-[#181716]'
+                      ? 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm'
+                      : 'text-[#70675E] dark:text-[#A8A096] hover:text-[#181716] dark:hover:text-white'
                   }`}
                 >
                   Vue Carte / Toile
@@ -201,15 +201,15 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   }}
                   className={`px-4 py-2 rounded-xl text-xs font-['Cinzel'] tracking-wider transition-all ${
                     viewMode === 'envelope'
-                      ? 'bg-[#181716] text-white shadow-sm'
-                      : 'text-[#70675E] hover:text-[#181716]'
+                      ? 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm'
+                      : 'text-[#70675E] dark:text-[#A8A096] hover:text-[#181716] dark:hover:text-white'
                   }`}
                 >
                   Vue Enveloppe & Sceau
                 </button>
               </div>
 
-              <div className="flex items-center space-x-2 text-xs text-[#8A7F75] font-sans">
+              <div className="flex items-center space-x-2 text-xs text-[#8A7F75] dark:text-[#9C9286] font-sans">
                 <Eye className="w-3.5 h-3.5 text-[#E68314]" />
                 <span className="hidden sm:inline">Rendu 3D en direct</span>
               </div>
@@ -217,7 +217,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
 
             {/* 3D Stage */}
             <div
-              className="relative min-h-[380px] sm:min-h-[520px] rounded-3xl bg-gradient-to-b from-[#F2ECE1] to-[#E7DEC5]/40 p-4 sm:p-12 flex items-center justify-center perspective-1000 overflow-hidden border border-[#DED2BF]"
+              className="relative min-h-[380px] sm:min-h-[520px] rounded-3xl bg-gradient-to-b from-[#F2ECE1] to-[#E7DEC5]/40 dark:from-[#1C1A18] dark:to-[#121110] p-4 sm:p-12 flex items-center justify-center perspective-1000 overflow-hidden border border-[#DED2BF] dark:border-[#2E2A26]"
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
@@ -346,16 +346,16 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             </div>
 
             {/* Price Preview Card in FCFA */}
-            <div className="bg-white rounded-2xl p-5 border border-[#E8DFD1] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="bg-white dark:bg-[#1A1816] rounded-2xl p-5 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
               <div>
-                <p className="text-xs text-[#8A8075] uppercase font-['Cinzel'] tracking-wider">
+                <p className="text-xs text-[#8A8075] dark:text-[#A09589] uppercase font-['Cinzel'] tracking-wider">
                   Estimation Chiffrée ({config.quantity} {config.quantity > 1 ? 'exemplaires' : 'pièce'})
                 </p>
                 <div className="flex items-baseline space-x-2 mt-0.5">
-                  <span className="text-2xl font-['Cormorant_Garamond'] font-bold text-[#181716]">
+                  <span className="text-2xl font-['Cormorant_Garamond'] font-bold text-[#181716] dark:text-[#FAF8F5]">
                     {pricing.totalPriceFCFA} FCFA
                   </span>
-                  <span className="text-xs text-[#8A8075]">
+                  <span className="text-xs text-[#8A8075] dark:text-[#A09589]">
                     (~{pricing.totalEUR} €)
                   </span>
                 </div>
@@ -367,7 +367,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                     atelierAudio.playWaxStamp();
                     onOpenQuoteSummary();
                   }}
-                  className="px-5 py-3 rounded-full bg-[#181716] text-[#FAF8F5] text-xs uppercase tracking-widest font-['Cinzel'] hover:bg-[#E68314] transition-all flex items-center space-x-2 shadow-md hover:shadow-lg"
+                  className="px-5 py-3 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-[#FAF8F5] dark:text-[#181716] text-xs uppercase tracking-widest font-['Cinzel'] hover:bg-[#E68314] dark:hover:bg-[#E68314] dark:hover:text-white transition-all flex items-center space-x-2 shadow-md hover:shadow-lg"
                 >
                   <FileText className="w-3.5 h-3.5 text-[#E68314]" />
                   <span>Voir le Devis</span>
@@ -391,7 +391,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
           <div className="lg:col-span-5 space-y-6">
             
             {/* Event & Product Category */}
-            <div className="bg-white rounded-3xl p-6 border border-[#E8DFD1] shadow-sm space-y-3">
+            <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-3 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
                 1. Type d'Œuvre WriticArt
               </label>
@@ -410,19 +410,19 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                     }}
                     className={`p-3 rounded-2xl border text-left transition-all ${
                       config.eventType === ev.id
-                        ? 'border-[#E68314] bg-[#FFF8F0] ring-1 ring-[#E68314]'
-                        : 'border-[#ECE4D8] hover:border-[#D5C7B2]'
+                        ? 'border-[#E68314] bg-[#FFF8F0] dark:bg-[#E68314]/15 ring-1 ring-[#E68314]'
+                        : 'border-[#ECE4D8] dark:border-[#2E2A26] dark:bg-[#141312] hover:border-[#D5C7B2] dark:hover:border-[#423C36]'
                     }`}
                   >
                     <span className="text-lg block mb-1">{ev.icon}</span>
-                    <span className="block text-xs font-medium text-[#292623]">{ev.label}</span>
+                    <span className="block text-xs font-medium text-[#292623] dark:text-[#EDE6DD]">{ev.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Paper Selection */}
-            <div className="bg-white rounded-3xl p-6 border border-[#E8DFD1] shadow-sm space-y-3">
+            <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-3 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
                 2. Papier d'Art & Support
               </label>
@@ -441,14 +441,14 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                     }}
                     className={`p-3.5 rounded-2xl border text-left transition-all ${
                       config.paperType === paper.id
-                        ? 'border-[#E68314] bg-[#FFF8F0] ring-1 ring-[#E68314]'
-                        : 'border-[#ECE4D8] hover:border-[#D5C7B2]'
+                        ? 'border-[#E68314] bg-[#FFF8F0] dark:bg-[#E68314]/15 ring-1 ring-[#E68314]'
+                        : 'border-[#ECE4D8] dark:border-[#2E2A26] dark:bg-[#141312] hover:border-[#D5C7B2] dark:hover:border-[#423C36]'
                     }`}
                   >
-                    <span className="block text-xs font-semibold text-[#181716] font-['Cinzel']">
+                    <span className="block text-xs font-semibold text-[#181716] dark:text-[#EDE6DD] font-['Cinzel']">
                       {paper.title}
                     </span>
-                    <span className="block text-[11px] text-[#7E7469] mt-0.5">
+                    <span className="block text-[11px] text-[#7E7469] dark:text-[#9E9488] mt-0.5">
                       {paper.desc}
                     </span>
                   </button>
@@ -457,14 +457,14 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             </div>
 
             {/* Ink & Calligraphy Style */}
-            <div className="bg-white rounded-3xl p-6 border border-[#E8DFD1] shadow-sm space-y-4">
+            <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
                 3. Plume & Pigments Minéraux
               </label>
 
               {/* Ink choice */}
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] block mb-2">Pigment de l'encre :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-2">Pigment de l'encre :</span>
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { id: 'or-24k', label: 'Dorure Or 24K en relief' },
@@ -480,8 +480,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                       }}
                       className={`p-2.5 rounded-xl border text-xs font-medium text-left transition-all ${
                         config.inkType === ink.id
-                          ? 'border-[#E68314] bg-[#FFF8F0] text-[#B86209] ring-1 ring-[#E68314]'
-                          : 'border-[#ECE4D8] text-[#554E46]'
+                          ? 'border-[#E68314] bg-[#FFF8F0] dark:bg-[#E68314]/15 text-[#B86209] dark:text-[#E68314] ring-1 ring-[#E68314]'
+                          : 'border-[#ECE4D8] dark:border-[#2E2A26] dark:bg-[#141312] text-[#554E46] dark:text-[#C5BCB2]'
                       }`}
                     >
                       {ink.label}
@@ -492,7 +492,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
 
               {/* Calligraphy font style */}
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] block mb-2">Style Calligraphique :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-2">Style Calligraphique :</span>
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { id: 'spencerian', label: 'Spencerian Romantique', font: "font-['Great_Vibes'] text-base" },
@@ -508,8 +508,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                       }}
                       className={`p-2.5 rounded-xl border text-left transition-all ${
                         config.calligraphyStyle === sty.id
-                          ? 'border-[#E68314] bg-[#FFF8F0] text-[#B86209] ring-1 ring-[#E68314]'
-                          : 'border-[#ECE4D8] text-[#554E46]'
+                          ? 'border-[#E68314] bg-[#FFF8F0] dark:bg-[#E68314]/15 text-[#B86209] dark:text-[#E68314] ring-1 ring-[#E68314]'
+                          : 'border-[#ECE4D8] dark:border-[#2E2A26] dark:bg-[#141312] text-[#554E46] dark:text-[#C5BCB2]'
                       }`}
                     >
                       <span className={`block ${sty.font}`}>{sty.label}</span>
@@ -520,7 +520,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             </div>
 
             {/* Sceau de Cire & Finitions */}
-            <div className="bg-white rounded-3xl p-6 border border-[#E8DFD1] shadow-sm space-y-4">
+            <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4 transition-colors">
               <div className="flex items-center justify-between">
                 <label className="text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
                   4. Sceau de Cire & Finitions
@@ -534,8 +534,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
               </div>
 
               {config.hasWaxSeal && (
-                <div className="space-y-3 pt-2 border-t border-[#ECE4D8]">
-                  <span className="text-[11px] font-sans text-[#70675E] block">Nuance de la cire :</span>
+                <div className="space-y-3 pt-2 border-t border-[#ECE4D8] dark:border-[#2E2A26]">
+                  <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block">Nuance de la cire :</span>
                   <div className="flex items-center space-x-3">
                     {[
                       { id: 'or', label: 'Or WriticArt', colorClass: 'bg-[#E68314]' },
@@ -551,7 +551,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                         }}
                         className={`w-9 h-9 rounded-full ${w.colorClass} border-2 transition-all flex items-center justify-center ${
                           config.waxColor === w.id
-                            ? 'border-[#181716] scale-110 shadow-md ring-2 ring-[#E68314]/50'
+                            ? 'border-[#181716] dark:border-[#FAF8F5] scale-110 shadow-md ring-2 ring-[#E68314]/50'
                             : 'border-transparent hover:scale-105'
                         }`}
                         title={w.label}
@@ -563,7 +563,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
 
                   {/* Stamp engraving pattern */}
                   <div className="pt-2">
-                    <span className="text-[11px] font-sans text-[#70675E] block mb-1.5">Motif gravé :</span>
+                    <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1.5">Motif gravé :</span>
                     <div className="grid grid-cols-4 gap-2">
                       {[
                         { id: 'monogramme', label: 'Logo WA' },
@@ -579,8 +579,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                           }}
                           className={`p-2 rounded-xl border text-[11px] text-center font-['Cinzel'] transition-all ${
                             config.waxStamp === st.id
-                              ? 'border-[#E68314] bg-[#FFF8F0] text-[#B86209] font-bold'
-                              : 'border-[#ECE4D8] text-[#554E46]'
+                              ? 'border-[#E68314] bg-[#FFF8F0] dark:bg-[#E68314]/20 text-[#B86209] dark:text-[#E68314] font-bold'
+                              : 'border-[#ECE4D8] dark:border-[#2E2A26] dark:bg-[#141312] text-[#554E46] dark:text-[#C5BCB2]'
                           }`}
                         >
                           {st.label}
@@ -593,49 +593,49 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             </div>
 
             {/* Custom Content Inputs */}
-            <div className="bg-white rounded-3xl p-6 border border-[#E8DFD1] shadow-sm space-y-4">
+            <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
                 5. Votre Texte & Noms Personnalisés
               </label>
 
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] block mb-1">Titre ou Occasion :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">Titre ou Occasion :</span>
                 <input
                   type="text"
                   value={config.customTitle}
                   onChange={(e) => update({ customTitle: e.target.value })}
                   placeholder="Ex : Tableau Anniversaire de Mariage"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] text-sm focus:outline-none focus:border-[#E68314] font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] dark:placeholder-[#6E665E] text-sm focus:outline-none focus:border-[#E68314] font-sans"
                 />
               </div>
 
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] block mb-1">Destinataires / Noms :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">Destinataires / Noms :</span>
                 <input
                   type="text"
                   value={config.customNames}
                   onChange={(e) => update({ customNames: e.target.value })}
                   placeholder="Ex : Mariama & Ousmane"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] text-sm focus:outline-none focus:border-[#E68314] font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] dark:placeholder-[#6E665E] text-sm focus:outline-none focus:border-[#E68314] font-sans"
                 />
               </div>
 
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] block mb-1">Message ou Vœux manuscrits :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">Message ou Vœux manuscrits :</span>
                 <textarea
                   rows={3}
                   value={config.customMessage}
                   onChange={(e) => update({ customMessage: e.target.value })}
                   placeholder="Ex : Que chaque jour passé à tes côtés soit une œuvre d'amour éternelle."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] text-sm focus:outline-none focus:border-[#E68314] font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] dark:placeholder-[#6E665E] text-sm focus:outline-none focus:border-[#E68314] font-sans"
                 />
               </div>
 
               {/* Quantity */}
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-[11px] font-sans text-[#70675E]">Quantité souhaitée :</span>
-                  <span className="text-xs font-semibold font-['Cinzel'] text-[#181716]">{config.quantity} {config.quantity > 1 ? 'pièces' : 'pièce unique'}</span>
+                  <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096]">Quantité souhaitée :</span>
+                  <span className="text-xs font-semibold font-['Cinzel'] text-[#181716] dark:text-[#FAF8F5]">{config.quantity} {config.quantity > 1 ? 'pièces' : 'pièce unique'}</span>
                 </div>
                 <input
                   type="range"

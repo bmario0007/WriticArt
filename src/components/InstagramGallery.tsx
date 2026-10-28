@@ -31,20 +31,20 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
     : galleryItems.filter(item => item.category === selectedFilter);
 
   return (
-    <section id="galerie" className="py-24 bg-[#FAF8F5] relative overflow-hidden">
+    <section id="galerie" className="py-24 bg-[#FAF8F5] dark:bg-[#0F0E0D] relative overflow-hidden transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header with Instagram verification style */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-12 border-b border-[#E8DFD1]">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-12 border-b border-[#E8DFD1] dark:border-[#2E2A26]">
           <div>
             <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.25em] text-[#B86209] font-['Cinzel'] font-bold mb-2">
               <InstagramIcon className="w-4 h-4 text-[#E1306C]" />
               <span>Galerie Officielle • Feed @writicart</span>
             </div>
-            <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl lg:text-5xl font-light text-[#181716]">
+            <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl lg:text-5xl font-light text-[#181716] dark:text-[#FAF8F5]">
               Tableaux, Cadres & Instants d'Atelier
             </h2>
-            <p className="font-sans text-sm text-[#70675E] font-light mt-1">
+            <p className="font-sans text-sm text-[#70675E] dark:text-[#A8A096] font-light mt-1">
               Explorez les créations récentes partagées sur notre feed Instagram. Cliquez pour commander ou personnaliser.
             </p>
           </div>
@@ -55,7 +55,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
               href="https://www.instagram.com/writicart"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-3 px-5 py-3 rounded-full bg-white border border-[#DED4C3] shadow-sm hover:border-[#E1306C] hover:shadow-md transition-all group"
+              className="flex items-center space-x-3 px-5 py-3 rounded-full bg-white dark:bg-[#1A1816] border border-[#DED4C3] dark:border-[#2E2A26] shadow-sm hover:border-[#E1306C] hover:shadow-md transition-all group"
             >
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] p-0.5">
                 <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
@@ -63,14 +63,14 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
                 </div>
               </div>
               <div className="text-left">
-                <span className="block text-xs font-bold text-[#181716] group-hover:text-[#DD2A7B] transition-colors">
+                <span className="block text-xs font-bold text-[#181716] dark:text-[#FAF8F5] group-hover:text-[#DD2A7B] transition-colors">
                   @writicart
                 </span>
-                <span className="block text-[10px] text-[#8C8074]">
+                <span className="block text-[10px] text-[#8C8074] dark:text-[#9E9488]">
                   Transformer les mots en œuvres
                 </span>
               </div>
-              <ArrowUpRight className="w-4 h-4 text-[#8C8074] group-hover:text-[#DD2A7B] transition-colors" />
+              <ArrowUpRight className="w-4 h-4 text-[#8C8074] dark:text-[#9E9488] group-hover:text-[#DD2A7B] transition-colors" />
             </a>
 
             <a
@@ -87,7 +87,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
 
         {/* OFFICIAL INSTAGRAM HIGHLIGHTS (Writic'Love, Tableaux, Cadres, Feedbacks) */}
         <div className="py-8">
-          <p className="text-[11px] font-['Cinzel'] uppercase tracking-wider text-[#8C8074] mb-4">
+          <p className="text-[11px] font-['Cinzel'] uppercase tracking-wider text-[#8C8074] dark:text-[#A09589] mb-4">
             Stories à la Une (@writicart Highlights) :
           </p>
           <div className="flex items-center space-x-6 overflow-x-auto pb-3 scrollbar-none">
@@ -106,10 +106,10 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
                   </div>
                 </div>
                 <div className="text-center">
-                  <span className="block text-xs font-semibold text-[#181716] group-hover:text-[#E68314] transition-colors">
+                  <span className="block text-xs font-semibold text-[#181716] dark:text-[#FAF8F5] group-hover:text-[#E68314] transition-colors">
                     {hl.name}
                   </span>
-                  <span className="block text-[10px] text-[#8C8074]">
+                  <span className="block text-[10px] text-[#8C8074] dark:text-[#9E9488]">
                     {hl.subtitle}
                   </span>
                 </div>
@@ -119,23 +119,23 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
         </div>
 
         {/* Real Flyer Showcase Banner */}
-        <div className="mb-12 rounded-3xl overflow-hidden border border-[#E8DFD1] shadow-xl bg-white grid grid-cols-1 lg:grid-cols-12 items-center">
+        <div className="mb-12 rounded-3xl overflow-hidden border border-[#E8DFD1] dark:border-[#2E2A26] shadow-xl bg-white dark:bg-[#1A1816] grid grid-cols-1 lg:grid-cols-12 items-center transition-colors">
           <div className="lg:col-span-6 p-8 sm:p-12 space-y-4">
             <span className="text-xs uppercase font-['Cinzel'] tracking-widest text-[#E68314] font-bold block">
               ★ Édition Phare
             </span>
-            <h3 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl font-light text-[#181716]">
+            <h3 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl font-light text-[#181716] dark:text-[#FAF8F5]">
               365 Jours, 365 Cartes <br />
-              <span className="italic font-serif text-[#C46A0B]">Writic’Love Homme, Femme & Le Duo</span>
+              <span className="italic font-serif text-[#C46A0B] dark:text-[#E68314]">Writic’Love Homme, Femme & Le Duo</span>
             </h3>
-            <p className="text-xs sm:text-sm text-[#6B635B] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#6B635B] dark:text-[#A8A096] leading-relaxed">
               Le concept révolutionnaire qui nourrit votre relation au quotidien. Disponible dès maintenant pour commande immédiate à Dakar et envoi international.
             </p>
             <div className="pt-2 flex flex-wrap gap-3">
-              <span className="px-3.5 py-1.5 rounded-full bg-[#181716] text-[#E68314] text-xs font-['Cinzel'] font-bold">
+              <span className="px-3.5 py-1.5 rounded-full bg-[#181716] dark:bg-[#2C2824] text-[#E68314] text-xs font-['Cinzel'] font-bold">
                 Homme : 30 000 FCFA
               </span>
-              <span className="px-3.5 py-1.5 rounded-full bg-[#FFF0F4] text-[#B83256] text-xs font-['Cinzel'] font-bold border border-[#F5C2CE]">
+              <span className="px-3.5 py-1.5 rounded-full bg-[#FFF0F4] dark:bg-[#4A1525] text-[#B83256] dark:text-[#FF8DAA] text-xs font-['Cinzel'] font-bold border border-[#F5C2CE] dark:border-[#732238]">
                 Femme : 30 000 FCFA
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-[#E68314] text-white text-xs font-['Cinzel'] font-bold shadow-md">
@@ -166,7 +166,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
 
         {/* CATEGORY FILTERS */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-6 scrollbar-none">
-          <SlidersHorizontal className="w-4 h-4 text-[#8C8074] shrink-0 mr-1" />
+          <SlidersHorizontal className="w-4 h-4 text-[#8C8074] dark:text-[#A09589] shrink-0 mr-1" />
           {[
             { id: 'all', label: 'Toutes les Créations' },
             { id: 'writiclove', label: 'Coffrets 365 Jours' },
@@ -182,8 +182,8 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
               }}
               className={`px-4 py-2 rounded-full text-xs font-['Cinzel'] tracking-wider shrink-0 transition-all ${
                 selectedFilter === cat.id
-                  ? 'bg-[#181716] text-[#FAF8F5] shadow-md'
-                  : 'bg-white/80 border border-[#DED4C3] text-[#696158] hover:border-[#E68314] hover:text-[#181716]'
+                  ? 'bg-[#181716] dark:bg-[#FAF8F5] text-[#FAF8F5] dark:text-[#181716] shadow-md'
+                  : 'bg-white/80 dark:bg-[#1A1816] border border-[#DED4C3] dark:border-[#2E2A26] text-[#696158] dark:text-[#A8A096] hover:border-[#E68314] hover:text-[#181716] dark:hover:text-[#FAF8F5]'
               }`}
             >
               {cat.label}
@@ -196,11 +196,11 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-3xl overflow-hidden border border-[#E8DFD1] shadow-sm hover:shadow-xl transition-all duration-500 group flex flex-col justify-between"
+              className="bg-white dark:bg-[#1A1816] rounded-3xl overflow-hidden border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm hover:shadow-xl transition-all duration-500 group flex flex-col justify-between"
             >
               <div>
                 {/* Image Container with Hover Overlay */}
-                <div className="relative aspect-[4/3] overflow-hidden bg-[#ECE4D8]">
+                <div className="relative aspect-[4/3] overflow-hidden bg-[#ECE4D8] dark:bg-[#25221F]">
                   <img
                     src={item.image}
                     alt={item.title}
@@ -208,7 +208,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
                   />
                   
                   {/* Badge Category */}
-                  <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[10px] font-['Cinzel'] font-semibold tracking-wider text-[#181716] shadow-sm">
+                  <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-white/90 dark:bg-[#141312]/90 backdrop-blur-sm text-[10px] font-['Cinzel'] font-semibold tracking-wider text-[#181716] dark:text-[#FAF8F5] shadow-sm">
                     {item.categoryLabel}
                   </div>
 
@@ -229,28 +229,28 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
 
                 {/* Card Body */}
                 <div className="p-6 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-[#8C8074]">
+                  <div className="flex items-center justify-between text-xs text-[#8C8074] dark:text-[#A09589]">
                     <span className="font-['Cinzel'] font-bold text-[#E68314]">
                       {item.instagramHandle}
                     </span>
                     <span>{item.creationTime}</span>
                   </div>
 
-                  <h3 className="font-['Cormorant_Garamond'] text-xl font-medium text-[#181716] group-hover:text-[#B86209] transition-colors leading-snug">
+                  <h3 className="font-['Cormorant_Garamond'] text-xl font-medium text-[#181716] dark:text-[#FAF8F5] group-hover:text-[#B86209] dark:group-hover:text-[#E68314] transition-colors leading-snug">
                     {item.title}
                   </h3>
 
-                  <p className="text-xs font-sans text-[#6B635B] line-clamp-2 leading-relaxed">
+                  <p className="text-xs font-sans text-[#6B635B] dark:text-[#A8A096] line-clamp-2 leading-relaxed">
                     {item.description}
                   </p>
 
                   {/* Material tags */}
-                  <div className="pt-2 border-t border-[#F2ECE1] space-y-1 text-[11px] text-[#7A7167]">
+                  <div className="pt-2 border-t border-[#F2ECE1] dark:border-[#2E2A26] space-y-1 text-[11px] text-[#7A7167] dark:text-[#A8A096]">
                     <p className="truncate">
-                      <strong className="font-medium text-[#2E2A26]">Papier :</strong> {item.paperDetail}
+                      <strong className="font-medium text-[#2E2A26] dark:text-[#EDE6DD]">Papier :</strong> {item.paperDetail}
                     </p>
                     <p className="truncate">
-                      <strong className="font-medium text-[#2E2A26]">Encre :</strong> {item.inkDetail}
+                      <strong className="font-medium text-[#2E2A26] dark:text-[#EDE6DD]">Encre :</strong> {item.inkDetail}
                     </p>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
                     atelierAudio.playWaxStamp();
                     onSelectArtPiece(item);
                   }}
-                  className="w-full py-3 rounded-2xl bg-[#FFF8F0] border border-[#E68314]/30 text-[#B86209] hover:bg-[#181716] hover:text-[#FAF8F5] hover:border-[#181716] transition-all text-xs font-['Cinzel'] font-bold tracking-wider flex items-center justify-center space-x-2"
+                  className="w-full py-3 rounded-2xl bg-[#FFF8F0] dark:bg-[#E68314]/15 border border-[#E68314]/30 text-[#B86209] dark:text-[#E68314] hover:bg-[#181716] dark:hover:bg-[#FAF8F5] hover:text-[#FAF8F5] dark:hover:text-[#181716] hover:border-[#181716] dark:hover:border-[#FAF8F5] transition-all text-xs font-['Cinzel'] font-bold tracking-wider flex items-center justify-center space-x-2"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-[#E68314]" />
                   <span>Commander dans ce Style</span>
@@ -279,10 +279,10 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
       {/* INSPECT DETAIL MODAL */}
       {inspectItem && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#FAF8F5] rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-[#DED4C3] relative">
+          <div className="bg-[#FAF8F5] dark:bg-[#181716] rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-[#DED4C3] dark:border-[#2E2A26] relative">
             <button
               onClick={() => setInspectItem(null)}
-              className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 hover:bg-white text-black transition-colors"
+              className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 dark:bg-[#2C2824] hover:bg-white dark:hover:bg-[#3E3934] text-black dark:text-white transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -302,22 +302,22 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>{inspectItem.categoryLabel}</span>
                   </div>
-                  <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold text-[#181716]">
+                  <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold text-[#181716] dark:text-[#FAF8F5]">
                     {inspectItem.title}
                   </h3>
-                  <p className="text-xs text-[#7A7167] mt-3 leading-relaxed">
+                  <p className="text-xs text-[#7A7167] dark:text-[#A8A096] mt-3 leading-relaxed">
                     {inspectItem.description}
                   </p>
 
-                  <div className="mt-6 p-4 rounded-2xl bg-[#F4EDE2] border border-[#E2D5C0] space-y-2 text-xs">
+                  <div className="mt-6 p-4 rounded-2xl bg-[#F4EDE2] dark:bg-[#121110] border border-[#E2D5C0] dark:border-[#2E2A26] space-y-2 text-xs">
                     <p>
-                      <strong className="text-[#181716]">Texture Support :</strong> {inspectItem.paperDetail}
+                      <strong className="text-[#181716] dark:text-[#FAF8F5]">Texture Support :</strong> <span className="text-[#554E46] dark:text-[#C5BCB2]">{inspectItem.paperDetail}</span>
                     </p>
                     <p>
-                      <strong className="text-[#181716]">Pigments :</strong> {inspectItem.inkDetail}
+                      <strong className="text-[#181716] dark:text-[#FAF8F5]">Pigments :</strong> <span className="text-[#554E46] dark:text-[#C5BCB2]">{inspectItem.inkDetail}</span>
                     </p>
                     {inspectItem.featuredQuote && (
-                      <p className="italic font-serif text-[#B86209]">
+                      <p className="italic font-serif text-[#B86209] dark:text-[#E68314]">
                         « {inspectItem.featuredQuote} »
                       </p>
                     )}
@@ -331,7 +331,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
                       setInspectItem(null);
                       onSelectArtPiece(chosen);
                     }}
-                    className="w-full py-3.5 rounded-full bg-[#181716] text-[#FAF8F5] text-xs font-['Cinzel'] uppercase tracking-widest hover:bg-[#E68314] transition-all flex items-center justify-center space-x-2"
+                    className="w-full py-3.5 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-[#FAF8F5] dark:text-[#181716] text-xs font-['Cinzel'] uppercase tracking-widest hover:bg-[#E68314] dark:hover:bg-[#E68314] dark:hover:text-white transition-all flex items-center justify-center space-x-2"
                   >
                     <Sparkles className="w-4 h-4 text-[#E68314]" />
                     <span>Personnaliser cette œuvre</span>

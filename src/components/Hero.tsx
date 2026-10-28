@@ -35,20 +35,20 @@ export const Hero: React.FC<HeroProps> = () => {
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             
             {/* Official Slogan Badge */}
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-[#E68314]/30 bg-[#FFF7EE] text-xs text-[#B86209] font-['Cinzel'] tracking-wider shadow-sm font-semibold">
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-[#E68314]/30 dark:border-[#E68314]/50 bg-[#FFF7EE] dark:bg-[#1E1914] text-xs text-[#B86209] dark:text-[#E68314] font-['Cinzel'] tracking-wider shadow-sm font-semibold">
               <span className="w-2 h-2 rounded-full bg-[#E68314] animate-ping" />
               <span>Transformer les mots en œuvres • Atelier WriticArt</span>
             </div>
 
             {/* Main Title */}
-            <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-5xl lg:text-6xl font-light text-[#181716] leading-[1.12] tracking-tight">
+            <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-5xl lg:text-6xl font-light text-[#181716] dark:text-[#FAF8F5] leading-[1.12] tracking-tight">
               L'Art du Verbe, <br />
-              <span className="italic font-serif text-[#C46A0B]">des Coffrets d'Amour aux Toiles Éternelles.</span>
+              <span className="italic font-serif text-[#C46A0B] dark:text-[#E68314]">des Coffrets d'Amour aux Toiles Éternelles.</span>
             </h1>
 
             {/* Subtitle with @writicart identity */}
-            <p className="font-sans text-base sm:text-lg text-[#5F5851] max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
-              Des célèbres coffrets <strong className="font-semibold text-[#181716]">« 365 Jours d'Amour »</strong> aux <strong className="font-semibold text-[#181716]">tableaux personnalisés</strong> et <strong className="font-semibold text-[#181716]">cadres d’art</strong>. Nous donnons à vos sentiments le prestige de la haute calligraphie et du papier noble.
+            <p className="font-sans text-base sm:text-lg text-[#5F5851] dark:text-[#B5ABA0] max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+              Des célèbres coffrets <strong className="font-semibold text-[#181716] dark:text-white">« 365 Jours d'Amour »</strong> aux <strong className="font-semibold text-[#181716] dark:text-white">tableaux personnalisés</strong> et <strong className="font-semibold text-[#181716] dark:text-white">cadres d’art</strong>. Nous donnons à vos sentiments le prestige de la haute calligraphie et du papier noble.
             </p>
 
             {/* Primary Action Buttons */}
@@ -74,29 +74,29 @@ export const Hero: React.FC<HeroProps> = () => {
             </div>
 
             {/* Trust points */}
-            <div className="pt-8 border-t border-[#E8DFD1]/80 grid grid-cols-3 gap-4 text-center lg:text-left">
+            <div className="pt-8 border-t border-[#E8DFD1]/80 dark:border-[#2E2A26] grid grid-cols-3 gap-4 text-center lg:text-left">
               <div>
-                <div className="flex items-center justify-center lg:justify-start space-x-1.5 text-[#B86209] mb-1">
+                <div className="flex items-center justify-center lg:justify-start space-x-1.5 text-[#B86209] dark:text-[#E68314] mb-1">
                   <Heart className="w-4 h-4" />
                   <span className="font-['Cinzel'] text-xs font-bold tracking-wider">365 Cartes</span>
                 </div>
-                <p className="text-[12px] text-[#7E756C]">Un rituel amoureux unique</p>
+                <p className="text-[12px] text-[#7E756C] dark:text-[#9A9084]">Un rituel amoureux unique</p>
               </div>
 
               <div>
-                <div className="flex items-center justify-center lg:justify-start space-x-1.5 text-[#B86209] mb-1">
+                <div className="flex items-center justify-center lg:justify-start space-x-1.5 text-[#B86209] dark:text-[#E68314] mb-1">
                   <ShieldCheck className="w-4 h-4" />
                   <span className="font-['Cinzel'] text-xs font-bold tracking-wider">Tableaux & Cadres</span>
                 </div>
-                <p className="text-[12px] text-[#7E756C]">Calligraphie sur-mesure</p>
+                <p className="text-[12px] text-[#7E756C] dark:text-[#9A9084]">Calligraphie sur-mesure</p>
               </div>
 
               <div>
-                <div className="flex items-center justify-center lg:justify-start space-x-1.5 text-[#B86209] mb-1">
+                <div className="flex items-center justify-center lg:justify-start space-x-1.5 text-[#B86209] dark:text-[#E68314] mb-1">
                   <Award className="w-4 h-4" />
                   <span className="font-['Cinzel'] text-xs font-bold tracking-wider">Dakar & Export</span>
                 </div>
-                <p className="text-[12px] text-[#7E756C]">Livraison locale & internationale</p>
+                <p className="text-[12px] text-[#7E756C] dark:text-[#9A9084]">Livraison locale & internationale</p>
               </div>
             </div>
 
@@ -124,46 +124,46 @@ export const Hero: React.FC<HeroProps> = () => {
                   transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
                   transition: 'transform 0.15s ease-out'
                 }}
-                className="relative rounded-3xl bg-[#FAF8F5] border border-[#E0D4C0] shadow-2xl p-8 sm:p-9 paper-deckle-edge transform-style-3d group"
+                className="relative rounded-3xl bg-[#FAF8F5] dark:bg-[#1C1A18] border border-[#E0D4C0] dark:border-[#38332E] shadow-2xl p-8 sm:p-9 paper-deckle-edge transform-style-3d group"
               >
                 
                 {/* Official Wax / Badge Stamp */}
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-gradient-to-br from-[#E68314] via-[#C46A0B] to-[#7A3E04] shadow-xl flex items-center justify-center border-2 border-white z-20">
+                <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-gradient-to-br from-[#E68314] via-[#C46A0B] to-[#7A3E04] shadow-xl flex items-center justify-center border-2 border-white dark:border-[#2A2622] z-20">
                   <span className="font-['Cinzel'] text-xs text-white font-bold tracking-widest drop-shadow">
                     WA
                   </span>
                 </div>
 
                 {/* Card Header */}
-                <div className="pt-4 pb-4 border-b border-[#E8DFD1] text-center">
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-[#9E948B] font-['Cinzel']">
+                <div className="pt-4 pb-4 border-b border-[#E8DFD1] dark:border-white/10 text-center">
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-[#9E948B] dark:text-[#A69C91] font-['Cinzel']">
                     Writic’Love • 365 Jours d'Amour
                   </p>
-                  <h3 className="font-['Great_Vibes'] text-3xl sm:text-4xl text-[#C46A0B] mt-2 mb-1">
+                  <h3 className="font-['Great_Vibes'] text-3xl sm:text-4xl text-[#C46A0B] dark:text-[#E68314] mt-2 mb-1">
                     Jour 010 — 10 Janvier
                   </h3>
-                  <p className="text-xs font-['Cinzel'] text-[#8C827A] tracking-widest">
+                  <p className="text-xs font-['Cinzel'] text-[#8C827A] dark:text-[#9A9084] tracking-widest">
                     DE PETITS MOTS POUR DE GRANDS CHANGEMENTS
                   </p>
                 </div>
 
                 {/* Calligraphic Body */}
                 <div className="py-6 text-center space-y-3">
-                  <p className="font-['Pinyon_Script'] text-2xl text-[#2C2723] leading-relaxed">
+                  <p className="font-['Pinyon_Script'] text-2xl text-[#2C2723] dark:text-[#FAF8F5] leading-relaxed">
                     « Je mesure mes paroles avant de les prononcer. »
                   </p>
-                  <p className="font-['Cormorant_Garamond'] text-sm text-[#6A635B] italic">
+                  <p className="font-['Cormorant_Garamond'] text-sm text-[#6A635B] dark:text-[#B5ABA0] italic">
                     « Aujourd'hui, je t'aime plus que jamais. »
                   </p>
                 </div>
 
                 {/* Price and Coffret pill */}
-                <div className="pt-4 border-t border-[#E8DFD1]/80 flex items-center justify-between text-[11px] text-[#8C827A] font-sans">
+                <div className="pt-4 border-t border-[#E8DFD1]/80 dark:border-white/10 flex items-center justify-between text-[11px] text-[#8C827A] dark:text-[#A69C91] font-sans">
                   <span className="flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#E68314]" />
                     <span>30 000 FCFA l'unité</span>
                   </span>
-                  <span className="font-['Cinzel'] text-[#C46A0B] font-bold">Duo : 50 000 FCFA</span>
+                  <span className="font-['Cinzel'] text-[#C46A0B] dark:text-[#E68314] font-bold">Duo : 50 000 FCFA</span>
                 </div>
 
                 {/* Interactive hint */}

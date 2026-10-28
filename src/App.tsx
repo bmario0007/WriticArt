@@ -9,10 +9,11 @@ import { AtelierStoryModal } from './components/AtelierStoryModal';
 import { QuoteEngineModal } from './components/QuoteEngineModal';
 import { AtelierManifesto } from './components/AtelierManifesto';
 import { Footer } from './components/Footer';
+import { ThemeProvider } from './context/ThemeContext';
 import type { QuoteConfiguration, DailyThought, GalleryItem } from './types';
 import type { WriticProduct } from './data/productsData';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
   // Global bespoke order state
   const [config, setConfig] = useState<QuoteConfiguration>({
     eventType: 'writiclove',
@@ -115,9 +116,9 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-[#FAF8F5] text-[#1E1C1A]">
+    <div className="min-h-screen flex flex-col font-sans bg-[#FAF8F5] dark:bg-[#121110] text-[#1E1C1A] dark:text-[#FAF8F5] transition-colors duration-300">
       
-      {/* Navigation bar */}
+      {/* Navigation bar with Day/Night toggle */}
       <Navbar
         onOpenConfigurator={() => scrollTo('studio')}
         onOpenOracle={() => scrollTo('oracle')}
@@ -182,6 +183,14 @@ export const App: React.FC = () => {
       )}
 
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 };
 
