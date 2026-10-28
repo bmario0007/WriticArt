@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Volume2, VolumeX, Sparkles, PhoneCall, Heart, FileText } from 'lucide-react';
 import { atelierAudio } from '../utils/soundEffects';
 import { InstagramIcon } from './InstagramIcon';
+import logoLight from '../assets/brand/logo-light.jpg';
 
 interface NavbarProps {
   onOpenConfigurator: () => void;
@@ -63,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConfigurator, onOpenOracle
           {/* Brand Logo with Official WriticArt Graphic */}
           <a href="#" className="flex items-center space-x-3 group">
             <img
-              src="/brand/logo-light.jpg"
+              src={logoLight}
               alt="WriticArt Logo"
               className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
             />

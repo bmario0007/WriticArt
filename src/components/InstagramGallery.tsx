@@ -12,6 +12,7 @@ import { instagramHighlightsData } from '../data/productsData';
 import type { GalleryItem, EventType } from '../types';
 import { atelierAudio } from '../utils/soundEffects';
 import { InstagramIcon } from './InstagramIcon';
+import feedInstagram from '../assets/brand/feed-instagram.png';
 
 interface InstagramGalleryProps {
   onSelectArtPiece: (item: GalleryItem) => void;
@@ -156,7 +157,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
 
           <div className="lg:col-span-6 h-full min-h-[320px] bg-[#181716] p-4 flex items-center justify-center">
             <img
-              src="/brand/feed-instagram.png"
+              src={feedInstagram}
               alt="Feed Instagram WriticArt"
               className="max-h-[380px] w-auto rounded-2xl object-contain shadow-2xl border border-white/10"
             />

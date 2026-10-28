@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, Mail, PhoneCall, MapPin } from 'lucide-react';
 import { InstagramIcon } from './InstagramIcon';
+import logoDark from '../assets/brand/logo-dark.jpg';
 
 export const Footer: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ export const Footer: React.FC = () => {
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center space-x-3">
               <img
-                src="/brand/logo-dark.jpg"
+                src={logoDark}
                 alt="WriticArt Logo"
                 className="h-12 w-auto object-contain rounded"
               />

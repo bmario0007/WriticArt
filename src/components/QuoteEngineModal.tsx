@@ -10,6 +10,7 @@ import {
 import type { QuoteConfiguration } from '../types';
 import { atelierAudio } from '../utils/soundEffects';
 import confetti from 'canvas-confetti';
+import logoDark from '../assets/brand/logo-dark.jpg';
 
 interface QuoteEngineModalProps {
   config: QuoteConfiguration;
@@ -79,7 +80,7 @@ export const QuoteEngineModal: React.FC<QuoteEngineModalProps> = ({
         <div className="bg-[#181716] text-[#FAF8F5] px-6 sm:px-8 py-5 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img
-              src="/brand/logo-dark.jpg"
+              src={logoDark}
               alt="WriticArt Logo"
               className="h-10 w-auto object-contain rounded"
             />

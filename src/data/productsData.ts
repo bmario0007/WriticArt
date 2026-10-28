@@ -1,3 +1,5 @@
+import feedInstagram from '../assets/brand/feed-instagram.png';
+
 export interface WriticProduct {
   id: string;
   name: string;
@@ -34,7 +36,7 @@ export const writicLoveProducts: WriticProduct[] = [
       '« Jour 010 — Je mesure mes paroles avant de les prononcer. »',
       '« Une attention vaut mille promesses inexprimées. »'
     ],
-    image: '/brand/feed-instagram.png'
+    image: feedInstagram
   },
   {
     id: 'writiclove-femme',
@@ -57,7 +59,7 @@ export const writicLoveProducts: WriticProduct[] = [
       '« Chaque jour à tes côtés est une bénédiction qui se réinvente. »',
       '« Jour 289 — Être en couple, c’est apprécier les moments partagés et aussi notre liberté intérieure. »'
     ],
-    image: '/brand/feed-instagram.png'
+    image: feedInstagram
   },
   {
     id: 'writiclove-duo',
@@ -79,7 +81,7 @@ export const writicLoveProducts: WriticProduct[] = [
       '« Deux coffrets, deux regards, une seule et même promesse. »',
       '« Le rituel amoureux qui a transformé des centaines de relations. »'
     ],
-    image: '/brand/feed-instagram.png'
+    image: feedInstagram
   }
 ];
 
