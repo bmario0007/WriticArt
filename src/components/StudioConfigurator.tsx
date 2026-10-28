@@ -175,8 +175,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
         {/* Studio Grid: Controls & 3D Interactive Canvas */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* LEFT: 3D Interactive Canvas & Live Preview */}
-          <div className="lg:col-span-7 sticky top-28 space-y-6">
+          {/* LEFT: 3D Interactive Canvas & Live Preview (Sticky ONLY on desktop lg:) */}
+          <div className="lg:col-span-7 lg:sticky lg:top-28 space-y-6">
             
             {/* Canvas controls header */}
             <div className="flex items-center justify-between bg-white/80 p-3 rounded-2xl border border-[#E8DFD1] shadow-sm">
@@ -217,7 +217,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
 
             {/* 3D Stage */}
             <div
-              className="relative min-h-[460px] sm:min-h-[520px] rounded-3xl bg-gradient-to-b from-[#F2ECE1] to-[#E7DEC5]/40 p-8 sm:p-12 flex items-center justify-center perspective-1000 overflow-hidden border border-[#DED2BF]"
+              className="relative min-h-[380px] sm:min-h-[520px] rounded-3xl bg-gradient-to-b from-[#F2ECE1] to-[#E7DEC5]/40 p-4 sm:p-12 flex items-center justify-center perspective-1000 overflow-hidden border border-[#DED2BF]"
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
@@ -281,7 +281,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                     transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
                     transition: 'transform 0.15s ease-out'
                   }}
-                  className={`relative w-full max-w-[440px] rounded-3xl p-8 sm:p-10 border transition-all duration-300 transform-style-3d paper-deckle-edge ${getPaperClasses()}`}
+                  className={`relative w-full max-w-[440px] rounded-2xl sm:rounded-3xl p-5 sm:p-10 border transition-all duration-300 transform-style-3d paper-deckle-edge ${getPaperClasses()}`}
                 >
                   
                   {/* Gold leaf foil border if enabled */}
@@ -291,25 +291,25 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
 
                   {/* Silk Ribbon across the top */}
                   {config.hasSilkRibbon && (
-                    <div className="absolute top-0 right-12 w-6 h-16 bg-gradient-to-b from-[#EFE5D5] to-[#D5C4A9] shadow-md rounded-b-md z-20 border-x border-[#BFAFA0] pointer-events-none" />
+                    <div className="absolute top-0 right-8 sm:right-12 w-5 sm:w-6 h-12 sm:h-16 bg-gradient-to-b from-[#EFE5D5] to-[#D5C4A9] shadow-md rounded-b-md z-20 border-x border-[#BFAFA0] pointer-events-none" />
                   )}
 
                   {/* Header Monogram / Brand */}
-                  <div className="text-center pb-4 border-b border-black/10">
-                    <span className="text-[10px] uppercase font-['Cinzel'] tracking-[0.3em] opacity-60 block">
+                  <div className="text-center pb-3 sm:pb-4 border-b border-black/10">
+                    <span className="text-[9px] sm:text-[10px] uppercase font-['Cinzel'] tracking-[0.25em] opacity-60 block">
                       WriticArt • Transformer les mots en œuvres
                     </span>
-                    <h3 className={`text-3xl sm:text-4xl mt-3 mb-1 ${getFontFamily()} ${getInkStyle()}`}>
+                    <h3 className={`text-2xl sm:text-4xl mt-2 mb-1 ${getFontFamily()} ${getInkStyle()}`}>
                       {config.customTitle || 'Titre de Votre Création'}
                     </h3>
-                    <p className="text-xs font-['Cinzel'] tracking-widest opacity-70">
+                    <p className="text-[11px] sm:text-xs font-['Cinzel'] tracking-widest opacity-70">
                       {config.customNames || 'Noms des Destinataires'}
                     </p>
                   </div>
 
                   {/* Handwritten Message Body */}
-                  <div className="py-8 text-center min-h-[140px] flex items-center justify-center">
-                    <p className={`text-xl sm:text-2xl ${getFontFamily()} ${getInkStyle()} leading-relaxed px-2`}>
+                  <div className="py-5 sm:py-8 text-center min-h-[110px] sm:min-h-[140px] flex items-center justify-center">
+                    <p className={`text-base sm:text-2xl ${getFontFamily()} ${getInkStyle()} leading-relaxed px-1 sm:px-2`}>
                       « {config.customMessage || 'Votre texte manuscrit ou déclaration apparaîtra ici avec les pigments choisis.'} »
                     </p>
                   </div>
