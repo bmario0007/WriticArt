@@ -15,6 +15,8 @@ import { StudioPage } from './pages/StudioPage';
 import { OraclePage } from './pages/OraclePage';
 import { GalleryPage } from './pages/GalleryPage';
 import { AtelierPage } from './pages/AtelierPage';
+import { BlogPage } from './pages/BlogPage';
+import { ArticleDetailPage } from './pages/ArticleDetailPage';
 
 // Contexts
 import { ThemeProvider } from './context/ThemeContext';
@@ -25,7 +27,7 @@ import { NavigationProvider, useNavigation } from './context/NavigationContext';
 import type { QuoteConfiguration, DailyThought, GalleryItem } from './types';
 
 const AppContent: React.FC = () => {
-  const { currentPage, currentProductId, navigateTo } = useNavigation();
+  const { currentPage, currentProductId, currentArticleId, navigateTo } = useNavigation();
 
   // Bespoke quote state
   const [config, setConfig] = useState<QuoteConfiguration>({
@@ -147,6 +149,12 @@ const AppContent: React.FC = () => {
             onSelectArtPiece={handleSelectArtPiece}
             onOpenStory={(idx) => setActiveStoryIndex(idx)}
           />
+        )}
+
+        {currentPage === 'journal' && <BlogPage />}
+
+        {currentPage === 'article' && (
+          <ArticleDetailPage articleId={currentArticleId} />
         )}
         
         {currentPage === 'atelier' && <AtelierPage />}

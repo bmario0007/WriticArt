@@ -1,24 +1,68 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { ErpOrder, InventoryItem, ErpClient, CatalogProduct, OrderStatus } from '../types';
-import { initialErpOrders, initialInventory, initialClients, initialCatalogProducts } from '../data/erpData';
+import type { 
+  ErpOrder, 
+  InventoryItem, 
+  ErpClient, 
+  CatalogProduct, 
+  OrderStatus,
+  ArticlePost,
+  MediaItem,
+  SiteSettings
+} from '../types';
+import { 
+  initialErpOrders, 
+  initialInventory, 
+  initialClients, 
+  initialCatalogProducts,
+  initialArticles,
+  initialMedia,
+  initialSiteSettings
+} from '../data/erpData';
 import { atelierAudio } from '../utils/soundEffects';
 
 interface ErpContextType {
   isAdminMode: boolean;
   openAdminMode: () => void;
   closeAdminMode: () => void;
+  
+  // Orders
   orders: ErpOrder[];
-  inventory: InventoryItem[];
-  clients: ErpClient[];
-  products: CatalogProduct[];
   addOrder: (order: Omit<ErpOrder, 'id' | 'date'>) => ErpOrder;
   updateOrderStatus: (orderId: string, newStatus: OrderStatus) => void;
+  deleteOrder: (orderId: string) => void;
+  
+  // Inventory
+  inventory: InventoryItem[];
   updateInventoryStock: (itemId: string, newQty: number) => void;
   adjustInventoryStock: (itemId: string, delta: number) => void;
+  
+  // Clients CRM
+  clients: ErpClient[];
+  addClient: (client: Omit<ErpClient, 'id' | 'totalOrders' | 'totalSpentFCFA' | 'lastOrderDate'>) => void;
+  
+  // Catalog Products
+  products: CatalogProduct[];
+  addProduct: (product: Omit<CatalogProduct, 'id'>) => CatalogProduct;
+  updateProduct: (id: string, partial: Partial<CatalogProduct>) => void;
+  deleteProduct: (id: string) => void;
   updateProductPrice: (productId: string, newPriceFCFA: number) => void;
   toggleProductStock: (productId: string) => void;
-  addClient: (client: Omit<ErpClient, 'id' | 'totalOrders' | 'totalSpentFCFA' | 'lastOrderDate'>) => void;
-  deleteOrder: (orderId: string) => void;
+  
+  // Blog / Journal Articles (WordPress CMS)
+  articles: ArticlePost[];
+  addArticle: (article: Omit<ArticlePost, 'id' | 'slug' | 'date'>) => ArticlePost;
+  updateArticle: (id: string, partial: Partial<ArticlePost>) => void;
+  deleteArticle: (id: string) => void;
+
+  // Media Library (WordPress Photos)
+  mediaList: MediaItem[];
+  addMedia: (media: Omit<MediaItem, 'id' | 'date'>) => MediaItem;
+  deleteMedia: (id: string) => void;
+
+  // Page Builder / Site Settings (WordPress Appearance)
+  siteSettings: SiteSettings;
+  updateSiteSettings: (partial: Partial<SiteSettings>) => void;
+
   resetAllData: () => void;
   totalRevenueFCFA: number;
   activeOrdersCount: number;
@@ -32,10 +76,14 @@ const ORDERS_KEY = 'writicart_erp_orders_v2';
 const INVENTORY_KEY = 'writicart_erp_inventory_v2';
 const CLIENTS_KEY = 'writicart_erp_clients_v2';
 const PRODUCTS_KEY = 'writicart_erp_products_v2';
+const ARTICLES_KEY = 'writicart_cms_articles_v1';
+const MEDIA_KEY = 'writicart_cms_media_v1';
+const SETTINGS_KEY = 'writicart_cms_settings_v1';
 
 export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAdminMode, setIsAdminMode] = useState(false);
 
+  // Orders
   const [orders, setOrders] = useState<ErpOrder[]>(() => {
     try {
       const saved = localStorage.getItem(ORDERS_KEY);
@@ -45,6 +93,7 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
+  // Inventory
   const [inventory, setInventory] = useState<InventoryItem[]>(() => {
     try {
       const saved = localStorage.getItem(INVENTORY_KEY);
@@ -54,6 +103,7 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
+  // Clients
   const [clients, setClients] = useState<ErpClient[]>(() => {
     try {
       const saved = localStorage.getItem(CLIENTS_KEY);
@@ -63,6 +113,7 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
+  // Products
   const [products, setProducts] = useState<CatalogProduct[]>(() => {
     try {
       const saved = localStorage.getItem(PRODUCTS_KEY);
@@ -72,38 +123,64 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
-  // Save changes to localStorage
-  useEffect(() => {
+  // Blog / Articles (WordPress)
+  const [articles, setArticles] = useState<ArticlePost[]>(() => {
     try {
-      localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+      const saved = localStorage.getItem(ARTICLES_KEY);
+      return saved ? JSON.parse(saved) : initialArticles;
     } catch {
-      // storage exception
+      return initialArticles;
     }
+  });
+
+  // Media Library (WordPress)
+  const [mediaList, setMediaList] = useState<MediaItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(MEDIA_KEY);
+      return saved ? JSON.parse(saved) : initialMedia;
+    } catch {
+      return initialMedia;
+    }
+  });
+
+  // Site Settings (Layout & Appearance)
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
+    try {
+      const saved = localStorage.getItem(SETTINGS_KEY);
+      return saved ? { ...initialSiteSettings, ...JSON.parse(saved) } : initialSiteSettings;
+    } catch {
+      return initialSiteSettings;
+    }
+  });
+
+  // LocalStorage sync
+  useEffect(() => {
+    try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch {}
   }, [orders]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(INVENTORY_KEY, JSON.stringify(inventory));
-    } catch {
-      // storage exception
-    }
+    try { localStorage.setItem(INVENTORY_KEY, JSON.stringify(inventory)); } catch {}
   }, [inventory]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
-    } catch {
-      // storage exception
-    }
+    try { localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients)); } catch {}
   }, [clients]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-    } catch {
-      // storage exception
-    }
+    try { localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products)); } catch {}
   }, [products]);
+
+  useEffect(() => {
+    try { localStorage.setItem(ARTICLES_KEY, JSON.stringify(articles)); } catch {}
+  }, [articles]);
+
+  useEffect(() => {
+    try { localStorage.setItem(MEDIA_KEY, JSON.stringify(mediaList)); } catch {}
+  }, [mediaList]);
+
+  useEffect(() => {
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(siteSettings)); } catch {}
+  }, [siteSettings]);
 
   const openAdminMode = () => {
     atelierAudio.playGoldChime();
@@ -117,6 +194,7 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Orders methods
   const addOrder = (orderData: Omit<ErpOrder, 'id' | 'date'>): ErpOrder => {
     atelierAudio.playWaxStamp();
     const today = new Date().toLocaleDateString('fr-FR', {
@@ -134,7 +212,7 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setOrders((prev) => [newOrder, ...prev]);
 
-    // Also update or add client
+    // Update clients
     setClients((prev) => {
       const existing = prev.find((c) => c.phone === orderData.clientPhone || c.name.toLowerCase() === orderData.clientName.toLowerCase());
       if (existing) {
@@ -174,6 +252,11 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
+  const deleteOrder = (orderId: string) => {
+    setOrders((prev) => prev.filter((o) => o.id !== orderId));
+  };
+
+  // Inventory methods
   const updateInventoryStock = (itemId: string, newQty: number) => {
     setInventory((prev) =>
       prev.map((item) => (item.id === itemId ? { ...item, currentStock: Math.max(0, newQty) } : item))
@@ -191,6 +274,25 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
+  // Product methods
+  const addProduct = (prodData: Omit<CatalogProduct, 'id'>): CatalogProduct => {
+    atelierAudio.playWaxStamp();
+    const newId = 'prod_' + Date.now();
+    const newProd: CatalogProduct = { ...prodData, id: newId };
+    setProducts((prev) => [newProd, ...prev]);
+    return newProd;
+  };
+
+  const updateProduct = (id: string, partial: Partial<CatalogProduct>) => {
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, ...partial } : p))
+    );
+  };
+
+  const deleteProduct = (id: string) => {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+  };
+
   const updateProductPrice = (productId: string, newPriceFCFA: number) => {
     atelierAudio.playGoldChime();
     setProducts((prev) =>
@@ -205,6 +307,7 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
+  // Client CRM methods
   const addClient = (clientData: Omit<ErpClient, 'id' | 'totalOrders' | 'totalSpentFCFA' | 'lastOrderDate'>) => {
     atelierAudio.playWaxStamp();
     const newClient: ErpClient = {
@@ -217,8 +320,66 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setClients((prev) => [newClient, ...prev]);
   };
 
-  const deleteOrder = (orderId: string) => {
-    setOrders((prev) => prev.filter((o) => o.id !== orderId));
+  // Articles / Blog (WordPress Posts)
+  const addArticle = (artData: Omit<ArticlePost, 'id' | 'slug' | 'date'>): ArticlePost => {
+    atelierAudio.playWaxStamp();
+    const today = new Date().toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    const slug = artData.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+
+    const newArticle: ArticlePost = {
+      ...artData,
+      id: 'post_' + Date.now(),
+      slug,
+      date: today
+    };
+
+    setArticles((prev) => [newArticle, ...prev]);
+    return newArticle;
+  };
+
+  const updateArticle = (id: string, partial: Partial<ArticlePost>) => {
+    atelierAudio.playPaperSlide();
+    setArticles((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, ...partial } : a))
+    );
+  };
+
+  const deleteArticle = (id: string) => {
+    setArticles((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  // Media Library (WordPress Photos)
+  const addMedia = (mediaData: Omit<MediaItem, 'id' | 'date'>): MediaItem => {
+    atelierAudio.playGoldChime();
+    const today = new Date().toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+    const newMedia: MediaItem = {
+      ...mediaData,
+      id: 'med_' + Date.now(),
+      date: today
+    };
+    setMediaList((prev) => [newMedia, ...prev]);
+    return newMedia;
+  };
+
+  const deleteMedia = (id: string) => {
+    setMediaList((prev) => prev.filter((m) => m.id !== id));
+  };
+
+  // Site Settings / Page Builder
+  const updateSiteSettings = (partial: Partial<SiteSettings>) => {
+    atelierAudio.playGoldChime();
+    setSiteSettings((prev) => ({ ...prev, ...partial }));
   };
 
   const resetAllData = () => {
@@ -226,10 +387,16 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setInventory(initialInventory);
     setClients(initialClients);
     setProducts(initialCatalogProducts);
+    setArticles(initialArticles);
+    setMediaList(initialMedia);
+    setSiteSettings(initialSiteSettings);
     localStorage.removeItem(ORDERS_KEY);
     localStorage.removeItem(INVENTORY_KEY);
     localStorage.removeItem(CLIENTS_KEY);
     localStorage.removeItem(PRODUCTS_KEY);
+    localStorage.removeItem(ARTICLES_KEY);
+    localStorage.removeItem(MEDIA_KEY);
+    localStorage.removeItem(SETTINGS_KEY);
   };
 
   // KPIs
@@ -245,17 +412,29 @@ export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         openAdminMode,
         closeAdminMode,
         orders,
-        inventory,
-        clients,
-        products,
         addOrder,
         updateOrderStatus,
+        deleteOrder,
+        inventory,
         updateInventoryStock,
         adjustInventoryStock,
+        clients,
+        addClient,
+        products,
+        addProduct,
+        updateProduct,
+        deleteProduct,
         updateProductPrice,
         toggleProductStock,
-        addClient,
-        deleteOrder,
+        articles,
+        addArticle,
+        updateArticle,
+        deleteArticle,
+        mediaList,
+        addMedia,
+        deleteMedia,
+        siteSettings,
+        updateSiteSettings,
         resetAllData,
         totalRevenueFCFA,
         activeOrdersCount,

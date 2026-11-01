@@ -1,4 +1,4 @@
-import type { ErpOrder, InventoryItem, ErpClient, CatalogProduct } from '../types';
+import type { ErpOrder, InventoryItem, ErpClient, CatalogProduct, ArticlePost, MediaItem, SiteSettings } from '../types';
 import feedInstagram from '../assets/brand/feed-instagram.png';
 
 // -------------------------------------------------------------
@@ -410,3 +410,145 @@ export const initialClients: ErpClient[] = [
     notes: 'Mariage prévu en Décembre à l’Île de Gorée. Commande de prestige.'
   }
 ];
+
+// -------------------------------------------------------------
+// SEED ARTICLES & POSTS (Journal d'Atelier / Blog WordPress)
+// -------------------------------------------------------------
+export const initialArticles: ArticlePost[] = [
+  {
+    id: 'art-1',
+    title: 'Comment le rituel "365 Jours d\'Amour" réinvente la complicité de couple',
+    slug: 'rituel-365-jours-amour-complicite-couple',
+    excerpt: 'Dans la routine moderne, comment une simple carte tirée chaque matin peut transformer la communication et nourrir l\'amour durable.',
+    content: `Dans un monde où les notifications numériques s'accumulent sans saveur, la parole amoureuse a souvent perdu de sa solennité. Le rituel « 365 Jours d'Amour » créé par WriticArt est né d'un constat simple : l'amour ne s'entretient pas seulement lors des grandes dates anniversaires, mais dans la délicatesse des micro-attentions quotidiennes.
+
+### Le pouvoir d'un mot manuscrit chaque matin
+Chaque coffret Writic'Love renferme 365 cartes imprimées sur papier noble. Tirer une carte au réveil devient une respiration. Qu'il s'agisse d'un rappel bienveillant, d'un vœu partagé ou d'une question invitant à l'intimité, le mot crée un pont immédiat entre les deux partenaires.
+
+### Des retours bouleversants de couples à Dakar et à l'international
+Depuis le lancement des éditions Homme, Femme et Duo, plus de 500 couples nous ont partagé comment ce rituel a désamorcé des incompréhensions et ravivé la tendresse des premiers jours. C'est la preuve que les mots, lorsqu'ils sont incarnés dans la matière, possèdent un pouvoir guérisseur inaltérable.`,
+    category: 'Couple & Amour',
+    author: 'Maître Calligraphe WriticArt',
+    date: '31 Octobre 2026',
+    readTime: '4 min',
+    coverImage: feedInstagram,
+    status: 'publie',
+    featured: true
+  },
+  {
+    id: 'art-2',
+    title: 'Les secrets de la dorure à la feuille d\'or 24 carats sur toile de lin',
+    slug: 'secrets-dorure-feuille-or-24k-toile-lin',
+    excerpt: 'Immersion dans les techniques vénitiennes de pose de feuille d\'or libre à la mixtion végétale dans notre atelier de Dakar.',
+    content: `La dorure à la feuille n'est pas une simple peinture métallique : c'est un dialogue avec la lumière. Dans notre atelier à Dakar, nous travaillons exclusivement avec de l'or pur 24 carats battu au dixième de micron.
+
+### La préparation du support
+Avant même que la première feuille ne se pose, la toile de lin brut est apprêtée d'un gesso à la colle de peau, poncée délicatement pour obtenir un grain satiné parfait. C'est sur cette surface veloutée que la mixtion à dorer est posée au pinceau en poil de martre.
+
+### L'instant magique de la pose
+Poser une feuille d'or exige d'arrêter de respirer. Au moindre souffle, la feuille vole. Elle est saisie au couteau à dorer et déposée avec la palette d'écureuil. Une fois appliquée, la brunissure à la pierre d'agate vient sceller l'or et lui donner cet éclat miroir qui traversera les générations sans jamais ternir.`,
+    category: 'Savoir-Faire',
+    author: 'Atelier WriticArt Dakar',
+    date: '24 Octobre 2026',
+    readTime: '5 min',
+    coverImage: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80',
+    status: 'publie',
+    featured: false
+  },
+  {
+    id: 'art-3',
+    title: 'Guide d\'élégance : Rédiger ses vœux de mariage pour la calligraphie',
+    slug: 'guide-rediger-voeux-mariage-calligraphie',
+    excerpt: 'Conseils pratiques et poétiques pour coucher sur papier pur coton des promesses d\'amour qui résonneront pour l\'éternité.',
+    content: `Rédiger ses vœux de mariage est l'un des exercices les plus émouvants d'une vie. Lorsque ces vœux sont destinés à être calligraphiés sur parchemin frangé et scellés à la cire, chaque terme compte.
+
+### 1. Parlez avec le cœur, fuyez les formules toutes faites
+La calligraphie donne du poids aux mots simples. Évitez les discours trop convenus : parlez de ce qui vous a fait tomber amoureux, des fous rires partagés, et de ce que vous promettez d'apporter dans les jours de tempête comme dans les jours de fête.
+
+### 2. Pensez au rythme de lecture
+Une belle calligraphie respire. Découpez votre texte en strophes ou en phrases courtes. Nos plumes d'acier créent des pleins et des déliés qui suivent la cadence de votre souffle lors de la cérémonie.
+
+### 3. La conservation du parchemin
+Une fois scellés du sceau de cire aux armoiries des mariés, vos vœux ne sont pas rangés dans un tiroir : ils deviennent une œuvre d'art sous cadre à contempler chaque jour dans votre foyer.`,
+    category: 'Mariage & Cérémonie',
+    author: 'Conseillère Nuptiale WriticArt',
+    date: '18 Octobre 2026',
+    readTime: '6 min',
+    coverImage: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
+    status: 'publie',
+    featured: false
+  }
+];
+
+// -------------------------------------------------------------
+// SEED MEDIA LIBRARY (Médiathèque Photos WordPress)
+// -------------------------------------------------------------
+export const initialMedia: MediaItem[] = [
+  {
+    id: 'med-1',
+    title: 'Coffret Writic\'Love 365 Jours d\'Amour (Photo officielle)',
+    url: feedInstagram,
+    category: 'coffret',
+    date: '1 Nov 2026',
+    size: '794 KB',
+    type: 'image'
+  },
+  {
+    id: 'med-2',
+    title: 'Toile Lin Pur Calligraphiée à l\'Or 24K',
+    url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80',
+    category: 'tableau',
+    date: '28 Oct 2026',
+    size: '1.2 MB',
+    type: 'image'
+  },
+  {
+    id: 'med-3',
+    title: 'Suite Nuptiale Papier Deckle Edge 350g & Sceau Bordeaux',
+    url: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
+    category: 'mariage',
+    date: '25 Oct 2026',
+    size: '980 KB',
+    type: 'image'
+  },
+  {
+    id: 'med-4',
+    title: 'Cadre Poétique Écrin Doré sous Verre Minéral',
+    url: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=1200&q=80',
+    category: 'tableau',
+    date: '22 Oct 2026',
+    size: '850 KB',
+    type: 'image'
+  },
+  {
+    id: 'med-5',
+    title: 'Matrice Sceau de Cire en Laiton & Bâton Doré WriticArt',
+    url: 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?auto=format&fit=crop&w=1200&q=80',
+    category: 'atelier',
+    date: '20 Oct 2026',
+    size: '1.1 MB',
+    type: 'image'
+  }
+];
+
+// -------------------------------------------------------------
+// SEED SITE SETTINGS (Mise en page & Page Builder)
+// -------------------------------------------------------------
+export const initialSiteSettings: SiteSettings = {
+  announcementText: "✦ ATELIER WRITICART DAKAR • « Transformer les mots en œuvres » • Coffrets 365 Jours disponibles pour commande immédiate",
+  announcementPhone: "+221 77 234 85 21",
+  heroSlogan: "Atelier de Haute Calligraphie • Dakar, Sénégal",
+  heroTitle: "L'Art du Verbe,",
+  heroHighlightText: "des Coffrets d'Amour aux Toiles Éternelles.",
+  heroSubtitle: "Découvrez nos célèbres coffrets « 365 Jours d'Amour », nos tableaux calligraphiés à l'or pur 24 carats et notre papeterie sur-mesure scellée à la cire d'atelier.",
+  heroCtaText: "Visiter la Boutique",
+  showReassuranceBar: true,
+  showDiscoveryPortals: true,
+  showFeaturedSection: true,
+  showAtelierBanner: true,
+  siteTitle: "WriticArt Dakar — Haute Calligraphie & Coffrets 365 Jours",
+  contactEmail: "kaynubind@gmail.com",
+  whatsappContact: "+221 77 234 85 21",
+  workshopAddress: "Dakar, Sénégal"
+};
+

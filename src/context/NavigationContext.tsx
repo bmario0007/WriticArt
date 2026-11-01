@@ -9,46 +9,60 @@ export type PageRoute =
   | 'pensee' 
   | 'galerie' 
   | 'atelier' 
+  | 'journal'
+  | 'article'
   | 'erp';
 
 interface NavigationContextType {
   currentPage: PageRoute;
   currentProductId: string | null;
-  navigateTo: (page: PageRoute, productId?: string) => void;
+  currentArticleId: string | null;
+  navigateTo: (page: PageRoute, itemId?: string) => void;
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
 
 export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const parseHash = (): { page: PageRoute; productId: string | null } => {
+  const parseHash = (): { page: PageRoute; productId: string | null; articleId: string | null } => {
     const hash = window.location.hash.replace(/^#\/?/, '').trim();
-    if (!hash) return { page: 'home', productId: null };
+    if (!hash) return { page: 'home', productId: null, articleId: null };
 
     if (hash.startsWith('produit/')) {
       const parts = hash.split('/');
-      return { page: 'product-detail', productId: parts[1] || null };
+      return { page: 'product-detail', productId: parts[1] || null, articleId: null };
     }
 
-    if (hash === 'boutique' || hash === 'catalogue') return { page: 'boutique', productId: null };
-    if (hash === 'writiclove' || hash === 'coffrets') return { page: 'writiclove', productId: null };
-    if (hash === 'sur-mesure' || hash === 'studio') return { page: 'sur-mesure', productId: null };
-    if (hash === 'pensee' || hash === 'oracle') return { page: 'pensee', productId: null };
-    if (hash === 'galerie') return { page: 'galerie', productId: null };
-    if (hash === 'atelier' || hash === 'manifeste' || hash === 'a-propos') return { page: 'atelier', productId: null };
-    if (hash === 'erp' || hash === 'admin') return { page: 'erp', productId: null };
+    if (hash.startsWith('article/')) {
+      const parts = hash.split('/');
+      return { page: 'article', productId: null, articleId: parts[1] || null };
+    }
 
-    return { page: 'home', productId: null };
+    if (hash === 'journal' || hash === 'blog' || hash === 'articles') {
+      return { page: 'journal', productId: null, articleId: null };
+    }
+
+    if (hash === 'boutique' || hash === 'catalogue') return { page: 'boutique', productId: null, articleId: null };
+    if (hash === 'writiclove' || hash === 'coffrets') return { page: 'writiclove', productId: null, articleId: null };
+    if (hash === 'sur-mesure' || hash === 'studio') return { page: 'sur-mesure', productId: null, articleId: null };
+    if (hash === 'pensee' || hash === 'oracle') return { page: 'pensee', productId: null, articleId: null };
+    if (hash === 'galerie') return { page: 'galerie', productId: null, articleId: null };
+    if (hash === 'atelier' || hash === 'manifeste' || hash === 'a-propos') return { page: 'atelier', productId: null, articleId: null };
+    if (hash === 'erp' || hash === 'admin') return { page: 'erp', productId: null, articleId: null };
+
+    return { page: 'home', productId: null, articleId: null };
   };
 
   const initial = parseHash();
   const [currentPage, setCurrentPage] = useState<PageRoute>(initial.page);
   const [currentProductId, setCurrentProductId] = useState<string | null>(initial.productId);
+  const [currentArticleId, setCurrentArticleId] = useState<string | null>(initial.articleId);
 
   useEffect(() => {
     const handleHashChange = () => {
-      const { page, productId } = parseHash();
+      const { page, productId, articleId } = parseHash();
       setCurrentPage(page);
       setCurrentProductId(productId);
+      setCurrentArticleId(articleId);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -56,10 +70,12 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  const navigateTo = (page: PageRoute, productId?: string) => {
+  const navigateTo = (page: PageRoute, itemId?: string) => {
     let targetHash = '#/';
     if (page === 'boutique') targetHash = '#/boutique';
-    else if (page === 'product-detail' && productId) targetHash = `#/produit/${productId}`;
+    else if (page === 'product-detail' && itemId) targetHash = `#/produit/${itemId}`;
+    else if (page === 'journal') targetHash = '#/journal';
+    else if (page === 'article' && itemId) targetHash = `#/article/${itemId}`;
     else if (page === 'writiclove') targetHash = '#/writiclove';
     else if (page === 'sur-mesure') targetHash = '#/sur-mesure';
     else if (page === 'pensee') targetHash = '#/pensee';
@@ -69,12 +85,21 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     window.location.hash = targetHash;
     setCurrentPage(page);
-    setCurrentProductId(productId || null);
+    if (page === 'product-detail') {
+      setCurrentProductId(itemId || null);
+      setCurrentArticleId(null);
+    } else if (page === 'article') {
+      setCurrentArticleId(itemId || null);
+      setCurrentProductId(null);
+    } else {
+      setCurrentProductId(null);
+      setCurrentArticleId(null);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <NavigationContext.Provider value={{ currentPage, currentProductId, navigateTo }}>
+    <NavigationContext.Provider value={{ currentPage, currentProductId, currentArticleId, navigateTo }}>
       {children}
     </NavigationContext.Provider>
   );

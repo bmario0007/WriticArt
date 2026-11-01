@@ -6,6 +6,7 @@ import logoDark from '../assets/brand/logo-dark.jpg';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
+import { useErp } from '../context/ErpContext';
 
 export const Navbar: React.FC = () => {
   const [isMuted, setIsMuted] = useState(atelierAudio.isMuted);
@@ -13,6 +14,7 @@ export const Navbar: React.FC = () => {
   const { toggleTheme, isDark } = useTheme();
   const { cartCount, openCart } = useCart();
   const { currentPage, navigateTo } = useNavigation();
+  const { siteSettings } = useErp();
 
   const toggleSound = () => {
     atelierAudio.isMuted = !atelierAudio.isMuted;
@@ -28,32 +30,33 @@ export const Navbar: React.FC = () => {
     { id: 'sur-mesure', label: 'Sur-Mesure' },
     { id: 'pensee', label: 'La Pensée du Jour' },
     { id: 'galerie', label: 'Galerie' },
+    { id: 'journal', label: "Journal d'Atelier" },
     { id: 'atelier', label: "L'Atelier" },
   ];
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-[#FAF8F5]/90 dark:bg-[#121110]/95 border-b border-[#E8DFD1]/70 dark:border-[#2A2622] transition-colors duration-300">
       
-      {/* Top Announcement Bar (Rahiya style) */}
+      {/* Top Announcement Bar (Rahiya style - Dynamic from WordPress CMS) */}
       <div className="bg-[#181716] dark:bg-[#0A0909] text-[#FAF8F5] text-[11px] py-1.5 px-4 font-sans tracking-wide border-b border-white/5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="font-['Cinzel'] text-[#E68314] font-semibold">✦ ATELIER WRITICART DAKAR</span>
-            <span className="hidden sm:inline text-white/40">•</span>
-            <span className="hidden sm:inline italic text-white/80">« Transformer les mots en œuvres »</span>
-            <span className="hidden md:inline text-white/40">•</span>
-            <span className="hidden md:inline text-white/70">Coffrets 365 Jours d'Amour disponibles pour commande immédiate</span>
+          <div className="flex items-center space-x-2 truncate pr-2">
+            <span className="font-['Cinzel'] text-[#E68314] font-semibold shrink-0">✦ ATELIER WRITICART</span>
+            <span className="hidden sm:inline text-white/40 shrink-0">•</span>
+            <span className="truncate text-white/85">
+              {siteSettings.announcementText || "« Transformer les mots en œuvres » • Coffrets 365 Jours d'Amour disponibles"}
+            </span>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 shrink-0">
             <a 
-              href="https://wa.me/221772348521" 
+              href={`https://wa.me/${(siteSettings.announcementPhone || '+221772348521').replace(/[^0-9]/g, '')}`} 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center space-x-1 hover:text-[#25D366] transition-colors font-medium"
             >
               <PhoneCall className="w-3 h-3 text-[#25D366]" />
-              <span>+221 77 234 85 21</span>
+              <span>{siteSettings.announcementPhone || "+221 77 234 85 21"}</span>
             </a>
           </div>
         </div>

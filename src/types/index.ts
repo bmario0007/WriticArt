@@ -63,10 +63,10 @@ export interface QuoteConfiguration {
 }
 
 // -------------------------------------------------------------
-// CART & E-COMMERCE TYPES (Rahiya minimalist shop)
+// CART & E-COMMERCE TYPES
 // -------------------------------------------------------------
 export interface CartItem {
-  id: string; // unique item line id
+  id: string;
   productId: string;
   name: string;
   subtitle?: string;
@@ -78,7 +78,7 @@ export interface CartItem {
 }
 
 // -------------------------------------------------------------
-// ERP TYPES (Admin Atelier Management)
+// ERP & ORDERS TYPES
 // -------------------------------------------------------------
 export type OrderStatus = 
   | 'nouveau' 
@@ -96,11 +96,11 @@ export interface OrderItemLine {
 }
 
 export interface ErpOrder {
-  id: string; // Ex: CMD-WA-1024
+  id: string;
   clientName: string;
   clientPhone: string;
   clientEmail?: string;
-  city: string; // Ex: "Dakar (Almadies)", "Mermoz", "Paris"
+  city: string;
   date: string;
   items: OrderItemLine[];
   totalFCFA: number;
@@ -147,4 +147,50 @@ export interface CatalogProduct {
   image: string;
   description: string;
   features: string[];
+}
+
+// -------------------------------------------------------------
+// WORDPRESS CMS & PAGE BUILDER TYPES
+// -------------------------------------------------------------
+export interface ArticlePost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  author: string;
+  date: string;
+  readTime: string;
+  coverImage: string;
+  status: 'publie' | 'brouillon';
+  featured?: boolean;
+}
+
+export interface MediaItem {
+  id: string;
+  title: string;
+  url: string;
+  category: 'coffret' | 'tableau' | 'atelier' | 'mariage' | 'autre';
+  date: string;
+  size?: string;
+  type: 'image';
+}
+
+export interface SiteSettings {
+  announcementText: string;
+  announcementPhone: string;
+  heroSlogan: string;
+  heroTitle: string;
+  heroHighlightText: string;
+  heroSubtitle: string;
+  heroCtaText: string;
+  showReassuranceBar: boolean;
+  showDiscoveryPortals: boolean;
+  showFeaturedSection: boolean;
+  showAtelierBanner: boolean;
+  siteTitle: string;
+  contactEmail: string;
+  whatsappContact: string;
+  workshopAddress: string;
 }
