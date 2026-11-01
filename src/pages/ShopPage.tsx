@@ -3,6 +3,7 @@ import { Search, Eye } from 'lucide-react';
 import { useErp } from '../context/ErpContext';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { atelierAudio } from '../utils/soundEffects';
 import type { CatalogProduct } from '../types';
 
@@ -10,6 +11,7 @@ export const ShopPage: React.FC = () => {
   const { products } = useErp();
   const { addToCart } = useCart();
   const { navigateTo } = useNavigation();
+  const { formatPrice } = useCurrency();
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -168,7 +170,7 @@ export const ShopPage: React.FC = () => {
                 <div>
                   <span className="text-[10px] text-[#8C8074] uppercase block font-['Cinzel']">Prix</span>
                   <span className="text-xl font-bold font-['Cinzel'] text-[#181716] dark:text-[#FAF8F5]">
-                    {prod.priceFCFA.toLocaleString('fr-FR')} FCFA
+                    {formatPrice(prod.priceFCFA)}
                   </span>
                 </div>
 

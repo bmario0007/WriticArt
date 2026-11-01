@@ -12,6 +12,7 @@ import {
   Printer, 
   PhoneCall, 
   Download, 
+  Upload,
   TrendingUp,
   FileText,
   Image as ImageIcon,
@@ -19,7 +20,11 @@ import {
   Trash2,
   Edit,
   Copy,
-  Check
+  Check,
+  Lock,
+  KeyRound,
+  ShieldCheck,
+  CheckCircle2
 } from 'lucide-react';
 import { useErp } from '../../context/ErpContext';
 import { useNavigation } from '../../context/NavigationContext';
@@ -30,6 +35,7 @@ import { PostEditorModal } from './PostEditorModal';
 import { MediaUploadModal } from './MediaUploadModal';
 import { ProductEditorModal } from './ProductEditorModal';
 import { LayoutCustomizer } from './LayoutCustomizer';
+import { AdminPinLock } from './AdminPinLock';
 import logoDark from '../../assets/brand/logo-dark.jpg';
 import { atelierAudio } from '../../utils/soundEffects';
 
@@ -54,6 +60,19 @@ export const AdminERP: React.FC = () => {
     pendingBATCount,
     lowStockItemsCount
   } = useErp();
+
+  // Security Lock State
+  const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
+    return sessionStorage.getItem('writicart_admin_unlocked') === 'true';
+  });
+  const [adminPin, setAdminPin] = useState<string>(() => {
+    return localStorage.getItem('writicart_admin_pin') || '1234';
+  });
+
+  // Settings PIN Change Form
+  const [currentPinInput, setCurrentPinInput] = useState('');
+  const [newPinInput, setNewPinInput] = useState('');
+  const [pinChangeMessage, setPinChangeMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   const [activeTab, setActiveTab] = useState<'dashboard' | 'articles' | 'media' | 'layout' | 'orders' | 'inventory' | 'clients' | 'catalog' | 'settings'>('dashboard');
   const [orderStatusFilter, setOrderStatusFilter] = useState<'all' | OrderStatus>('all');
@@ -134,6 +153,83 @@ export const AdminERP: React.FC = () => {
     document.body.removeChild(link);
   };
 
+  const handleExportAllJSON = () => {
+    const fullBackup = {
+      version: '1.0',
+      date: new Date().toISOString(),
+      orders,
+      inventory,
+      clients,
+      products,
+      articles,
+      mediaList,
+      siteSettings: localStorage.getItem('writicart_cms_settings_v1')
+    };
+    const blob = new Blob([JSON.stringify(fullBackup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `writicart_sauvegarde_complete_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = JSON.parse(evt.target?.result as string);
+        if (data.orders) localStorage.setItem('writicart_erp_orders_v2', JSON.stringify(data.orders));
+        if (data.inventory) localStorage.setItem('writicart_erp_inventory_v2', JSON.stringify(data.inventory));
+        if (data.clients) localStorage.setItem('writicart_erp_clients_v2', JSON.stringify(data.clients));
+        if (data.products) localStorage.setItem('writicart_erp_products_v2', JSON.stringify(data.products));
+        if (data.articles) localStorage.setItem('writicart_cms_articles_v1', JSON.stringify(data.articles));
+        if (data.mediaList) localStorage.setItem('writicart_cms_media_v1', JSON.stringify(data.mediaList));
+        if (data.siteSettings) localStorage.setItem('writicart_cms_settings_v1', data.siteSettings);
+        alert('Sauvegarde restaurée avec succès ! La page va s’actualiser.');
+        window.location.reload();
+      } catch {
+        alert('Erreur lors de la lecture du fichier de sauvegarde.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleChangePin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentPinInput !== adminPin) {
+      setPinChangeMessage({ text: 'Le code PIN actuel est incorrect.', type: 'error' });
+      return;
+    }
+    if (newPinInput.length < 4) {
+      setPinChangeMessage({ text: 'Le nouveau code doit contenir au moins 4 chiffres.', type: 'error' });
+      return;
+    }
+    localStorage.setItem('writicart_admin_pin', newPinInput);
+    setAdminPin(newPinInput);
+    setCurrentPinInput('');
+    setNewPinInput('');
+    setPinChangeMessage({ text: 'Code PIN mis à jour avec succès !', type: 'success' });
+    setTimeout(() => setPinChangeMessage(null), 4000);
+  };
+
+  // If not unlocked, render the luxury PIN Lock Screen
+  if (!isUnlocked) {
+    return (
+      <AdminPinLock
+        correctPin={adminPin}
+        onUnlock={() => {
+          sessionStorage.setItem('writicart_admin_unlocked', 'true');
+          setIsUnlocked(true);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F4EFE6] dark:bg-[#0D0C0B] text-[#1E1C1A] dark:text-[#FAF8F5] font-sans transition-colors duration-300">
       
@@ -160,16 +256,30 @@ export const AdminERP: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={() => {
-            closeAdminMode();
-            navigateTo('home');
-          }}
-          className="px-4 py-2 rounded-full bg-white/10 hover:bg-[#E68314] text-white text-xs font-['Cinzel'] tracking-wider uppercase font-semibold transition-all flex items-center space-x-1.5 shadow"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Retour à la Boutique</span>
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => {
+              sessionStorage.removeItem('writicart_admin_unlocked');
+              setIsUnlocked(false);
+            }}
+            className="px-3.5 py-2 rounded-full bg-white/10 hover:bg-red-600/80 text-white text-xs font-['Cinzel'] tracking-wider uppercase font-semibold transition-all flex items-center space-x-1.5 shadow"
+            title="Verrouiller la session"
+          >
+            <Lock className="w-3.5 h-3.5 text-red-400" />
+            <span className="hidden sm:inline">Verrouiller</span>
+          </button>
+
+          <button
+            onClick={() => {
+              closeAdminMode();
+              navigateTo('home');
+            }}
+            className="px-4 py-2 rounded-full bg-white/10 hover:bg-[#E68314] text-white text-xs font-['Cinzel'] tracking-wider uppercase font-semibold transition-all flex items-center space-x-1.5 shadow"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Retour à la Boutique</span>
+          </button>
+        </div>
       </header>
 
       {/* Main ERP Navigation Tabs (WordPress Style) */}
@@ -795,17 +905,119 @@ export const AdminERP: React.FC = () => {
         {/* ======================================================== */}
         {activeTab === 'settings' && (
           <div className="max-w-2xl mx-auto space-y-6">
+            
+            {/* 1. SECURITY & PIN CODE */}
+            <div className="bg-white dark:bg-[#181716] p-8 rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-5">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#FFF8F0] dark:bg-[#201D1A] border border-[#E68314]/30 flex items-center justify-center text-[#E68314]">
+                  <KeyRound className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-['Cormorant_Garamond'] text-2xl font-bold">Sécurité & Code PIN d'Atelier</h3>
+                  <p className="text-xs text-[#8C8074]">Protégez l'accès à l'ERP et au CMS WordPress.</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleChangePin} className="space-y-4 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-['Cinzel'] uppercase font-bold text-[#8C8074] mb-1">
+                      Code PIN actuel
+                    </label>
+                    <input
+                      type="password"
+                      maxLength={8}
+                      value={currentPinInput}
+                      onChange={(e) => setCurrentPinInput(e.target.value)}
+                      placeholder="Ex: 1234"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-sm font-mono tracking-widest focus:outline-none focus:border-[#E68314]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-['Cinzel'] uppercase font-bold text-[#8C8074] mb-1">
+                      Nouveau code PIN
+                    </label>
+                    <input
+                      type="password"
+                      maxLength={8}
+                      value={newPinInput}
+                      onChange={(e) => setNewPinInput(e.target.value)}
+                      placeholder="Min. 4 chiffres"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-sm font-mono tracking-widest focus:outline-none focus:border-[#E68314]"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {pinChangeMessage && (
+                  <div className={`p-3 rounded-xl text-xs flex items-center space-x-2 ${
+                    pinChangeMessage.type === 'success' 
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800'
+                      : 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border border-red-300 dark:border-red-800'
+                  }`}>
+                    {pinChangeMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                    <span>{pinChangeMessage.text}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] uppercase font-bold tracking-wider hover:bg-[#E68314] dark:hover:bg-[#E68314] dark:hover:text-white transition-colors"
+                >
+                  Mettre à jour le code PIN
+                </button>
+              </form>
+            </div>
+
+            {/* 2. FULL SITE BACKUP & RESTORE */}
             <div className="bg-white dark:bg-[#181716] p-8 rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4">
-              <h3 className="font-['Cormorant_Garamond'] text-2xl font-bold">Export Comptable & Sauvegarde</h3>
-              <p className="text-xs text-[#8C8074]">Sauvegarde automatique locale dans votre navigateur (`localStorage`).</p>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#FFF8F0] dark:bg-[#201D1A] border border-[#E68314]/30 flex items-center justify-center text-[#E68314]">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-['Cormorant_Garamond'] text-2xl font-bold">Sauvegarde & Restauration Complète</h3>
+                  <p className="text-xs text-[#8C8074]">Exportez l'intégralité du site (articles, réglages, catalogue, commandes) en un fichier JSON.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <button
+                  onClick={handleExportAllJSON}
+                  className="py-3 px-4 rounded-2xl bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] hover:bg-[#E68314] text-xs font-['Cinzel'] font-bold uppercase tracking-wider transition-all flex items-center justify-center space-x-2"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Télécharger Sauvegarde JSON</span>
+                </button>
+
+                <label className="py-3 px-4 rounded-2xl border border-[#DED4C3] dark:border-[#38332E] hover:border-[#E68314] text-[#181716] dark:text-[#FAF8F5] hover:text-[#E68314] text-xs font-['Cinzel'] font-bold uppercase tracking-wider transition-all flex items-center justify-center space-x-2 cursor-pointer">
+                  <Upload className="w-4 h-4" />
+                  <span>Restaurer Fichier JSON</span>
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={handleImportJSON}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* 3. EXCEL / CSV ORDERS EXPORT */}
+            <div className="bg-white dark:bg-[#181716] p-8 rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4">
+              <h3 className="font-['Cormorant_Garamond'] text-2xl font-bold">Export Comptable Commandes</h3>
+              <p className="text-xs text-[#8C8074]">Format tableur compatible Microsoft Excel, Google Sheets et Apple Numbers.</p>
               <button
                 onClick={handleExportCSV}
-                className="w-full py-3.5 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] uppercase font-bold tracking-wider hover:bg-[#E68314] transition-colors flex items-center justify-center space-x-2"
+                className="w-full py-3.5 rounded-full border border-[#DED4C3] dark:border-[#38332E] hover:border-[#E68314] text-xs font-['Cinzel'] uppercase font-bold tracking-wider hover:text-[#E68314] transition-colors flex items-center justify-center space-x-2"
               >
                 <Download className="w-4 h-4" />
-                <span>Télécharger l'Export des Commandes (Excel / CSV)</span>
+                <span>Télécharger le Fichier Excel / CSV</span>
               </button>
             </div>
+
           </div>
         )}
 

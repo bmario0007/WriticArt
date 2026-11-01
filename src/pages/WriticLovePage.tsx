@@ -4,11 +4,13 @@ import { writicLoveProducts } from '../data/productsData';
 import type { WriticProduct } from '../data/productsData';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { atelierAudio } from '../utils/soundEffects';
 
 export const WriticLovePage: React.FC = () => {
   const { addToCart } = useCart();
   const { navigateTo } = useNavigation();
+  const { formatPrice, currency } = useCurrency();
 
   const handleAddToCart = (product: WriticProduct) => {
     addToCart({
@@ -98,11 +100,13 @@ export const WriticLovePage: React.FC = () => {
                     <span className={`text-3xl sm:text-4xl font-bold font-['Cinzel'] ${
                       isDuo ? 'text-[#E68314]' : 'text-[#181716] dark:text-[#E68314]'
                     }`}>
-                      {prod.priceFCFA.toLocaleString('fr-FR')} FCFA
+                      {formatPrice(prod.priceFCFA)}
                     </span>
-                    <span className={`text-xs ${isDuo ? 'text-white/60' : 'text-[#8C8074]'}`}>
-                      (~{prod.priceEUR} €)
-                    </span>
+                    {currency !== 'FCFA' && (
+                      <span className={`text-xs ${isDuo ? 'text-white/60' : 'text-[#8C8074]'}`}>
+                        ({prod.priceFCFA.toLocaleString('fr-FR')} FCFA)
+                      </span>
+                    )}
                   </div>
                 </div>
 

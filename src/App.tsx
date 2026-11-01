@@ -17,12 +17,14 @@ import { GalleryPage } from './pages/GalleryPage';
 import { AtelierPage } from './pages/AtelierPage';
 import { BlogPage } from './pages/BlogPage';
 import { ArticleDetailPage } from './pages/ArticleDetailPage';
+import { OrderTrackingPage } from './pages/OrderTrackingPage';
 
 // Contexts
 import { ThemeProvider } from './context/ThemeContext';
 import { CartProvider } from './context/CartContext';
 import { ErpProvider } from './context/ErpContext';
 import { NavigationProvider, useNavigation } from './context/NavigationContext';
+import { CurrencyProvider } from './context/CurrencyContext';
 
 import type { QuoteConfiguration, DailyThought, GalleryItem } from './types';
 
@@ -156,6 +158,8 @@ const AppContent: React.FC = () => {
         {currentPage === 'article' && (
           <ArticleDetailPage articleId={currentArticleId} />
         )}
+
+        {currentPage === 'suivi-commande' && <OrderTrackingPage />}
         
         {currentPage === 'atelier' && <AtelierPage />}
       </main>
@@ -193,11 +197,13 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <ErpProvider>
-        <CartProvider>
-          <NavigationProvider>
-            <AppContent />
-          </NavigationProvider>
-        </CartProvider>
+        <CurrencyProvider>
+          <CartProvider>
+            <NavigationProvider>
+              <AppContent />
+            </NavigationProvider>
+          </CartProvider>
+        </CurrencyProvider>
       </ErpProvider>
     </ThemeProvider>
   );

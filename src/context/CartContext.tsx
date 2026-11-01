@@ -23,7 +23,16 @@ interface CartContextType {
   clearCart: () => void;
   cartCount: number;
   totalFCFA: number;
-  checkoutWhatsApp: (customerInfo?: { name?: string; address?: string }) => void;
+  checkoutWhatsApp: (customerInfo?: {
+    name?: string;
+    address?: string;
+    promoCode?: string;
+    discountFCFA?: number;
+    giftPackaging?: boolean;
+    giftNote?: string;
+    currencyCode?: string;
+    formattedTotal?: string;
+  }) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -114,7 +123,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const totalFCFA = cart.reduce((acc, item) => acc + item.priceFCFA * item.quantity, 0);
 
-  const checkoutWhatsApp = (customerInfo?: { name?: string; address?: string }) => {
+  const checkoutWhatsApp = (customerInfo?: {
+    name?: string;
+    address?: string;
+    promoCode?: string;
+    discountFCFA?: number;
+    giftPackaging?: boolean;
+    giftNote?: string;
+    currencyCode?: string;
+    formattedTotal?: string;
+  }) => {
     atelierAudio.playWaxStamp();
     confetti({
       particleCount: 70,
@@ -123,20 +141,39 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       colors: ['#25D366', '#E68314', '#181716']
     });
 
+    const finalFCFA = Math.max(0, totalFCFA - (customerInfo?.discountFCFA || 0));
+
     let message = `*Bonjour l'Atelier WriticArt !* ✨%0A`;
     message += `Je souhaite valider ma commande :%0A%0A`;
 
     cart.forEach((item, idx) => {
       message += `👉 *${idx + 1}. ${item.name}* (${item.quantity}x)%0A`;
       if (item.selectedOption) message += `   • Option : ${item.selectedOption}%0A`;
-      if (item.customMessage) message += `   • Message personnalisé : « ${item.customMessage} »%0A`;
+      if (item.customMessage) message += `   • Dédicace manuscrite : « ${item.customMessage} »%0A`;
       message += `   • Prix : ${(item.priceFCFA * item.quantity).toLocaleString('fr-FR')} FCFA%0A%0A`;
     });
 
-    message += `💰 *TOTAL COMMANDE : ${totalFCFA.toLocaleString('fr-FR')} FCFA*%0A`;
+    if (customerInfo?.giftPackaging) {
+      message += `🎁 *Option Écrin Cadeau de Prestige :* Oui (Ruban de soie & cachet de cire)%0A`;
+      if (customerInfo.giftNote) {
+        message += `💌 *Mot doux accompagnateur :* « ${customerInfo.giftNote} »%0A`;
+      }
+      message += `%0A`;
+    }
+
+    if (customerInfo?.promoCode && customerInfo.discountFCFA) {
+      message += `🏷️ *Code Promo appliqué :* ${customerInfo.promoCode} (-${customerInfo.discountFCFA.toLocaleString('fr-FR')} FCFA)%0A`;
+    }
+
+    message += `💰 *TOTAL FINAL : ${finalFCFA.toLocaleString('fr-FR')} FCFA*`;
+    if (customerInfo?.formattedTotal && customerInfo.currencyCode !== 'FCFA') {
+      message += ` (~${customerInfo.formattedTotal})`;
+    }
+    message += `%0A`;
+
     if (customerInfo?.name) message += `👤 *Client :* ${customerInfo.name}%0A`;
     if (customerInfo?.address) message += `📍 *Lieu de livraison :* ${customerInfo.address}%0A`;
-    message += `%0APouvez-vous me confirmer la disponibilité et le délai de livraison ? Merci !`;
+    message += `%0APouvez-vous me confirmer la disponibilité et le délai de livraison à Dakar ? Merci !`;
 
     window.open(`https://wa.me/221772348521?text=${message}`, '_blank');
   };

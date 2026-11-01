@@ -11,6 +11,7 @@ export type PageRoute =
   | 'atelier' 
   | 'journal'
   | 'article'
+  | 'suivi-commande'
   | 'erp';
 
 interface NavigationContextType {
@@ -46,6 +47,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     if (hash === 'sur-mesure' || hash === 'studio') return { page: 'sur-mesure', productId: null, articleId: null };
     if (hash === 'pensee' || hash === 'oracle') return { page: 'pensee', productId: null, articleId: null };
     if (hash === 'galerie') return { page: 'galerie', productId: null, articleId: null };
+    if (hash === 'suivi-commande' || hash === 'suivi') return { page: 'suivi-commande', productId: null, articleId: null };
     if (hash === 'atelier' || hash === 'manifeste' || hash === 'a-propos') return { page: 'atelier', productId: null, articleId: null };
     if (hash === 'erp' || hash === 'admin') return { page: 'erp', productId: null, articleId: null };
 
@@ -80,6 +82,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     else if (page === 'sur-mesure') targetHash = '#/sur-mesure';
     else if (page === 'pensee') targetHash = '#/pensee';
     else if (page === 'galerie') targetHash = '#/galerie';
+    else if (page === 'suivi-commande') targetHash = '#/suivi-commande';
     else if (page === 'atelier') targetHash = '#/atelier';
     else if (page === 'erp') targetHash = '#/erp';
 

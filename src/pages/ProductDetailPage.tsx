@@ -3,6 +3,7 @@ import { ArrowLeft, Check, PhoneCall, ShoppingBag, Plus, Minus } from 'lucide-re
 import { useErp } from '../context/ErpContext';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { atelierAudio } from '../utils/soundEffects';
 
 interface ProductDetailPageProps {
@@ -13,6 +14,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
   const { products } = useErp();
   const { addToCart } = useCart();
   const { navigateTo } = useNavigation();
+  const { formatPrice, currency } = useCurrency();
 
   const product = products.find((p) => p.id === productId) || products[0];
 
@@ -96,11 +98,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
 
             <div className="pt-2 flex items-baseline space-x-3">
               <span className="font-['Cinzel'] text-3xl font-bold text-[#E68314]">
-                {product.priceFCFA.toLocaleString('fr-FR')} FCFA
+                {formatPrice(product.priceFCFA)}
               </span>
-              <span className="text-xs text-[#8C8074]">
-                (~{(product.priceFCFA / 655.957).toFixed(1)} €)
-              </span>
+              {currency !== 'FCFA' && (
+                <span className="text-xs text-[#8C8074]">
+                  ({product.priceFCFA.toLocaleString('fr-FR')} FCFA)
+                </span>
+              )}
             </div>
           </div>
 

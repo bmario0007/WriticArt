@@ -7,6 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
 import { useErp } from '../context/ErpContext';
+import { useCurrency, type CurrencyCode } from '../context/CurrencyContext';
 
 export const Navbar: React.FC = () => {
   const [isMuted, setIsMuted] = useState(atelierAudio.isMuted);
@@ -15,6 +16,7 @@ export const Navbar: React.FC = () => {
   const { cartCount, openCart } = useCart();
   const { currentPage, navigateTo } = useNavigation();
   const { siteSettings } = useErp();
+  const { currency, setCurrency } = useCurrency();
 
   const toggleSound = () => {
     atelierAudio.isMuted = !atelierAudio.isMuted;
@@ -31,6 +33,7 @@ export const Navbar: React.FC = () => {
     { id: 'pensee', label: 'La Pensée du Jour' },
     { id: 'galerie', label: 'Galerie' },
     { id: 'journal', label: "Journal d'Atelier" },
+    { id: 'suivi-commande', label: 'Suivi Commande' },
     { id: 'atelier', label: "L'Atelier" },
   ];
 
@@ -99,6 +102,24 @@ export const Navbar: React.FC = () => {
           {/* Right Controls: Sound, Theme, Admin ERP, Cart */}
           <div className="flex items-center space-x-2.5 sm:space-x-3.5">
             
+            {/* Multi-Currency Switcher (FCFA / EUR / USD) */}
+            <div className="hidden md:flex items-center bg-[#EFE8DC]/80 dark:bg-[#1E1C1A] border border-[#DED4C3] dark:border-[#38332E] rounded-full p-0.5 text-[10px] font-['Cinzel'] font-bold">
+              {(['FCFA', 'EUR', 'USD'] as CurrencyCode[]).map((curr) => (
+                <button
+                  key={curr}
+                  onClick={() => setCurrency(curr)}
+                  className={`px-2 py-0.5 rounded-full transition-all ${
+                    currency === curr
+                      ? 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm font-bold'
+                      : 'text-[#70675E] dark:text-[#A8A096] hover:text-[#E68314]'
+                  }`}
+                  title={`Afficher les prix en ${curr}`}
+                >
+                  {curr === 'EUR' ? '€ EUR' : curr === 'USD' ? '$ USD' : 'FCFA'}
+                </button>
+              ))}
+            </div>
+
             {/* Audio Toggle */}
             <button
               onClick={toggleSound}
@@ -167,6 +188,27 @@ export const Navbar: React.FC = () => {
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-[#E8DFD1] dark:border-[#2E2A26] space-y-3 text-xs uppercase font-['Cinzel'] font-semibold">
+            
+            {/* Mobile Currency Selector */}
+            <div className="flex items-center justify-between pb-2 border-b border-[#E8DFD1]/60 dark:border-[#2E2A26] px-1">
+              <span className="text-[11px] text-[#8C8074] font-['Cinzel'] font-bold">Devise d'affichage :</span>
+              <div className="flex items-center space-x-1 bg-[#EFE8DC]/80 dark:bg-[#1E1C1A] border border-[#DED4C3] dark:border-[#38332E] rounded-full p-0.5 text-[10px]">
+                {(['FCFA', 'EUR', 'USD'] as CurrencyCode[]).map((curr) => (
+                  <button
+                    key={curr}
+                    onClick={() => setCurrency(curr)}
+                    className={`px-2.5 py-1 rounded-full transition-all ${
+                      currency === curr
+                        ? 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm font-bold'
+                        : 'text-[#70675E] dark:text-[#A8A096]'
+                    }`}
+                  >
+                    {curr}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {navLinks.map((link) => (
               <button
                 key={link.id}

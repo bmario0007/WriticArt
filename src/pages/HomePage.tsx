@@ -3,12 +3,14 @@ import { ArrowRight, Heart, ShieldCheck, Feather, PhoneCall, ShoppingBag } from 
 import { useNavigation } from '../context/NavigationContext';
 import { useCart } from '../context/CartContext';
 import { useErp } from '../context/ErpContext';
+import { useCurrency } from '../context/CurrencyContext';
 import feedInstagram from '../assets/brand/feed-instagram.png';
 
 export const HomePage: React.FC = () => {
   const { navigateTo } = useNavigation();
   const { addToCart } = useCart();
   const { siteSettings, products } = useErp();
+  const { formatPrice } = useCurrency();
 
   const featuredProducts = products.slice(0, 3);
 
@@ -212,7 +214,7 @@ export const HomePage: React.FC = () => {
                   <div>
                     <span className="text-[10px] text-[#8C8074] uppercase block font-['Cinzel']">Prix</span>
                     <span className="text-xl font-bold font-['Cinzel'] text-[#181716] dark:text-[#FAF8F5]">
-                      {prod.priceFCFA.toLocaleString('fr-FR')} FCFA
+                      {formatPrice(prod.priceFCFA)}
                     </span>
                   </div>
 

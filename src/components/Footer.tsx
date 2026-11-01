@@ -68,6 +68,7 @@ export const Footer: React.FC = () => {
               <li><button onClick={() => navigateTo('pensee')} className="hover:text-white transition-colors">La Pensée du Jour (Oracle)</button></li>
               <li><button onClick={() => navigateTo('galerie')} className="hover:text-white transition-colors">Galerie & Feed Instagram</button></li>
               <li><button onClick={() => navigateTo('journal')} className="hover:text-white transition-colors">Journal d'Atelier (Blog)</button></li>
+              <li><button onClick={() => navigateTo('suivi-commande')} className="hover:text-white transition-colors">Suivi de Commande en Ligne</button></li>
               <li><button onClick={() => navigateTo('atelier')} className="hover:text-white transition-colors">L'Atelier & Le Manifeste</button></li>
             </ul>
           </div>
