@@ -61,3 +61,90 @@ export interface QuoteConfiguration {
   deliveryOption: 'standard' | 'express' | 'retrait-dakar';
   currency: 'FCFA' | 'EUR';
 }
+
+// -------------------------------------------------------------
+// CART & E-COMMERCE TYPES (Rahiya minimalist shop)
+// -------------------------------------------------------------
+export interface CartItem {
+  id: string; // unique item line id
+  productId: string;
+  name: string;
+  subtitle?: string;
+  priceFCFA: number;
+  quantity: number;
+  image: string;
+  selectedOption?: string;
+  customMessage?: string;
+}
+
+// -------------------------------------------------------------
+// ERP TYPES (Admin Atelier Management)
+// -------------------------------------------------------------
+export type OrderStatus = 
+  | 'nouveau' 
+  | 'bat_validation' 
+  | 'en_calligraphie' 
+  | 'pret_livraison' 
+  | 'livre' 
+  | 'annule';
+
+export interface OrderItemLine {
+  title: string;
+  quantity: number;
+  unitPriceFCFA: number;
+  options?: string;
+}
+
+export interface ErpOrder {
+  id: string; // Ex: CMD-WA-1024
+  clientName: string;
+  clientPhone: string;
+  clientEmail?: string;
+  city: string; // Ex: "Dakar (Almadies)", "Mermoz", "Paris"
+  date: string;
+  items: OrderItemLine[];
+  totalFCFA: number;
+  status: OrderStatus;
+  paymentMethod: 'Wave' | 'Orange Money' | 'Espèces' | 'Virement';
+  paymentStatus: 'paye' | 'acompte' | 'en_attente';
+  notes?: string;
+  customMessage?: string;
+}
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  category: 'coffret' | 'support' | 'encre_dorure' | 'cire' | 'accessoire';
+  currentStock: number;
+  minThreshold: number;
+  unit: string;
+  unitCostFCFA: number;
+  sellingPriceFCFA?: number;
+}
+
+export interface ErpClient {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  city: string;
+  totalOrders: number;
+  totalSpentFCFA: number;
+  lastOrderDate: string;
+  vipStatus: boolean;
+  notes?: string;
+}
+
+export interface CatalogProduct {
+  id: string;
+  name: string;
+  category: 'writiclove' | 'tableau' | 'cadre' | 'accessoire' | 'mariage';
+  categoryLabel: string;
+  subtitle: string;
+  priceFCFA: number;
+  badge?: string;
+  inStock: boolean;
+  image: string;
+  description: string;
+  features: string[];
+}

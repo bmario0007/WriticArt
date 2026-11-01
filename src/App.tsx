@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { ShopCatalog } from './components/ShopCatalog';
 import { WriticLoveCoffrets } from './components/WriticLoveCoffrets';
 import { DailyThoughtOracle } from './components/DailyThoughtOracle';
 import { StudioConfigurator } from './components/StudioConfigurator';
@@ -9,11 +10,17 @@ import { AtelierStoryModal } from './components/AtelierStoryModal';
 import { QuoteEngineModal } from './components/QuoteEngineModal';
 import { AtelierManifesto } from './components/AtelierManifesto';
 import { Footer } from './components/Footer';
+import { CartDrawer } from './components/cart/CartDrawer';
+import { AdminERP } from './components/erp/AdminERP';
 import { ThemeProvider } from './context/ThemeContext';
-import type { QuoteConfiguration, DailyThought, GalleryItem } from './types';
+import { CartProvider } from './context/CartContext';
+import { ErpProvider, useErp } from './context/ErpContext';
+import type { QuoteConfiguration, DailyThought, GalleryItem, CatalogProduct } from './types';
 import type { WriticProduct } from './data/productsData';
 
 const AppContent: React.FC = () => {
+  const { isAdminMode } = useErp();
+
   // Global bespoke order state
   const [config, setConfig] = useState<QuoteConfiguration>({
     eventType: 'writiclove',
@@ -45,6 +52,19 @@ const AppContent: React.FC = () => {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  // When user clicks to customize from catalog
+  const handleCustomizeFromCatalog = (product: CatalogProduct) => {
+    setConfig((prev) => ({
+      ...prev,
+      eventType: product.category === 'writiclove' ? 'writiclove' : product.category === 'tableau' ? 'tableau' : product.category === 'cadre' ? 'cadre' : 'sentiment',
+      customTitle: product.name,
+      customNames: 'Pour mes proches',
+      customMessage: product.description,
+      quantity: 1
+    }));
+    scrollTo('studio');
   };
 
   // When user clicks to customize vows with a coffret
@@ -115,23 +135,33 @@ const AppContent: React.FC = () => {
     scrollTo('studio');
   };
 
+  // If Admin Mode is active, render the dedicated ERP Management suite
+  if (isAdminMode) {
+    return <AdminERP />;
+  }
+
+  // Otherwise, render the minimalist luxury storefront inspired by Rahiya
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#FAF8F5] dark:bg-[#121110] text-[#1E1C1A] dark:text-[#FAF8F5] transition-colors duration-300">
       
-      {/* Navigation bar with Day/Night toggle */}
+      {/* Navigation bar with Day/Night toggle, Cart, and Admin ERP access */}
       <Navbar
         onOpenConfigurator={() => scrollTo('studio')}
         onOpenOracle={() => scrollTo('oracle')}
-        cartCount={config.quantity}
       />
 
       {/* Main Content Area */}
       <main className="flex-1">
         
-        {/* Hero with Interactive 3D Card & Official Brand */}
+        {/* Minimalist Hero Section (Rahiya style) */}
         <Hero
           onStartConfigurator={() => scrollTo('studio')}
           onOpenOracle={() => scrollTo('oracle')}
+        />
+
+        {/* Minimalist Permanent Boutique & Product Catalog (Rahiya grid) */}
+        <ShopCatalog
+          onCustomizeInStudio={handleCustomizeFromCatalog}
         />
 
         {/* The Flagship 365 Jours d'Amour Coffrets */}
@@ -165,6 +195,11 @@ const AppContent: React.FC = () => {
       {/* Footer */}
       <Footer />
 
+      {/* Slide-out Cart Drawer (Shopify / Rahiya style) */}
+      <CartDrawer
+        onOpenQuoteSummary={() => setIsQuoteModalOpen(true)}
+      />
+
       {/* Story Viewer Modal */}
       {activeStoryIndex !== null && (
         <AtelierStoryModal
@@ -189,7 +224,11 @@ const AppContent: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <AppContent />
+      <ErpProvider>
+        <CartProvider>
+          <AppContent />
+        </CartProvider>
+      </ErpProvider>
     </ThemeProvider>
   );
 };
