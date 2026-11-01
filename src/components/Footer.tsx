@@ -2,10 +2,10 @@ import React from 'react';
 import { Mail, PhoneCall, MapPin, ShieldCheck } from 'lucide-react';
 import { InstagramIcon } from './InstagramIcon';
 import logoDark from '../assets/brand/logo-dark.jpg';
-import { useErp } from '../context/ErpContext';
+import { useNavigation } from '../context/NavigationContext';
 
 export const Footer: React.FC = () => {
-  const { openAdminMode } = useErp();
+  const { navigateTo } = useNavigation();
 
   return (
     <footer className="bg-[#181716] text-[#FAF8F5] pt-16 pb-12 border-t border-[#312E2A]">
@@ -19,7 +19,8 @@ export const Footer: React.FC = () => {
               <img
                 src={logoDark}
                 alt="WriticArt Logo"
-                className="h-12 w-auto object-contain rounded"
+                className="h-12 w-auto object-contain rounded cursor-pointer"
+                onClick={() => navigateTo('home')}
               />
             </div>
             <p className="font-sans text-xs text-[#A69C91] max-w-sm leading-relaxed">
@@ -54,18 +55,19 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick links */}
+          {/* Quick links to Dedicated Pages */}
           <div className="space-y-3">
             <h4 className="font-['Cinzel'] text-xs font-bold uppercase tracking-widest text-[#E68314]">
-              Collections & Œuvres
+              Rubriques & Pages
             </h4>
             <ul className="space-y-2 text-xs text-[#B5ABA0]">
-              <li><a href="#boutique" className="hover:text-white transition-colors">Boutique Permanente</a></li>
-              <li><a href="#writiclove" className="hover:text-white transition-colors">Coffret Writic'Love Homme (30 000 FCFA)</a></li>
-              <li><a href="#writiclove" className="hover:text-white transition-colors">Coffret Writic'Love Femme (30 000 FCFA)</a></li>
-              <li><a href="#writiclove" className="hover:text-white transition-colors font-semibold text-[#E68314]">Le Duo Complémentaire (50 000 FCFA)</a></li>
-              <li><a href="#boutique" className="hover:text-white transition-colors">Tableaux d'Art Calligraphiés</a></li>
-              <li><a href="#studio" className="hover:text-white transition-colors">Configurateur Sur-Mesure</a></li>
+              <li><button onClick={() => navigateTo('home')} className="hover:text-white transition-colors">Page d'Accueil</button></li>
+              <li><button onClick={() => navigateTo('boutique')} className="hover:text-white transition-colors">La Boutique en Ligne</button></li>
+              <li><button onClick={() => navigateTo('writiclove')} className="hover:text-white transition-colors font-semibold text-[#E68314]">Coffrets 365 Jours d'Amour</button></li>
+              <li><button onClick={() => navigateTo('sur-mesure')} className="hover:text-white transition-colors">Atelier Sur-Mesure & Devis</button></li>
+              <li><button onClick={() => navigateTo('pensee')} className="hover:text-white transition-colors">La Pensée du Jour (Oracle)</button></li>
+              <li><button onClick={() => navigateTo('galerie')} className="hover:text-white transition-colors">Galerie & Feed Instagram</button></li>
+              <li><button onClick={() => navigateTo('atelier')} className="hover:text-white transition-colors">L'Atelier & Le Manifeste</button></li>
             </ul>
           </div>
 
@@ -95,7 +97,7 @@ export const Footer: React.FC = () => {
               {/* ADMIN ERP ACCESS BUTTON */}
               <div className="pt-3">
                 <button
-                  onClick={openAdminMode}
+                  onClick={() => navigateTo('erp')}
                   className="w-full py-2 px-3 rounded-xl bg-white/10 hover:bg-[#E68314] hover:text-white text-[11px] font-['Cinzel'] uppercase font-bold tracking-wider flex items-center justify-center space-x-1.5 transition-all"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-[#E68314]" />
@@ -112,9 +114,9 @@ export const Footer: React.FC = () => {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8C8277] gap-4">
           <p>© {new Date().getFullYear()} WriticArt Dakar. Tous droits réservés. Haute calligraphie et papeterie d'art.</p>
           <div className="flex items-center space-x-4">
-            <a href="#manifeste" className="hover:underline">Manifeste de l'Artisanat</a>
+            <button onClick={() => navigateTo('atelier')} className="hover:underline">Manifeste de l'Artisanat</button>
             <span>•</span>
-            <button onClick={openAdminMode} className="hover:underline text-[#E68314]">
+            <button onClick={() => navigateTo('erp')} className="hover:underline text-[#E68314]">
               Administration ERP
             </button>
           </div>

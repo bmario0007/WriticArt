@@ -5,19 +5,14 @@ import logoLight from '../assets/brand/logo-light.jpg';
 import logoDark from '../assets/brand/logo-dark.jpg';
 import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
-import { useErp } from '../context/ErpContext';
+import { useNavigation } from '../context/NavigationContext';
 
-interface NavbarProps {
-  onOpenConfigurator: () => void;
-  onOpenOracle: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ onOpenConfigurator, onOpenOracle }) => {
+export const Navbar: React.FC = () => {
   const [isMuted, setIsMuted] = useState(atelierAudio.isMuted);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { toggleTheme, isDark } = useTheme();
   const { cartCount, openCart } = useCart();
-  const { openAdminMode } = useErp();
+  const { currentPage, navigateTo } = useNavigation();
 
   const toggleSound = () => {
     atelierAudio.isMuted = !atelierAudio.isMuted;
@@ -26,6 +21,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConfigurator, onOpenOracle
       atelierAudio.playGoldChime();
     }
   };
+
+  const navLinks = [
+    { id: 'boutique', label: 'Boutique' },
+    { id: 'writiclove', label: 'Coffret 365 Jours', isHeart: true },
+    { id: 'sur-mesure', label: 'Sur-Mesure' },
+    { id: 'pensee', label: 'La Pensée du Jour' },
+    { id: 'galerie', label: 'Galerie' },
+    { id: 'atelier', label: "L'Atelier" },
+  ];
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-[#FAF8F5]/90 dark:bg-[#121110]/95 border-b border-[#E8DFD1]/70 dark:border-[#2A2622] transition-colors duration-300">
@@ -61,49 +65,33 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConfigurator, onOpenOracle
           
           {/* Left Navigation Links (Desktop) */}
           <nav className="hidden lg:flex items-center space-x-6 text-xs uppercase tracking-widest font-['Cinzel'] font-semibold text-[#4A453F] dark:text-[#D5CDBD]">
-            <a 
-              href="#boutique" 
-              className="hover:text-[#B86209] dark:hover:text-[#E68314] transition-colors"
-            >
-              Boutique
-            </a>
-            <a 
-              href="#writiclove" 
-              className="flex items-center space-x-1.5 text-[#B86209] dark:text-[#E68314] hover:text-[#181716] dark:hover:text-white transition-colors"
-            >
-              <Heart className="w-3 h-3 fill-[#E68314] text-[#E68314]" />
-              <span>Coffret 365 Jours</span>
-            </a>
-            <a 
-              href="#studio" 
-              onClick={(e) => { e.preventDefault(); onOpenConfigurator(); }}
-              className="hover:text-[#B86209] dark:hover:text-[#E68314] transition-colors"
-            >
-              Sur-Mesure
-            </a>
-            <a 
-              href="#oracle" 
-              onClick={(e) => { e.preventDefault(); onOpenOracle(); }}
-              className="hover:text-[#B86209] dark:hover:text-[#E68314] transition-colors"
-            >
-              La Pensée du Jour
-            </a>
-            <a 
-              href="#manifeste" 
-              className="hover:text-[#B86209] dark:hover:text-[#E68314] transition-colors"
-            >
-              L'Atelier
-            </a>
+            {navLinks.map((link) => {
+              const isActive = currentPage === link.id;
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => navigateTo(link.id as any)}
+                  className={`flex items-center space-x-1.5 transition-colors py-1 ${
+                    isActive
+                      ? 'text-[#E68314] border-b-2 border-[#E68314] font-bold'
+                      : 'hover:text-[#B86209] dark:hover:text-[#E68314]'
+                  }`}
+                >
+                  {link.isHeart && <Heart className="w-3 h-3 fill-[#E68314] text-[#E68314]" />}
+                  <span>{link.label}</span>
+                </button>
+              );
+            })}
           </nav>
 
           {/* Center Brand Logo */}
-          <a href="#" className="flex items-center space-x-2 group">
+          <button onClick={() => navigateTo('home')} className="flex items-center space-x-2 group">
             <img
               src={isDark ? logoDark : logoLight}
               alt="WriticArt Logo"
               className="h-10 sm:h-12 w-auto object-contain rounded transition-transform duration-300 group-hover:scale-105"
             />
-          </a>
+          </button>
 
           {/* Right Controls: Sound, Theme, Admin ERP, Cart */}
           <div className="flex items-center space-x-2.5 sm:space-x-3.5">
@@ -130,10 +118,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConfigurator, onOpenOracle
               )}
             </button>
 
-            {/* ADMIN ERP BUTTON (Mode ERP côté administrateur) */}
+            {/* ADMIN ERP BUTTON (Accès à la page dédiée ERP) */}
             <button
-              onClick={openAdminMode}
-              className="hidden sm:inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full border border-[#DED4C3] dark:border-[#38332E] hover:border-[#E68314] bg-white/70 dark:bg-[#1C1A18] text-[11px] font-['Cinzel'] tracking-wider uppercase font-bold text-[#181716] dark:text-[#FAF8F5] transition-all hover:shadow-sm"
+              onClick={() => navigateTo('erp')}
+              className={`hidden sm:inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full border text-[11px] font-['Cinzel'] tracking-wider uppercase font-bold transition-all ${
+                currentPage === 'erp'
+                  ? 'bg-[#E68314] text-white border-[#E68314]'
+                  : 'border-[#DED4C3] dark:border-[#38332E] hover:border-[#E68314] bg-white/70 dark:bg-[#1C1A18] text-[#181716] dark:text-[#FAF8F5]'
+              }`}
               title="Accéder au Mode ERP Administrateur"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#E68314]" />
@@ -172,45 +164,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConfigurator, onOpenOracle
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-[#E8DFD1] dark:border-[#2E2A26] space-y-3 text-xs uppercase font-['Cinzel'] font-semibold">
-            <a 
-              href="#boutique" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#181716] dark:text-white hover:text-[#E68314]"
-            >
-              Boutique
-            </a>
-            <a 
-              href="#writiclove" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#B86209] dark:text-[#E68314]"
-            >
-              Coffrets 365 Jours
-            </a>
-            <a 
-              href="#studio" 
-              onClick={() => { setMobileMenuOpen(false); onOpenConfigurator(); }}
-              className="block py-2 text-[#181716] dark:text-white hover:text-[#E68314]"
-            >
-              Sur-Mesure
-            </a>
-            <a 
-              href="#oracle" 
-              onClick={() => { setMobileMenuOpen(false); onOpenOracle(); }}
-              className="block py-2 text-[#181716] dark:text-white hover:text-[#E68314]"
-            >
-              La Pensée du Jour
-            </a>
-            <a 
-              href="#manifeste" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-[#181716] dark:text-white hover:text-[#E68314]"
-            >
-              L'Atelier
-            </a>
+            {navLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigateTo(link.id as any);
+                }}
+                className={`block w-full text-left py-2 ${
+                  currentPage === link.id
+                    ? 'text-[#E68314] font-bold'
+                    : 'text-[#181716] dark:text-white hover:text-[#E68314]'
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
 
             <div className="pt-2 border-t border-[#E8DFD1] dark:border-[#2E2A26]">
               <button
-                onClick={() => { setMobileMenuOpen(false); openAdminMode(); }}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigateTo('erp');
+                }}
                 className="w-full py-2.5 rounded-xl bg-white dark:bg-[#1C1A18] border border-[#DED4C3] dark:border-[#38332E] text-xs font-['Cinzel'] font-bold flex items-center justify-center space-x-2 text-[#B86209] dark:text-[#E68314]"
               >
                 <ShieldCheck className="w-4 h-4" />

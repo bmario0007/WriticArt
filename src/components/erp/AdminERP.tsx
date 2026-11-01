@@ -17,6 +17,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { useErp } from '../../context/ErpContext';
+import { useNavigation } from '../../context/NavigationContext';
 import type { OrderStatus, ErpOrder } from '../../types';
 import { NewOrderModal } from './NewOrderModal';
 import { PrintInvoiceModal } from './PrintInvoiceModal';
@@ -24,6 +25,7 @@ import logoDark from '../../assets/brand/logo-dark.jpg';
 import { atelierAudio } from '../../utils/soundEffects';
 
 export const AdminERP: React.FC = () => {
+  const { navigateTo } = useNavigation();
   const { 
     closeAdminMode, 
     orders, 
@@ -135,7 +137,10 @@ export const AdminERP: React.FC = () => {
         </div>
 
         <button
-          onClick={closeAdminMode}
+          onClick={() => {
+            closeAdminMode();
+            navigateTo('home');
+          }}
           className="px-4 py-2 rounded-full bg-white/10 hover:bg-[#E68314] text-white text-xs font-['Cinzel'] tracking-wider uppercase font-semibold transition-all flex items-center space-x-1.5 shadow"
         >
           <ArrowLeft className="w-4 h-4" />

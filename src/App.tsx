@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { ShopCatalog } from './components/ShopCatalog';
-import { WriticLoveCoffrets } from './components/WriticLoveCoffrets';
-import { DailyThoughtOracle } from './components/DailyThoughtOracle';
-import { StudioConfigurator } from './components/StudioConfigurator';
-import { InstagramGallery } from './components/InstagramGallery';
-import { AtelierStoryModal } from './components/AtelierStoryModal';
-import { QuoteEngineModal } from './components/QuoteEngineModal';
-import { AtelierManifesto } from './components/AtelierManifesto';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { AdminERP } from './components/erp/AdminERP';
+import { AtelierStoryModal } from './components/AtelierStoryModal';
+import { QuoteEngineModal } from './components/QuoteEngineModal';
+
+// Dedicated Separate Pages (No continuous feed)
+import { HomePage } from './pages/HomePage';
+import { ShopPage } from './pages/ShopPage';
+import { ProductDetailPage } from './pages/ProductDetailPage';
+import { WriticLovePage } from './pages/WriticLovePage';
+import { StudioPage } from './pages/StudioPage';
+import { OraclePage } from './pages/OraclePage';
+import { GalleryPage } from './pages/GalleryPage';
+import { AtelierPage } from './pages/AtelierPage';
+
+// Contexts
 import { ThemeProvider } from './context/ThemeContext';
 import { CartProvider } from './context/CartContext';
-import { ErpProvider, useErp } from './context/ErpContext';
-import type { QuoteConfiguration, DailyThought, GalleryItem, CatalogProduct } from './types';
-import type { WriticProduct } from './data/productsData';
+import { ErpProvider } from './context/ErpContext';
+import { NavigationProvider, useNavigation } from './context/NavigationContext';
+
+import type { QuoteConfiguration, DailyThought, GalleryItem } from './types';
 
 const AppContent: React.FC = () => {
-  const { isAdminMode } = useErp();
+  const { currentPage, currentProductId, navigateTo } = useNavigation();
 
-  // Global bespoke order state
+  // Bespoke quote state
   const [config, setConfig] = useState<QuoteConfiguration>({
     eventType: 'writiclove',
     paperType: 'deckle-edge',
@@ -46,42 +52,7 @@ const AppContent: React.FC = () => {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null);
 
-  // Scroll helper
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  // When user clicks to customize from catalog
-  const handleCustomizeFromCatalog = (product: CatalogProduct) => {
-    setConfig((prev) => ({
-      ...prev,
-      eventType: product.category === 'writiclove' ? 'writiclove' : product.category === 'tableau' ? 'tableau' : product.category === 'cadre' ? 'cadre' : 'sentiment',
-      customTitle: product.name,
-      customNames: 'Pour mes proches',
-      customMessage: product.description,
-      quantity: 1
-    }));
-    scrollTo('studio');
-  };
-
-  // When user clicks to customize vows with a coffret
-  const handleConfigureCustomVows = (product: WriticProduct) => {
-    setConfig((prev) => ({
-      ...prev,
-      eventType: 'writiclove',
-      customTitle: product.name,
-      customNames: 'Nos Noms',
-      customMessage: product.sampleCards[0] || 'De petits mots pour de grands changements.',
-      quantity: 1,
-      waxColor: product.colorScheme === 'noir-or' ? 'noir' : product.colorScheme === 'rose-or' ? 'bordeaux' : 'or'
-    }));
-    scrollTo('studio');
-  };
-
-  // When user picks a Daily Thought to turn into a physical card
+  // When user uses a Daily Thought in the Studio
   const handleUseThoughtInStudio = (thought: DailyThought) => {
     setConfig((prev) => ({
       ...prev,
@@ -96,7 +67,7 @@ const AppContent: React.FC = () => {
       hasSilkRibbon: false,
       hasHandmadeEnvelope: true
     }));
-    scrollTo('studio');
+    navigateTo('sur-mesure');
   };
 
   // When user clicks "Commander dans ce style" on a Gallery piece
@@ -132,70 +103,59 @@ const AppContent: React.FC = () => {
         quantity: item.category === 'mariage' ? 50 : item.category === 'entreprise' ? 50 : 1
       };
     });
-    scrollTo('studio');
+    navigateTo('sur-mesure');
   };
 
-  // If Admin Mode is active, render the dedicated ERP Management suite
-  if (isAdminMode) {
+  // If on ERP page, render full screen ERP Suite
+  if (currentPage === 'erp') {
     return <AdminERP />;
   }
 
-  // Otherwise, render the minimalist luxury storefront inspired by Rahiya
+  // Otherwise render separate pages with shared Navbar & Footer
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#FAF8F5] dark:bg-[#121110] text-[#1E1C1A] dark:text-[#FAF8F5] transition-colors duration-300">
       
-      {/* Navigation bar with Day/Night toggle, Cart, and Admin ERP access */}
-      <Navbar
-        onOpenConfigurator={() => scrollTo('studio')}
-        onOpenOracle={() => scrollTo('oracle')}
-      />
+      {/* Navigation bar with links to separate pages, cart drawer and dark mode */}
+      <Navbar />
 
-      {/* Main Content Area */}
+      {/* DEDICATED SEPARATE PAGES (No continuous feed) */}
       <main className="flex-1">
+        {currentPage === 'home' && <HomePage />}
         
-        {/* Minimalist Hero Section (Rahiya style) */}
-        <Hero
-          onStartConfigurator={() => scrollTo('studio')}
-          onOpenOracle={() => scrollTo('oracle')}
-        />
-
-        {/* Minimalist Permanent Boutique & Product Catalog (Rahiya grid) */}
-        <ShopCatalog
-          onCustomizeInStudio={handleCustomizeFromCatalog}
-        />
-
-        {/* The Flagship 365 Jours d'Amour Coffrets */}
-        <WriticLoveCoffrets
-          onConfigureCustomVows={handleConfigureCustomVows}
-        />
-
-        {/* The Daily Thought Oracle ("Une carte par jour" @writicart identity) */}
-        <DailyThoughtOracle
-          onUseThoughtInStudio={handleUseThoughtInStudio}
-        />
-
-        {/* 3D Studio & Live Customizer in FCFA */}
-        <StudioConfigurator
-          config={config}
-          onChangeConfig={setConfig}
-          onOpenQuoteSummary={() => setIsQuoteModalOpen(true)}
-        />
-
-        {/* Instagram Feed Gallery & Highlights */}
-        <InstagramGallery
-          onSelectArtPiece={handleSelectArtPiece}
-          onOpenStory={(idx) => setActiveStoryIndex(idx)}
-        />
-
-        {/* Atelier Craftsmanship & Manifesto */}
-        <AtelierManifesto />
-
+        {currentPage === 'boutique' && <ShopPage />}
+        
+        {currentPage === 'product-detail' && (
+          <ProductDetailPage productId={currentProductId} />
+        )}
+        
+        {currentPage === 'writiclove' && <WriticLovePage />}
+        
+        {currentPage === 'sur-mesure' && (
+          <StudioPage
+            config={config}
+            onChangeConfig={setConfig}
+            onOpenQuoteSummary={() => setIsQuoteModalOpen(true)}
+          />
+        )}
+        
+        {currentPage === 'pensee' && (
+          <OraclePage onUseThoughtInStudio={handleUseThoughtInStudio} />
+        )}
+        
+        {currentPage === 'galerie' && (
+          <GalleryPage
+            onSelectArtPiece={handleSelectArtPiece}
+            onOpenStory={(idx) => setActiveStoryIndex(idx)}
+          />
+        )}
+        
+        {currentPage === 'atelier' && <AtelierPage />}
       </main>
 
       {/* Footer */}
       <Footer />
 
-      {/* Slide-out Cart Drawer (Shopify / Rahiya style) */}
+      {/* Slide-out Cart Drawer */}
       <CartDrawer
         onOpenQuoteSummary={() => setIsQuoteModalOpen(true)}
       />
@@ -205,7 +165,7 @@ const AppContent: React.FC = () => {
         <AtelierStoryModal
           initialIndex={activeStoryIndex}
           onClose={() => setActiveStoryIndex(null)}
-          onConfigureFromStory={() => scrollTo('studio')}
+          onConfigureFromStory={() => navigateTo('sur-mesure')}
         />
       )}
 
@@ -226,7 +186,9 @@ export const App: React.FC = () => {
     <ThemeProvider>
       <ErpProvider>
         <CartProvider>
-          <AppContent />
+          <NavigationProvider>
+            <AppContent />
+          </NavigationProvider>
         </CartProvider>
       </ErpProvider>
     </ThemeProvider>
