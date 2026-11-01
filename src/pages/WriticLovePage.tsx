@@ -5,6 +5,8 @@ import type { WriticProduct } from '../data/productsData';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { InteractiveBoxDrawer } from '../components/writiclove/InteractiveBoxDrawer';
+import { TestimonialsSection } from '../components/TestimonialsSection';
 import { atelierAudio } from '../utils/soundEffects';
 
 export const WriticLovePage: React.FC = () => {
@@ -56,6 +58,9 @@ export const WriticLovePage: React.FC = () => {
           « De petits mots pour de grands changements ». Découvrez le rituel quotidien conçu par WriticArt pour cultiver la complicité, le respect et la tendresse au sein du couple, jour après jour.
         </p>
       </div>
+
+      {/* Interactive Virtual Box Unveiling Widget */}
+      <InteractiveBoxDrawer />
 
       {/* 3 Coffrets Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
@@ -215,6 +220,9 @@ export const WriticLovePage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Verified Customer Testimonials */}
+      <TestimonialsSection />
 
     </div>
   );

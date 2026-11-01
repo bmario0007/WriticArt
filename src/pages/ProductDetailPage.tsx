@@ -4,6 +4,7 @@ import { useErp } from '../context/ErpContext';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { TestimonialsSection } from '../components/TestimonialsSection';
 import { atelierAudio } from '../utils/soundEffects';
 
 interface ProductDetailPageProps {
@@ -234,11 +235,51 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                   {rel.name}
                 </h4>
                 <span className="font-['Cinzel'] font-bold text-xs text-[#E68314]">
-                  {rel.priceFCFA.toLocaleString('fr-FR')} FCFA
+                  {formatPrice(rel.priceFCFA)}
                 </span>
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Verified Customer Reviews */}
+      <TestimonialsSection />
+
+      {/* Sticky Mobile Buy Bar (Instant Mobile Conversion) */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#141210]/95 backdrop-blur-md border-t border-[#E8DFD1] dark:border-[#2E2A26] px-4 py-3 sm:hidden shadow-2xl flex items-center justify-between gap-3">
+        <div className="flex items-center space-x-2.5 min-w-0">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-11 h-11 rounded-xl object-cover shrink-0 border border-[#E8DFD1] dark:border-[#2E2A26]"
+          />
+          <div className="min-w-0">
+            <h4 className="font-['Cormorant_Garamond'] text-sm font-bold truncate leading-tight text-[#181716] dark:text-white">
+              {product.name}
+            </h4>
+            <span className="font-['Cinzel'] font-bold text-xs text-[#E68314]">
+              {formatPrice(product.priceFCFA)}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2 shrink-0">
+          <button
+            onClick={handleAddToCart}
+            className="p-2.5 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] hover:bg-[#E68314] shadow"
+            title="Ajouter au Panier"
+          >
+            <ShoppingBag className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={handleOrderWhatsApp}
+            className="px-3.5 py-2.5 rounded-full bg-[#25D366] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider flex items-center space-x-1 shadow"
+          >
+            <PhoneCall className="w-3.5 h-3.5" />
+            <span>Commander</span>
+          </button>
         </div>
       </div>
 

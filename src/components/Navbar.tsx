@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Volume2, VolumeX, PhoneCall, Heart, Sun, Moon, ShoppingBag, ShieldCheck, Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Volume2, VolumeX, PhoneCall, Heart, Sun, Moon, ShoppingBag, ShieldCheck, Menu, X, Search } from 'lucide-react';
 import { atelierAudio } from '../utils/soundEffects';
 import logoLight from '../assets/brand/logo-light.jpg';
 import logoDark from '../assets/brand/logo-dark.jpg';
@@ -8,15 +8,29 @@ import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
 import { useErp } from '../context/ErpContext';
 import { useCurrency, type CurrencyCode } from '../context/CurrencyContext';
+import { QuickSearchModal } from './search/QuickSearchModal';
 
 export const Navbar: React.FC = () => {
   const [isMuted, setIsMuted] = useState(atelierAudio.isMuted);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { toggleTheme, isDark } = useTheme();
   const { cartCount, openCart } = useCart();
   const { currentPage, navigateTo } = useNavigation();
   const { siteSettings } = useErp();
   const { currency, setCurrency } = useCurrency();
+
+  // Keyboard shortcut Ctrl+K / Cmd+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const toggleSound = () => {
     atelierAudio.isMuted = !atelierAudio.isMuted;
@@ -119,6 +133,15 @@ export const Navbar: React.FC = () => {
                 </button>
               ))}
             </div>
+
+            {/* Global Search Button (with Ctrl+K shortcut) */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-[#70675E] dark:text-[#A8A096] hover:text-[#E68314] transition-colors flex items-center space-x-1"
+              title="Rechercher (Ctrl+K)"
+            >
+              <Search className="w-4 h-4" />
+            </button>
 
             {/* Audio Toggle */}
             <button
@@ -242,6 +265,12 @@ export const Navbar: React.FC = () => {
         )}
 
       </div>
+
+      {/* Global Quick Search Modal */}
+      <QuickSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </header>
   );
 };

@@ -3,6 +3,7 @@ import { X, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Sparkles, PhoneCall, G
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { atelierAudio } from '../../utils/soundEffects';
+import { WavePaymentModal } from './WavePaymentModal';
 
 interface CartDrawerProps {
   onOpenQuoteSummary?: () => void;
@@ -13,6 +14,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
   const { formatPrice, currency } = useCurrency();
   const [customerName, setCustomerName] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
+  const [isWaveModalOpen, setIsWaveModalOpen] = useState(false);
 
   // Promo code state
   const [promoInput, setPromoInput] = useState('');
@@ -339,11 +341,20 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
                   currencyCode: currency,
                   formattedTotal: formatPrice(finalFCFA)
                 })}
-                className="w-full py-4 rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] transition-all text-xs font-['Cinzel'] font-bold uppercase tracking-widest flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl group"
+                className="w-full py-3.5 rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] transition-all text-xs font-['Cinzel'] font-bold uppercase tracking-widest flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl group"
               >
                 <PhoneCall className="w-4 h-4" />
                 <span>Commander sur WhatsApp (+221 77 234 85 21)</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Local Mobile Payment Button (Wave / Orange Money) */}
+              <button
+                type="button"
+                onClick={() => setIsWaveModalOpen(true)}
+                className="w-full py-2.5 rounded-full bg-white dark:bg-[#1E1C1A] border border-[#DED4C3] dark:border-[#38332E] hover:border-[#1CA0F2] text-xs font-['Cinzel'] font-bold uppercase tracking-wider text-[#181716] dark:text-[#FAF8F5] hover:text-[#1CA0F2] transition-all flex items-center justify-center space-x-2 shadow-sm"
+              >
+                <span>🌊 Payer par Wave / Orange Money</span>
               </button>
 
               {/* Secondary action: Proforma quote if provided */}
@@ -377,6 +388,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
 
         </div>
       </div>
+
+      {/* Wave / Orange Money Senegal Modal */}
+      <WavePaymentModal
+        isOpen={isWaveModalOpen}
+        onClose={() => setIsWaveModalOpen(false)}
+        totalFCFA={finalFCFA}
+        customerName={customerName}
+      />
     </div>
   );
 };

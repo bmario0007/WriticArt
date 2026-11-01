@@ -4,6 +4,7 @@ import { useNavigation } from '../context/NavigationContext';
 import { useCart } from '../context/CartContext';
 import { useErp } from '../context/ErpContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { TestimonialsSection } from '../components/TestimonialsSection';
 import feedInstagram from '../assets/brand/feed-instagram.png';
 
 export const HomePage: React.FC = () => {
@@ -327,6 +328,9 @@ export const HomePage: React.FC = () => {
           </div>
         </section>
       )}
+
+      {/* 6. CLIENT TESTIMONIALS (Social Proof) */}
+      <TestimonialsSection />
 
     </div>
   );
