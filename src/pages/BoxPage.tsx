@@ -23,12 +23,13 @@ import {
   writicloveDuoImg,
   tableauMinimalisteImg
 } from '../assets/images';
-import type { ErpOrder } from '../types';
+import { OrderDispatchBadges } from '../components/OrderDispatchBadges';
+import type { ErpOrder, OrderDispatchInfo } from '../types';
 
 export const BoxPage: React.FC = () => {
   const { tr, lang } = useLanguage();
   const { formatPrice, currency } = useCurrency();
-  const { addOrder } = useErp();
+  const { submitOrderWithCloud, siteSettings } = useErp();
   const { navigateTo } = useNavigation();
   const formRef = useRef<HTMLElement>(null);
 
@@ -79,6 +80,8 @@ export const BoxPage: React.FC = () => {
   const [otherPayment, setOtherPayment] = useState('');
   const [deliveryType, setDeliveryType] = useState('Coursier Dakar & Banlieue');
   const [submittedOrder, setSubmittedOrder] = useState<ErpOrder | null>(null);
+  const [dispatchInfo, setDispatchInfo] = useState<OrderDispatchInfo | undefined>(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const editionPriceFCFA = writicLoveEdition === 'couple' ? 50000 : 30000;
   const editionLabel =
@@ -91,55 +94,61 @@ export const BoxPage: React.FC = () => {
   const unitTotalFCFA = editionPriceFCFA + tableauAmountFCFA;
   const totalFCFA = unitTotalFCFA * Math.max(1, quantity);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName.trim() || !clientPhone.trim() || !address.trim()) return;
+    if (isSubmitting || !clientName.trim() || !clientPhone.trim() || !address.trim()) return;
 
-    const finalTheme =
-      tableauTheme === 'Autres' ? customTheme.trim() || 'Autres (à définir)' : tableauTheme;
-    const otherPayNote =
-      paymentMethod === 'Autre' && otherPayment.trim()
-        ? `Autre paiement : ${otherPayment.trim()}`
-        : '';
+    setIsSubmitting(true);
+    try {
+      const finalTheme =
+        tableauTheme === 'Autres' ? customTheme.trim() || 'Autres (à définir)' : tableauTheme;
+      const otherPayNote =
+        paymentMethod === 'Autre' && otherPayment.trim()
+          ? `Autre paiement : ${otherPayment.trim()}`
+          : '';
 
-    const created = addOrder({
-      clientName: clientName.trim(),
-      clientPhone: clientPhone.trim(),
-      clientEmail: clientEmail.trim() || undefined,
-      city: address.trim(),
-      items: [
-        {
-          title: `Box WriticArt Février — ${editionLabel} + Tableau ${tableauAmountFCFA.toLocaleString('fr-FR')} FCFA + Parfum`,
-          quantity: Math.max(1, quantity),
-          unitPriceFCFA: unitTotalFCFA,
-          options: `Thème : ${finalTheme} • Parfum : ${parfumChoice}`
-        }
-      ],
-      totalFCFA,
-      currencyUsed: currency,
-      offerType: 'box',
-      isPreorder: true,
-      questionType,
-      deliveryType,
-      theme: finalTheme,
-      tableauFormula: `Tableau inclus box : ${tableauAmountFCFA.toLocaleString('fr-FR')} FCFA`,
-      parfumChoice,
-      status: 'nouveau',
-      paymentMethod,
-      paymentStatus: 'en_attente',
-      notes: [
-        `Lancement Février`,
-        `Devise client : ${currency}`,
-        `Parfum : ${parfumChoice}`,
-        `Thème : ${finalTheme}`,
-        `Livraison : ${deliveryType}`,
-        otherPayNote
-      ]
-        .filter(Boolean)
-        .join(' | ')
-    });
+      const { order, dispatch } = await submitOrderWithCloud({
+        clientName: clientName.trim(),
+        clientPhone: clientPhone.trim(),
+        clientEmail: clientEmail.trim() || undefined,
+        city: address.trim(),
+        items: [
+          {
+            title: `Box WriticArt Février — ${editionLabel} + Tableau ${tableauAmountFCFA.toLocaleString('fr-FR')} FCFA + Parfum`,
+            quantity: Math.max(1, quantity),
+            unitPriceFCFA: unitTotalFCFA,
+            options: `Thème : ${finalTheme} • Parfum : ${parfumChoice}`
+          }
+        ],
+        totalFCFA,
+        currencyUsed: currency,
+        offerType: 'box',
+        isPreorder: true,
+        questionType,
+        deliveryType,
+        theme: finalTheme,
+        tableauFormula: `Tableau inclus box : ${tableauAmountFCFA.toLocaleString('fr-FR')} FCFA`,
+        parfumChoice,
+        status: 'nouveau',
+        paymentMethod,
+        paymentStatus: 'en_attente',
+        notes: [
+          `Lancement Février`,
+          `Devise client : ${currency}`,
+          `Parfum : ${parfumChoice}`,
+          `Thème : ${finalTheme}`,
+          `Livraison : ${deliveryType}`,
+          otherPayNote
+        ]
+          .filter(Boolean)
+          .join(' | ')
+      });
 
-    setSubmittedOrder(created);
+      setSubmittedOrder(order);
+      setDispatchInfo(dispatch);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const buildSummaryText = (order: ErpOrder) => {
@@ -356,6 +365,7 @@ export const BoxPage: React.FC = () => {
                       `Reference: ${submittedOrder.id} • Currency: ${submittedOrder.currencyUsed} • Perfume: ${parfumChoice} • Total: ${formatPrice(submittedOrder.totalFCFA)}.`
                     )}
                   </p>
+                  <OrderDispatchBadges dispatch={dispatchInfo} />
                 </div>
               </div>
 
@@ -371,17 +381,24 @@ export const BoxPage: React.FC = () => {
                 </a>
 
                 <a
-                  href={`mailto:kaynubind@gmail.com?subject=${encodeURIComponent(`Commande Box WriticArt ${submittedOrder.id}`)}&body=${encodeURIComponent(buildSummaryText(submittedOrder))}`}
+                  href={`mailto:${siteSettings.contactEmail || 'kaynubind@gmail.com'}?subject=${encodeURIComponent(`Commande Box WriticArt ${submittedOrder.id}`)}&body=${encodeURIComponent(buildSummaryText(submittedOrder))}`}
                   className="flex-1 py-3 px-5 rounded-full bg-[#231B26] hover:bg-[#E68314] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow"
                 >
                   <Mail className="w-4 h-4" />
-                  <span>{tr('Envoyer par Email', 'Send by Email')}</span>
+                  <span>
+                    {dispatchInfo?.emailSent
+                      ? tr('Copie manuelle par Email', 'Manual Email Copy')
+                      : tr('Envoyer par Email', 'Send by Email')}
+                  </span>
                 </a>
               </div>
 
               <button
                 type="button"
-                onClick={() => setSubmittedOrder(null)}
+                onClick={() => {
+                  setSubmittedOrder(null);
+                  setDispatchInfo(undefined);
+                }}
                 className="text-xs text-[#B86209] dark:text-[#E68314] hover:underline font-medium"
               >
                 {tr('← Commander une autre box', '← Order another box')}
@@ -671,11 +688,16 @@ export const BoxPage: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="px-8 py-4 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] dark:hover:bg-[#C46A0B] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-xl flex items-center justify-center space-x-2"
+                  disabled={isSubmitting}
+                  className="px-8 py-4 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] dark:hover:bg-[#C46A0B] disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-xl flex items-center justify-center space-x-2"
                 >
                   <Check className="w-4 h-4" />
                   <Gift className="w-4 h-4" />
-                  <span>{tr('Valider ma commande Box', 'Submit Box Order')}</span>
+                  <span>
+                    {isSubmitting
+                      ? tr('Enregistrement en cours...', 'Sending Box order...')
+                      : tr('Valider ma commande Box', 'Submit Box Order')}
+                  </span>
                 </button>
               </div>
             </form>

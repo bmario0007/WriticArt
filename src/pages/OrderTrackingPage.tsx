@@ -1,37 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Package, Clock, PhoneCall, ShieldCheck, Feather, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Package, Clock, PhoneCall, ShieldCheck, Feather, Sparkles, Cloud } from 'lucide-react';
 import { useErp } from '../context/ErpContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { useLanguage } from '../context/LanguageContext';
+import { trackOrderRemote } from '../services/backendService';
 import type { ErpOrder, OrderStatus } from '../types';
 
 export const OrderTrackingPage: React.FC = () => {
-  const { orders } = useErp();
+  const { orders, cloudConfig } = useErp();
   const { formatPrice } = useCurrency();
   const { tr } = useLanguage();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState<ErpOrder | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<ErpOrder | null>(() => orders[0] ?? null);
+  const [isSearchingRemote, setIsSearchingRemote] = useState(false);
 
-  useEffect(() => {
-    if (!selectedOrder && orders.length > 0) {
-      setSelectedOrder(orders[0]);
-    }
-  }, [orders, selectedOrder]);
-
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = searchQuery.trim().toLowerCase();
+    const rawQuery = searchQuery.trim();
+    const clean = rawQuery.toLowerCase();
     if (!clean) return;
 
-    const found = orders.find(
+    const foundLocal = orders.find(
       (o) =>
         o.id.toLowerCase() === clean ||
-        o.clientPhone.replace(/[^0-9]/g, '').includes(clean.replace(/[^0-9]/g, '')) ||
+        (clean.replace(/[^0-9]/g, '').length >= 4 &&
+          o.clientPhone.replace(/[^0-9]/g, '').includes(clean.replace(/[^0-9]/g, ''))) ||
         o.clientName.toLowerCase().includes(clean)
     );
 
-    setSelectedOrder(found || null);
+    if (cloudConfig.appsScriptUrl && clean.startsWith('cmd-')) {
+      setIsSearchingRemote(true);
+      const remote = await trackOrderRemote(rawQuery);
+      setIsSearchingRemote(false);
+      if (remote.ok && remote.order) {
+        setSelectedOrder({ ...remote.order, syncStatus: 'synced' });
+        return;
+      }
+    }
+
+    setSelectedOrder(foundLocal || null);
   };
 
   const getStepStatus = (orderStatus: OrderStatus, stepNumber: number): 'completed' | 'current' | 'upcoming' => {
@@ -120,11 +128,18 @@ export const OrderTrackingPage: React.FC = () => {
 
           <button
             type="submit"
-            className="px-6 py-3 rounded-full bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] hover:text-white transition-colors shadow"
+            disabled={isSearchingRemote}
+            className="px-6 py-3 rounded-full bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] hover:text-white transition-colors shadow disabled:opacity-60"
           >
-            {tr('Rechercher', 'Search')}
+            {isSearchingRemote ? tr('Recherche...', 'Searching...') : tr('Rechercher', 'Search')}
           </button>
         </form>
+        {cloudConfig.appsScriptUrl && (
+          <p className="inline-flex items-center space-x-1.5 text-[11px] text-emerald-700 dark:text-emerald-400">
+            <Cloud className="w-3.5 h-3.5" />
+            <span>{tr('Suivi connecté en temps réel avec Google Sheets', 'Connected live to Google Sheets backend')}</span>
+          </p>
+        )}
 
         <div className="pt-1 flex items-center justify-center flex-wrap gap-2 text-xs">
           <span className="text-[11px] text-[#8C8074]">{tr('Exemples récents :', 'Recent samples:')}</span>

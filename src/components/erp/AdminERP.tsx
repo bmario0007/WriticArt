@@ -24,7 +24,9 @@ import {
   Lock,
   KeyRound,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Cloud,
+  RefreshCw
 } from 'lucide-react';
 import { useErp } from '../../context/ErpContext';
 import { useNavigation } from '../../context/NavigationContext';
@@ -35,7 +37,9 @@ import { PostEditorModal } from './PostEditorModal';
 import { MediaUploadModal } from './MediaUploadModal';
 import { ProductEditorModal } from './ProductEditorModal';
 import { LayoutCustomizer } from './LayoutCustomizer';
+import { CloudBackendPanel } from './CloudBackendPanel';
 import { AdminPinLock } from './AdminPinLock';
+import { adminChangePinRemote, adminVerifyPinRemote } from '../../services/backendService';
 import logoDark from '../../assets/brand/logo-dark.jpg';
 import { atelierAudio } from '../../utils/soundEffects';
 
@@ -58,7 +62,11 @@ export const AdminERP: React.FC = () => {
     totalRevenueFCFA,
     activeOrdersCount,
     pendingBATCount,
-    lowStockItemsCount
+    lowStockItemsCount,
+    cloudConfig,
+    cloudSync,
+    pullAdminFromCloud,
+    unsyncedOrdersCount
   } = useErp();
 
   // Security Lock State
@@ -74,7 +82,7 @@ export const AdminERP: React.FC = () => {
   const [newPinInput, setNewPinInput] = useState('');
   const [pinChangeMessage, setPinChangeMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'articles' | 'media' | 'layout' | 'orders' | 'inventory' | 'clients' | 'catalog' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'articles' | 'media' | 'layout' | 'orders' | 'inventory' | 'clients' | 'catalog' | 'cloud' | 'settings'>('dashboard');
   const [orderStatusFilter, setOrderStatusFilter] = useState<'all' | OrderStatus>('all');
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -205,18 +213,30 @@ export const AdminERP: React.FC = () => {
     reader.readAsText(file);
   };
 
-  const handleChangePin = (e: React.FormEvent) => {
+  const handleChangePin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (currentPinInput !== adminPin) {
-      setPinChangeMessage({ text: 'Le code PIN actuel est incorrect.', type: 'error' });
-      return;
-    }
-    if (newPinInput.length < 4) {
+    if (newPinInput.trim().length < 4) {
       setPinChangeMessage({ text: 'Le nouveau code doit contenir au moins 4 chiffres.', type: 'error' });
       return;
     }
-    localStorage.setItem('writicart_admin_pin', newPinInput);
-    setAdminPin(newPinInput);
+
+    if (cloudConfig.appsScriptUrl) {
+      const remoteRes = await adminChangePinRemote(currentPinInput.trim(), newPinInput.trim());
+      if (!remoteRes.ok) {
+        setPinChangeMessage({
+          text: remoteRes.error || 'Le code PIN actuel est incorrect sur Google Apps Script.',
+          type: 'error'
+        });
+        return;
+      }
+      sessionStorage.setItem('writicart_admin_session_pin', newPinInput.trim());
+    } else if (currentPinInput !== adminPin) {
+      setPinChangeMessage({ text: 'Le code PIN actuel est incorrect.', type: 'error' });
+      return;
+    }
+
+    localStorage.setItem('writicart_admin_pin', newPinInput.trim());
+    setAdminPin(newPinInput.trim());
     setCurrentPinInput('');
     setNewPinInput('');
     setPinChangeMessage({ text: 'Code PIN mis à jour avec succès !', type: 'success' });
@@ -228,9 +248,24 @@ export const AdminERP: React.FC = () => {
     return (
       <AdminPinLock
         correctPin={adminPin}
-        onUnlock={() => {
+        onVerifyPin={
+          cloudConfig.appsScriptUrl
+            ? async (pin) => {
+                const res = await adminVerifyPinRemote(pin);
+                if (!res.configured || !res.ok) {
+                  return pin === adminPin;
+                }
+                return res.authorized;
+              }
+            : undefined
+        }
+        onUnlock={(verifiedPin) => {
           sessionStorage.setItem('writicart_admin_unlocked', 'true');
+          sessionStorage.setItem('writicart_admin_session_pin', verifiedPin);
           setIsUnlocked(true);
+          if (cloudConfig.appsScriptUrl && cloudConfig.autoSyncOrdersOnAdminOpen) {
+            void pullAdminFromCloud(verifiedPin);
+          }
         }}
       />
     );
@@ -248,12 +283,27 @@ export const AdminERP: React.FC = () => {
             className="h-10 w-auto object-contain rounded"
           />
           <div>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h1 className="font-['Cormorant_Garamond'] text-lg sm:text-xl font-bold tracking-wide">
                 WriticArt • WordPress CMS & Atelier ERP
               </h1>
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold border border-emerald-500/30">
                 Mode Administrateur Actif
+              </span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                  cloudConfig.appsScriptUrl
+                    ? 'bg-[#C5A059]/20 text-[#F3D69B] border-[#C5A059]/40'
+                    : cloudConfig.web3formsKey
+                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/30'
+                    : 'bg-white/10 text-[#A69C91] border-white/15'
+                }`}
+              >
+                {cloudConfig.appsScriptUrl
+                  ? 'Cloud Google Sheets'
+                  : cloudConfig.web3formsKey
+                  ? 'Notifs Email Actives'
+                  : 'Stockage Local'}
               </span>
             </div>
             <p className="text-[10px] text-[#A69C91] font-['Cinzel'] tracking-wider hidden sm:block">
@@ -266,6 +316,7 @@ export const AdminERP: React.FC = () => {
           <button
             onClick={() => {
               sessionStorage.removeItem('writicart_admin_unlocked');
+              sessionStorage.removeItem('writicart_admin_session_pin');
               setIsUnlocked(false);
             }}
             className="px-3.5 py-2 rounded-full bg-white/10 hover:bg-red-600/80 text-white text-xs font-['Cinzel'] tracking-wider uppercase font-semibold transition-all flex items-center space-x-1.5 shadow"
@@ -290,8 +341,8 @@ export const AdminERP: React.FC = () => {
 
       {/* Main ERP Navigation Tabs (WordPress Style) */}
       <nav className="bg-white/80 dark:bg-[#141312]/90 backdrop-blur-md border-b border-[#E8DFD1] dark:border-[#2E2A26] px-4 sm:px-8 sticky top-[65px] z-30">
-        <div className="flex space-x-1 overflow-x-auto scrollbar-none py-2">
-          {[
+        <div className="flex items-center space-x-1 sm:space-x-0 sm:gap-1.5 overflow-x-auto sm:overflow-visible sm:flex-wrap scrollbar-none py-2">
+          {([
             { id: 'dashboard', label: 'Tableau de Bord', icon: LayoutDashboard },
             { id: 'articles', label: `Articles (${articles.length})`, icon: FileText },
             { id: 'media', label: `Médiathèque (${mediaList.length})`, icon: ImageIcon },
@@ -300,8 +351,9 @@ export const AdminERP: React.FC = () => {
             { id: 'orders', label: `Commandes (${orders.length})`, icon: Package },
             { id: 'inventory', label: `Stocks (${inventory.length})`, icon: Boxes, badge: lowStockItemsCount > 0 ? `${lowStockItemsCount} bas` : undefined },
             { id: 'clients', label: `Clients (${clients.length})`, icon: Users },
+            { id: 'cloud', label: 'Cloud & Notifs', icon: Cloud, badge: unsyncedOrdersCount > 0 ? String(unsyncedOrdersCount) : undefined },
             { id: 'settings', label: 'Réglages', icon: Settings }
-          ].map((tab) => {
+          ] as const).map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
@@ -309,7 +361,7 @@ export const AdminERP: React.FC = () => {
                 key={tab.id}
                 onClick={() => {
                   atelierAudio.playPaperSlide();
-                  setActiveTab(tab.id as any);
+                  setActiveTab(tab.id);
                 }}
                 className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-[11px] font-['Cinzel'] tracking-wider font-semibold whitespace-nowrap transition-all ${
                   isActive
@@ -319,7 +371,7 @@ export const AdminERP: React.FC = () => {
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span>{tab.label}</span>
-                {tab.badge && (
+                {'badge' in tab && tab.badge && (
                   <span className="px-1.5 py-0.2 rounded-full bg-red-500 text-white text-[9px] font-bold">
                     {tab.badge}
                   </span>
@@ -393,7 +445,7 @@ export const AdminERP: React.FC = () => {
             </div>
 
             {/* Quick Actions Shortcuts */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <button
                 onClick={() => {
                   setEditingPost(null);
@@ -422,6 +474,19 @@ export const AdminERP: React.FC = () => {
                 <Palette className="w-6 h-6 text-[#E68314] mb-3 group-hover:scale-110 transition-transform" />
                 <h4 className="font-['Cormorant_Garamond'] text-xl font-bold">Modifier la Mise en Page</h4>
                 <p className="text-xs text-[#8C8074] mt-1">Personnaliser en direct les textes du Hero, le bandeau et l'ordre des rubriques.</p>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('cloud')}
+                className="p-6 bg-white dark:bg-[#181716] rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] hover:border-[#E68314] shadow-sm text-left transition-all group"
+              >
+                <Cloud className="w-6 h-6 text-[#E68314] mb-3 group-hover:scale-110 transition-transform" />
+                <h4 className="font-['Cormorant_Garamond'] text-xl font-bold">Cloud & Notifications</h4>
+                <p className="text-xs text-[#8C8074] mt-1">
+                  {cloudConfig.appsScriptUrl
+                    ? 'Google Sheets connecté • Synchroniser ou tester les emails atelier.'
+                    : 'Connecter Google Sheets & alertes email automatiques en 5 minutes.'}
+                </p>
               </button>
             </div>
           </div>
@@ -718,7 +783,20 @@ export const AdminERP: React.FC = () => {
                 />
               </div>
 
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-wrap items-center gap-3">
+                {cloudConfig.appsScriptUrl && (
+                  <button
+                    type="button"
+                    disabled={cloudSync.isSyncing}
+                    onClick={() => void pullAdminFromCloud()}
+                    className="px-4 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] hover:border-[#E68314] text-xs font-['Cinzel'] font-bold uppercase tracking-wider flex items-center space-x-1.5 transition-colors disabled:opacity-50"
+                    title="Importer les commandes depuis Google Sheets"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 text-[#E68314] ${cloudSync.isSyncing ? 'animate-spin' : ''}`} />
+                    <span>Synchro Sheets</span>
+                  </button>
+                )}
+
                 <select
                   value={orderStatusFilter}
                   onChange={(e) => setOrderStatusFilter(e.target.value as any)}
@@ -759,9 +837,22 @@ export const AdminERP: React.FC = () => {
                   <tbody className="divide-y divide-[#EFE7DA] dark:divide-[#26221E]">
                     {filteredOrders.map((order) => (
                       <tr key={order.id} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors">
-                        <td className="py-3.5 px-4">
+                        <td className="py-3.5 px-4 space-y-1">
                           <span className="font-mono font-bold text-sm block">{order.id}</span>
-                          <span className="text-[10px] text-[#8C8074]">{order.date}</span>
+                          <span className="text-[10px] text-[#8C8074] block">{order.date}</span>
+                          {order.syncStatus === 'synced' ? (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-[9px] font-bold">
+                              Cloud ✓
+                            </span>
+                          ) : order.syncStatus === 'pending' ? (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 text-[9px] font-bold">
+                              En attente
+                            </span>
+                          ) : !order.id.startsWith('CMD-WA-10') ? (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300 text-[9px] font-bold">
+                              Local
+                            </span>
+                          ) : null}
                         </td>
 
                         <td className="py-3.5 px-4">
@@ -959,7 +1050,14 @@ export const AdminERP: React.FC = () => {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 9: SETTINGS & EXPORT */}
+        {/* TAB 9: CLOUD BACKEND & EMAIL NOTIFICATIONS */}
+        {/* ======================================================== */}
+        {activeTab === 'cloud' && (
+          <CloudBackendPanel />
+        )}
+
+        {/* ======================================================== */}
+        {/* TAB 10: SETTINGS & EXPORT */}
         {/* ======================================================== */}
         {activeTab === 'settings' && (
           <div className="max-w-2xl mx-auto space-y-6">

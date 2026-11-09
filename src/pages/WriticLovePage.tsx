@@ -20,14 +20,15 @@ import { InteractiveBoxDrawer } from '../components/writiclove/InteractiveBoxDra
 import { TestimonialsSection } from '../components/TestimonialsSection';
 import { atelierAudio } from '../utils/soundEffects';
 import { writicloveDuoImg } from '../assets/images';
-import type { ErpOrder } from '../types';
+import { OrderDispatchBadges } from '../components/OrderDispatchBadges';
+import type { ErpOrder, OrderDispatchInfo } from '../types';
 
 export const WriticLovePage: React.FC = () => {
   const { addToCart } = useCart();
   const { navigateTo } = useNavigation();
   const { formatPrice, currency } = useCurrency();
   const { tr, lang } = useLanguage();
-  const { addOrder } = useErp();
+  const { submitOrderWithCloud, siteSettings } = useErp();
 
   const formRef = useRef<HTMLElement>(null);
 
@@ -43,6 +44,8 @@ export const WriticLovePage: React.FC = () => {
   const [otherPayment, setOtherPayment] = useState('');
   const [deliveryType, setDeliveryType] = useState('Coursier Dakar & Banlieue');
   const [submittedOrder, setSubmittedOrder] = useState<ErpOrder | null>(null);
+  const [dispatchInfo, setDispatchInfo] = useState<OrderDispatchInfo | undefined>(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectedProductObj =
     writicLoveProducts.find((p) => p.id === selectedProductId) || writicLoveProducts[2];
@@ -70,49 +73,55 @@ export const WriticLovePage: React.FC = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const handleSubmitPreorder = (e: React.FormEvent) => {
+  const handleSubmitPreorder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName.trim() || !clientPhone.trim() || !address.trim()) return;
+    if (isSubmitting || !clientName.trim() || !clientPhone.trim() || !address.trim()) return;
 
-    const prodLabel = lang === 'en' ? selectedProductObj.nameEn : selectedProductObj.name;
-    const otherPayNote =
-      paymentMethod === 'Autre' && otherPayment.trim()
-        ? `Autre moyen de paiement : ${otherPayment.trim()}`
-        : '';
+    setIsSubmitting(true);
+    try {
+      const prodLabel = lang === 'en' ? selectedProductObj.nameEn : selectedProductObj.name;
+      const otherPayNote =
+        paymentMethod === 'Autre' && otherPayment.trim()
+          ? `Autre moyen de paiement : ${otherPayment.trim()}`
+          : '';
 
-    const created = addOrder({
-      clientName: clientName.trim(),
-      clientPhone: clientPhone.trim(),
-      clientEmail: clientEmail.trim() || undefined,
-      city: address.trim(),
-      items: [
-        {
-          title: `Précommande WriticLove — ${prodLabel}`,
-          quantity: Math.max(1, quantity),
-          unitPriceFCFA: selectedProductObj.priceFCFA,
-          options: '365 cartes + 1 carte bonus (Livraison non incluse)'
-        }
-      ],
-      totalFCFA: estimatedTotalFCFA,
-      currencyUsed: currency,
-      offerType: 'writiclove',
-      isPreorder: true,
-      questionType,
-      deliveryType,
-      status: 'nouveau',
-      paymentMethod,
-      paymentStatus: 'en_attente',
-      notes: [
-        `Devise client : ${currency}`,
-        `Sortie prévue : Fin Déc. 2026 / Début Janv. 2027`,
-        `Livraison non incluse (${deliveryType})`,
-        otherPayNote
-      ]
-        .filter(Boolean)
-        .join(' | ')
-    });
+      const { order, dispatch } = await submitOrderWithCloud({
+        clientName: clientName.trim(),
+        clientPhone: clientPhone.trim(),
+        clientEmail: clientEmail.trim() || undefined,
+        city: address.trim(),
+        items: [
+          {
+            title: `Précommande WriticLove — ${prodLabel}`,
+            quantity: Math.max(1, quantity),
+            unitPriceFCFA: selectedProductObj.priceFCFA,
+            options: '365 cartes + 1 carte bonus (Livraison non incluse)'
+          }
+        ],
+        totalFCFA: estimatedTotalFCFA,
+        currencyUsed: currency,
+        offerType: 'writiclove',
+        isPreorder: true,
+        questionType,
+        deliveryType,
+        status: 'nouveau',
+        paymentMethod,
+        paymentStatus: 'en_attente',
+        notes: [
+          `Devise client : ${currency}`,
+          `Sortie prévue : Fin Déc. 2026 / Début Janv. 2027`,
+          `Livraison non incluse (${deliveryType})`,
+          otherPayNote
+        ]
+          .filter(Boolean)
+          .join(' | ')
+      });
 
-    setSubmittedOrder(created);
+      setSubmittedOrder(order);
+      setDispatchInfo(dispatch);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const buildOrderSummaryText = (order: ErpOrder) => {
@@ -463,6 +472,7 @@ export const WriticLovePage: React.FC = () => {
                         `Reference: ${submittedOrder.id} • Saved currency: ${submittedOrder.currencyUsed} • Total: ${formatPrice(submittedOrder.totalFCFA)} (delivery not included).`
                       )}
                     </p>
+                    <OrderDispatchBadges dispatch={dispatchInfo} />
                   </div>
                 </div>
 
@@ -478,17 +488,24 @@ export const WriticLovePage: React.FC = () => {
                   </a>
 
                   <a
-                    href={`mailto:kaynubind@gmail.com?subject=${encodeURIComponent(`Précommande WriticLove ${submittedOrder.id}`)}&body=${encodeURIComponent(buildOrderSummaryText(submittedOrder))}`}
+                    href={`mailto:${siteSettings.contactEmail || 'kaynubind@gmail.com'}?subject=${encodeURIComponent(`Précommande WriticLove ${submittedOrder.id}`)}&body=${encodeURIComponent(buildOrderSummaryText(submittedOrder))}`}
                     className="flex-1 py-3 px-5 rounded-full bg-[#231B26] hover:bg-[#E68314] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow"
                   >
                     <Mail className="w-4 h-4" />
-                    <span>{tr('Envoyer par Email', 'Send by Email')}</span>
+                    <span>
+                      {dispatchInfo?.emailSent
+                        ? tr('Copie manuelle par Email', 'Manual Email Copy')
+                        : tr('Envoyer par Email', 'Send by Email')}
+                    </span>
                   </a>
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => setSubmittedOrder(null)}
+                  onClick={() => {
+                    setSubmittedOrder(null);
+                    setDispatchInfo(undefined);
+                  }}
                   className="text-xs text-[#B86209] dark:text-[#E68314] hover:underline font-medium"
                 >
                   {tr('← Effectuer une autre précommande', '← Make another pre-order')}
@@ -707,10 +724,15 @@ export const WriticLovePage: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="px-8 py-4 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] dark:hover:bg-[#C46A0B] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-xl flex items-center justify-center space-x-2"
+                    disabled={isSubmitting}
+                    className="px-8 py-4 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] dark:hover:bg-[#C46A0B] disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-xl flex items-center justify-center space-x-2"
                   >
                     <Heart className="w-4 h-4" />
-                    <span>{tr('Précommander WriticLove', 'Submit WriticLove Pre-order')}</span>
+                    <span>
+                      {isSubmitting
+                        ? tr('Enregistrement en cours...', 'Sending pre-order...')
+                        : tr('Précommander WriticLove', 'Submit WriticLove Pre-order')}
+                    </span>
                   </button>
                 </div>
               </form>

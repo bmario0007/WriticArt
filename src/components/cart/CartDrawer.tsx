@@ -18,6 +18,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useErp } from '../../context/ErpContext';
 import { atelierAudio } from '../../utils/soundEffects';
 import { WavePaymentModal } from './WavePaymentModal';
+import { OrderDispatchBadges } from '../OrderDispatchBadges';
+import type { OrderDispatchInfo } from '../../types';
 
 interface CartDrawerProps {
   onOpenQuoteSummary?: () => void;
@@ -28,13 +30,17 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
     useCart();
   const { formatPrice, currency } = useCurrency();
   const { tr } = useLanguage();
-  const { addOrder } = useErp();
+  const { submitOrderWithCloud } = useErp();
 
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
   const [isWaveModalOpen, setIsWaveModalOpen] = useState(false);
   const [savedOrderId, setSavedOrderId] = useState<string | null>(null);
+  const [dispatchInfo, setDispatchInfo] = useState<OrderDispatchInfo | undefined>(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
 
   // Promo code state
   const [promoInput, setPromoInput] = useState('');
@@ -80,28 +86,47 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
 
   const finalFCFA = Math.max(0, totalFCFA - (appliedPromo?.discountFCFA || 0));
 
-  const handleRegisterErpOrder = () => {
-    const created = addOrder({
-      clientName: customerName.trim() || tr('Client Panier', 'Cart Client'),
-      clientPhone: customerPhone.trim() || '+221 77 000 00 00',
-      city: customerAddress.trim() || tr('À préciser', 'To be specified'),
-      items: cart.map((item) => ({
-        title: item.name,
-        quantity: item.quantity,
-        unitPriceFCFA: item.priceFCFA,
-        options: item.selectedOption
-      })),
-      totalFCFA: finalFCFA,
-      currencyUsed: currency,
-      offerType: 'boutique',
-      status: 'nouveau',
-      paymentMethod: 'Wave',
-      paymentStatus: 'en_attente',
-      customMessage: giftNote || undefined,
-      notes: `Commande Panier (${currency})${appliedPromo ? ` • Promo ${appliedPromo.code}` : ''}`
-    });
-    setSavedOrderId(created.id);
-    clearCart();
+  const handleRegisterErpOrder = async () => {
+    if (isSubmitting) return;
+    if (!customerName.trim() || !customerPhone.trim()) {
+      setFormError(
+        tr(
+          'Merci de renseigner votre prénom/nom et votre téléphone pour vous recontacter.',
+          'Please enter your full name and phone number so we can contact you.'
+        )
+      );
+      return;
+    }
+
+    setFormError('');
+    setIsSubmitting(true);
+    try {
+      const { order, dispatch } = await submitOrderWithCloud({
+        clientName: customerName.trim(),
+        clientPhone: customerPhone.trim(),
+        clientEmail: customerEmail.trim() || undefined,
+        city: customerAddress.trim() || tr('À préciser', 'To be specified'),
+        items: cart.map((item) => ({
+          title: item.name,
+          quantity: item.quantity,
+          unitPriceFCFA: item.priceFCFA,
+          options: item.selectedOption
+        })),
+        totalFCFA: finalFCFA,
+        currencyUsed: currency,
+        offerType: 'boutique',
+        status: 'nouveau',
+        paymentMethod: 'Wave',
+        paymentStatus: 'en_attente',
+        customMessage: giftNote || undefined,
+        notes: `Commande Panier (${currency})${appliedPromo ? ` • Promo ${appliedPromo.code}` : ''}`
+      });
+      setSavedOrderId(order.id);
+      setDispatchInfo(dispatch);
+      clearCart();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -161,9 +186,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
                 <p className="text-[11px] text-[#70675E] dark:text-[#A8A096]">
                   {tr('Référence', 'Reference')}: <strong>{savedOrderId}</strong> ({currency})
                 </p>
+                <div className="flex justify-center text-left">
+                  <OrderDispatchBadges dispatch={dispatchInfo} />
+                </div>
                 <button
                   onClick={() => {
                     setSavedOrderId(null);
+                    setDispatchInfo(undefined);
                     closeCart();
                   }}
                   className="px-5 py-2 rounded-full bg-[#231B26] text-white text-xs font-['Cinzel'] font-bold uppercase"
@@ -335,19 +364,34 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
 
               {/* Customer Details */}
               <div className="space-y-2 text-xs pt-1">
-                <input
-                  type="text"
-                  placeholder={tr('Prénom / Nom', 'Full Name')}
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-xs focus:outline-none focus:border-[#E68314]"
-                />
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder={tr('Prénom / Nom *', 'Full Name *')}
+                    value={customerName}
+                    onChange={(e) => {
+                      setCustomerName(e.target.value);
+                      setFormError('');
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-xs focus:outline-none focus:border-[#E68314]"
+                  />
+                  <input
+                    type="email"
+                    placeholder={tr('Email (optionnel)', 'Email (optional)')}
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-xs focus:outline-none focus:border-[#E68314]"
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="tel"
-                    placeholder={tr('Téléphone', 'Phone')}
+                    placeholder={tr('Téléphone *', 'Phone *')}
                     value={customerPhone}
-                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    onChange={(e) => {
+                      setCustomerPhone(e.target.value);
+                      setFormError('');
+                    }}
                     className="w-full px-3 py-2 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-xs focus:outline-none focus:border-[#E68314]"
                   />
                   <input
@@ -358,6 +402,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
                     className="w-full px-3 py-2 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-xs focus:outline-none focus:border-[#E68314]"
                   />
                 </div>
+                {formError && <p className="text-[11px] text-red-500 font-medium">{formError}</p>}
               </div>
 
               {/* Subtotal */}
@@ -375,11 +420,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenQuoteSummary }) =>
               {/* Primary Action: Record in ERP / Site */}
               <button
                 type="button"
-                onClick={handleRegisterErpOrder}
-                className="w-full py-3.5 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] text-white transition-all text-xs font-['Cinzel'] font-bold uppercase tracking-widest flex items-center justify-center space-x-2 shadow-lg"
+                disabled={isSubmitting}
+                onClick={() => void handleRegisterErpOrder()}
+                className="w-full py-3.5 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] disabled:opacity-60 disabled:cursor-not-allowed text-white transition-all text-xs font-['Cinzel'] font-bold uppercase tracking-widest flex items-center justify-center space-x-2 shadow-lg"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                <span>{tr('Valider ma commande', 'Submit Order')}</span>
+                <span>
+                  {isSubmitting
+                    ? tr('Enregistrement en cours...', 'Submitting order...')
+                    : tr('Valider ma commande', 'Submit Order')}
+                </span>
               </button>
 
               {/* WhatsApp Checkout */}

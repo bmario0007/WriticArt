@@ -95,6 +95,21 @@ export interface OrderItemLine {
   options?: string;
 }
 
+export interface OrderDispatchInfo {
+  sheetSynced: boolean;
+  emailSent: boolean;
+  channelsUsed: ('apps-script' | 'web3forms' | 'local')[];
+  warning?: string;
+}
+
+export interface CloudBackendConfig {
+  appsScriptUrl: string;
+  web3formsKey: string;
+  adminEmail: string;
+  autoSyncPublicCms: boolean;
+  autoSyncOrdersOnAdminOpen: boolean;
+}
+
 export interface ErpOrder {
   id: string;
   clientName: string;
@@ -118,6 +133,8 @@ export interface ErpOrder {
   paymentStatus: 'paye' | 'acompte' | 'en_attente';
   notes?: string;
   customMessage?: string;
+  syncStatus?: 'synced' | 'local_only' | 'pending';
+  dispatchInfo?: OrderDispatchInfo;
 }
 
 export interface InventoryItem {

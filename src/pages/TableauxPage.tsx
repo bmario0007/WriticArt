@@ -20,7 +20,8 @@ import {
   tableauMinimalisteImg,
   tableauAcrosticheDorureImg
 } from '../assets/images';
-import type { ErpOrder } from '../types';
+import { OrderDispatchBadges } from '../components/OrderDispatchBadges';
+import type { ErpOrder, OrderDispatchInfo } from '../types';
 
 const ACROSTIC_FR: Record<string, string> = {
   A: 'Âme lumineuse dont la douceur éclaire nos jours,',
@@ -99,7 +100,7 @@ export const TABLEAU_THEMES = [
 export const TableauxPage: React.FC = () => {
   const { tr, lang } = useLanguage();
   const { formatPrice, currency } = useCurrency();
-  const { addOrder } = useErp();
+  const { submitOrderWithCloud, siteSettings } = useErp();
   const { navigateTo } = useNavigation();
   const formRef = useRef<HTMLElement>(null);
 
@@ -123,6 +124,8 @@ export const TableauxPage: React.FC = () => {
   const [acrosticInput, setAcrosticInput] = useState('');
 
   const [submittedOrder, setSubmittedOrder] = useState<ErpOrder | null>(null);
+  const [dispatchInfo, setDispatchInfo] = useState<OrderDispatchInfo | undefined>(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const formulas = [
     {
@@ -188,50 +191,56 @@ export const TableauxPage: React.FC = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName.trim() || !clientPhone.trim() || !address.trim()) return;
+    if (isSubmitting || !clientName.trim() || !clientPhone.trim() || !address.trim()) return;
 
-    const finalTheme = theme === 'Autres' ? (customTheme.trim() || 'Autres (à définir)') : theme;
-    const formulaLabel = `${activeFormulaObj.title} (${tr('à partir de', 'starting from')} ${formatPrice(activeFormulaObj.minFCFA)})`;
-    const paymentNotes = paymentMethod === 'Autre' && otherPayment.trim() ? `Moyen paiement : ${otherPayment.trim()}` : '';
+    setIsSubmitting(true);
+    try {
+      const finalTheme = theme === 'Autres' ? (customTheme.trim() || 'Autres (à définir)') : theme;
+      const formulaLabel = `${activeFormulaObj.title} (${tr('à partir de', 'starting from')} ${formatPrice(activeFormulaObj.minFCFA)})`;
+      const paymentNotes = paymentMethod === 'Autre' && otherPayment.trim() ? `Moyen paiement : ${otherPayment.trim()}` : '';
 
-    const created = addOrder({
-      clientName: clientName.trim(),
-      clientPhone: clientPhone.trim(),
-      clientEmail: clientEmail.trim() || undefined,
-      city: address.trim(),
-      items: [
-        {
-          title: `Tableau Personnalisé — ${activeFormulaObj.title}`,
-          quantity: 1,
-          unitPriceFCFA: activeFormulaObj.minFCFA,
-          options: `${tableauSize} • ${finalTheme}`
-        }
-      ],
-      totalFCFA: activeFormulaObj.minFCFA,
-      currencyUsed: currency,
-      offerType: 'tableau',
-      questionType,
-      deliveryType,
-      theme: finalTheme,
-      tableauFormula: formulaLabel,
-      tableauSize,
-      status: 'nouveau',
-      paymentMethod,
-      paymentStatus: 'en_attente',
-      customMessage: acrosticInput.trim() || undefined,
-      notes: [
-        `Devise choisie : ${currency}`,
-        `Question : ${questionType}`,
-        `Livraison : ${deliveryType}`,
-        paymentNotes
-      ]
-        .filter(Boolean)
-        .join(' | ')
-    });
+      const { order, dispatch } = await submitOrderWithCloud({
+        clientName: clientName.trim(),
+        clientPhone: clientPhone.trim(),
+        clientEmail: clientEmail.trim() || undefined,
+        city: address.trim(),
+        items: [
+          {
+            title: `Tableau Personnalisé — ${activeFormulaObj.title}`,
+            quantity: 1,
+            unitPriceFCFA: activeFormulaObj.minFCFA,
+            options: `${tableauSize} • ${finalTheme}`
+          }
+        ],
+        totalFCFA: activeFormulaObj.minFCFA,
+        currencyUsed: currency,
+        offerType: 'tableau',
+        questionType,
+        deliveryType,
+        theme: finalTheme,
+        tableauFormula: formulaLabel,
+        tableauSize,
+        status: 'nouveau',
+        paymentMethod,
+        paymentStatus: 'en_attente',
+        customMessage: acrosticInput.trim() || undefined,
+        notes: [
+          `Devise choisie : ${currency}`,
+          `Question : ${questionType}`,
+          `Livraison : ${deliveryType}`,
+          paymentNotes
+        ]
+          .filter(Boolean)
+          .join(' | ')
+      });
 
-    setSubmittedOrder(created);
+      setSubmittedOrder(order);
+      setDispatchInfo(dispatch);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const buildOrderSummaryText = (order: ErpOrder) => {
@@ -604,6 +613,7 @@ export const TableauxPage: React.FC = () => {
                       `Reference: ${submittedOrder.id} • Saved currency: ${submittedOrder.currencyUsed} • Estimate: starting from ${formatPrice(submittedOrder.totalFCFA)}.`
                     )}
                   </p>
+                  <OrderDispatchBadges dispatch={dispatchInfo} />
                 </div>
               </div>
 
@@ -619,17 +629,24 @@ export const TableauxPage: React.FC = () => {
                 </a>
 
                 <a
-                  href={`mailto:kaynubind@gmail.com?subject=${encodeURIComponent(`Commande Tableau WriticArt ${submittedOrder.id}`)}&body=${encodeURIComponent(buildOrderSummaryText(submittedOrder))}`}
+                  href={`mailto:${siteSettings.contactEmail || 'kaynubind@gmail.com'}?subject=${encodeURIComponent(`Commande Tableau WriticArt ${submittedOrder.id}`)}&body=${encodeURIComponent(buildOrderSummaryText(submittedOrder))}`}
                   className="flex-1 py-3 px-5 rounded-full bg-[#231B26] hover:bg-[#E68314] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow"
                 >
                   <Mail className="w-4 h-4" />
-                  <span>{tr('Envoyer par Email', 'Send by Email')}</span>
+                  <span>
+                    {dispatchInfo?.emailSent
+                      ? tr('Copie manuelle par Email', 'Manual Email Copy')
+                      : tr('Envoyer par Email', 'Send by Email')}
+                  </span>
                 </a>
               </div>
 
               <button
                 type="button"
-                onClick={() => setSubmittedOrder(null)}
+                onClick={() => {
+                  setSubmittedOrder(null);
+                  setDispatchInfo(undefined);
+                }}
                 className="text-xs text-[#B86209] dark:text-[#E68314] hover:underline font-medium"
               >
                 {tr('← Passer une autre commande de tableau', '← Place another painting order')}
@@ -899,10 +916,15 @@ export const TableauxPage: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="px-8 py-4 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] dark:hover:bg-[#C46A0B] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-xl flex items-center justify-center space-x-2"
+                  disabled={isSubmitting}
+                  className="px-8 py-4 rounded-full bg-[#231B26] dark:bg-[#E68314] hover:bg-[#E68314] dark:hover:bg-[#C46A0B] disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-xl flex items-center justify-center space-x-2"
                 >
                   <Check className="w-4 h-4" />
-                  <span>{tr('Valider ma commande', 'Submit Order')}</span>
+                  <span>
+                    {isSubmitting
+                      ? tr('Enregistrement en cours...', 'Sending order...')
+                      : tr('Valider ma commande', 'Submit Order')}
+                  </span>
                 </button>
               </div>
             </form>

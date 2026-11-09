@@ -5,21 +5,48 @@ import { atelierAudio } from '../../utils/soundEffects';
 import logoDark from '../../assets/brand/logo-dark.jpg';
 
 interface AdminPinLockProps {
-  onUnlock: () => void;
+  onUnlock: (verifiedPin: string) => void;
   correctPin: string;
+  onVerifyPin?: (pin: string) => Promise<boolean>;
 }
 
-export const AdminPinLock: React.FC<AdminPinLockProps> = ({ onUnlock, correctPin }) => {
+export const AdminPinLock: React.FC<AdminPinLockProps> = ({
+  onUnlock,
+  correctPin,
+  onVerifyPin
+}) => {
   const { navigateTo } = useNavigation();
   const [pin, setPin] = useState('');
   const [error, setError] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pin.trim() === correctPin.trim()) {
+  const attemptUnlock = async (candidatePin: string) => {
+    const cleaned = candidatePin.trim();
+    if (!cleaned || isVerifying) return;
+
+    if (onVerifyPin) {
+      setIsVerifying(true);
+      try {
+        const ok = await onVerifyPin(cleaned);
+        if (ok) {
+          atelierAudio.playGoldChime();
+          setError(false);
+          onUnlock(cleaned);
+          return;
+        }
+      } finally {
+        setIsVerifying(false);
+      }
+      setError(true);
+      setPin('');
+      atelierAudio.playPaperSlide();
+      return;
+    }
+
+    if (cleaned === correctPin.trim()) {
       atelierAudio.playGoldChime();
       setError(false);
-      onUnlock();
+      onUnlock(cleaned);
     } else {
       setError(true);
       setPin('');
@@ -27,26 +54,30 @@ export const AdminPinLock: React.FC<AdminPinLockProps> = ({ onUnlock, correctPin
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void attemptUnlock(pin);
+  };
+
   const handleQuickKey = (num: string) => {
-    if (pin.length < 8) {
+    if (pin.length < 8 && !isVerifying) {
       const newPin = pin + num;
       setPin(newPin);
-      if (newPin === correctPin) {
+      if (!onVerifyPin && newPin === correctPin) {
         atelierAudio.playGoldChime();
         setError(false);
-        onUnlock();
+        onUnlock(newPin);
       }
     }
   };
 
   const handleBackspace = () => {
-    setPin(prev => prev.slice(0, -1));
+    setPin((prev) => prev.slice(0, -1));
     setError(false);
   };
 
   return (
     <div className="min-h-screen bg-[#121110] text-[#FAF8F5] flex flex-col justify-between p-6 sm:p-12 relative overflow-hidden font-sans">
-      
       {/* Subtle ambient lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#E68314]/20 via-[#FAF8F5]/0 to-transparent blur-3xl rounded-full pointer-events-none" />
 
@@ -67,7 +98,6 @@ export const AdminPinLock: React.FC<AdminPinLockProps> = ({ onUnlock, correctPin
 
       {/* Central Lock Card */}
       <div className="max-w-sm mx-auto w-full my-auto space-y-8 relative z-10 text-center">
-        
         {/* Brand Logo & Lock icon */}
         <div className="space-y-4">
           <img
@@ -121,16 +151,17 @@ export const AdminPinLock: React.FC<AdminPinLockProps> = ({ onUnlock, correctPin
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#E68314] to-[#C46A0B] text-white text-xs uppercase tracking-widest font-['Cinzel'] font-bold hover:brightness-110 transition-all shadow-lg flex items-center justify-center space-x-2"
+            disabled={isVerifying}
+            className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#E68314] to-[#C46A0B] text-white text-xs uppercase tracking-widest font-['Cinzel'] font-bold hover:brightness-110 disabled:opacity-60 transition-all shadow-lg flex items-center justify-center space-x-2"
           >
             <KeyRound className="w-4 h-4" />
-            <span>Déverrouiller l'Atelier</span>
+            <span>{isVerifying ? 'Vérification...' : "Déverrouiller l'Atelier"}</span>
           </button>
         </form>
 
         {/* Quick Numeric Keypad for convenience on mobile & touch */}
         <div className="grid grid-cols-3 gap-2 pt-2 max-w-[280px] mx-auto">
-          {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(num => (
+          {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((num) => (
             <button
               key={num}
               type="button"
@@ -166,12 +197,14 @@ export const AdminPinLock: React.FC<AdminPinLockProps> = ({ onUnlock, correctPin
         {/* Helpful hint for owner */}
         <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-[11px] text-[#A89F94]">
           <p>
-            💡 <strong className="text-white">Code d'accès initial :</strong> <code className="bg-black/50 px-1.5 py-0.5 rounded text-[#E68314] font-mono">1234</code>
+            💡 <strong className="text-white">Code d'accès initial :</strong>{' '}
+            <code className="bg-black/50 px-1.5 py-0.5 rounded text-[#E68314] font-mono">1234</code>
             <br />
-            <span className="text-[10px] text-[#7A7167]">Vous pourrez le modifier dans l'onglet « Réglages » de l'ERP.</span>
+            <span className="text-[10px] text-[#7A7167]">
+              Vous pourrez le modifier dans l'onglet « Réglages » de l'ERP.
+            </span>
           </p>
         </div>
-
       </div>
 
       {/* Footer */}
@@ -181,7 +214,6 @@ export const AdminPinLock: React.FC<AdminPinLockProps> = ({ onUnlock, correctPin
           <span>WriticArt Dakar • Haute Calligraphie & Protection des Données</span>
         </p>
       </div>
-
     </div>
   );
 };
