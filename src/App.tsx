@@ -1,25 +1,55 @@
-import React, { useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/cart/CartDrawer';
-import { AdminERP } from './components/erp/AdminERP';
-import { AtelierStoryModal } from './components/AtelierStoryModal';
-import { QuoteEngineModal } from './components/QuoteEngineModal';
-
-// Dedicated Separate Pages (No continuous feed)
 import { HomePage } from './pages/HomePage';
-import { TableauxPage } from './pages/TableauxPage';
-import { BoxPage } from './pages/BoxPage';
-import { ShopPage } from './pages/ShopPage';
-import { ProductDetailPage } from './pages/ProductDetailPage';
-import { WriticLovePage } from './pages/WriticLovePage';
-import { StudioPage } from './pages/StudioPage';
-import { OraclePage } from './pages/OraclePage';
-import { GalleryPage } from './pages/GalleryPage';
-import { AtelierPage } from './pages/AtelierPage';
-import { BlogPage } from './pages/BlogPage';
-import { ArticleDetailPage } from './pages/ArticleDetailPage';
-import { OrderTrackingPage } from './pages/OrderTrackingPage';
+
+// Lazy-loaded pages & modals (isolates ERP + Cloud tools + secondary routes from initial bundle)
+const AdminERP = lazy(() =>
+  import('./components/erp/AdminERP').then((m) => ({ default: m.AdminERP }))
+);
+const AtelierStoryModal = lazy(() =>
+  import('./components/AtelierStoryModal').then((m) => ({ default: m.AtelierStoryModal }))
+);
+const QuoteEngineModal = lazy(() =>
+  import('./components/QuoteEngineModal').then((m) => ({ default: m.QuoteEngineModal }))
+);
+const TableauxPage = lazy(() =>
+  import('./pages/TableauxPage').then((m) => ({ default: m.TableauxPage }))
+);
+const BoxPage = lazy(() =>
+  import('./pages/BoxPage').then((m) => ({ default: m.BoxPage }))
+);
+const ShopPage = lazy(() =>
+  import('./pages/ShopPage').then((m) => ({ default: m.ShopPage }))
+);
+const ProductDetailPage = lazy(() =>
+  import('./pages/ProductDetailPage').then((m) => ({ default: m.ProductDetailPage }))
+);
+const WriticLovePage = lazy(() =>
+  import('./pages/WriticLovePage').then((m) => ({ default: m.WriticLovePage }))
+);
+const StudioPage = lazy(() =>
+  import('./pages/StudioPage').then((m) => ({ default: m.StudioPage }))
+);
+const OraclePage = lazy(() =>
+  import('./pages/OraclePage').then((m) => ({ default: m.OraclePage }))
+);
+const GalleryPage = lazy(() =>
+  import('./pages/GalleryPage').then((m) => ({ default: m.GalleryPage }))
+);
+const AtelierPage = lazy(() =>
+  import('./pages/AtelierPage').then((m) => ({ default: m.AtelierPage }))
+);
+const BlogPage = lazy(() =>
+  import('./pages/BlogPage').then((m) => ({ default: m.BlogPage }))
+);
+const ArticleDetailPage = lazy(() =>
+  import('./pages/ArticleDetailPage').then((m) => ({ default: m.ArticleDetailPage }))
+);
+const OrderTrackingPage = lazy(() =>
+  import('./pages/OrderTrackingPage').then((m) => ({ default: m.OrderTrackingPage }))
+);
 
 // Contexts
 import { ThemeProvider } from './context/ThemeContext';
@@ -30,6 +60,19 @@ import { NavigationProvider, useNavigation } from './context/NavigationContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
 import type { QuoteConfiguration, DailyThought, GalleryItem } from './types';
+
+const PageLoader: React.FC<{ fullScreen?: boolean }> = ({ fullScreen }) => (
+  <div
+    className={`flex flex-col items-center justify-center space-y-3 ${
+      fullScreen ? 'min-h-screen bg-[#121110] text-[#FAF8F5]' : 'min-h-[55vh] py-20'
+    }`}
+  >
+    <div className="w-10 h-10 rounded-full border-2 border-[#C5A059]/30 border-t-[#E68314] animate-spin" />
+    <span className="font-['Cinzel'] text-[11px] uppercase tracking-[0.25em] text-[#B86209] dark:text-[#E68314]">
+      WriticArt
+    </span>
+  </div>
+);
 
 const AppContent: React.FC = () => {
   const { currentPage, currentProductId, currentArticleId, navigateTo } = useNavigation();
@@ -115,7 +158,11 @@ const AppContent: React.FC = () => {
 
   // If on ERP page, render full screen ERP Suite
   if (currentPage === 'erp') {
-    return <AdminERP />;
+    return (
+      <Suspense fallback={<PageLoader fullScreen />}>
+        <AdminERP />
+      </Suspense>
+    );
   }
 
   // Otherwise render separate pages with shared Navbar & Footer
@@ -127,48 +174,41 @@ const AppContent: React.FC = () => {
 
       {/* DEDICATED SEPARATE PAGES (No continuous feed) */}
       <main className="flex-1" id="main-content">
-        {currentPage === 'home' && <HomePage />}
-        
-        {currentPage === 'tableaux' && <TableauxPage />}
-
-        {currentPage === 'writiclove' && <WriticLovePage />}
-
-        {currentPage === 'box' && <BoxPage />}
-        
-        {currentPage === 'boutique' && <ShopPage />}
-        
-        {currentPage === 'product-detail' && (
-          <ProductDetailPage productId={currentProductId} />
+        {currentPage === 'home' ? (
+          <HomePage />
+        ) : (
+          <Suspense fallback={<PageLoader />}>
+            {currentPage === 'tableaux' && <TableauxPage />}
+            {currentPage === 'writiclove' && <WriticLovePage />}
+            {currentPage === 'box' && <BoxPage />}
+            {currentPage === 'boutique' && <ShopPage />}
+            {currentPage === 'product-detail' && (
+              <ProductDetailPage productId={currentProductId} />
+            )}
+            {currentPage === 'sur-mesure' && (
+              <StudioPage
+                config={config}
+                onChangeConfig={setConfig}
+                onOpenQuoteSummary={() => setIsQuoteModalOpen(true)}
+              />
+            )}
+            {currentPage === 'pensee' && (
+              <OraclePage onUseThoughtInStudio={handleUseThoughtInStudio} />
+            )}
+            {currentPage === 'galerie' && (
+              <GalleryPage
+                onSelectArtPiece={handleSelectArtPiece}
+                onOpenStory={(idx) => setActiveStoryIndex(idx)}
+              />
+            )}
+            {currentPage === 'journal' && <BlogPage />}
+            {currentPage === 'article' && (
+              <ArticleDetailPage articleId={currentArticleId} />
+            )}
+            {currentPage === 'suivi-commande' && <OrderTrackingPage />}
+            {currentPage === 'atelier' && <AtelierPage />}
+          </Suspense>
         )}
-        
-        {currentPage === 'sur-mesure' && (
-          <StudioPage
-            config={config}
-            onChangeConfig={setConfig}
-            onOpenQuoteSummary={() => setIsQuoteModalOpen(true)}
-          />
-        )}
-        
-        {currentPage === 'pensee' && (
-          <OraclePage onUseThoughtInStudio={handleUseThoughtInStudio} />
-        )}
-        
-        {currentPage === 'galerie' && (
-          <GalleryPage
-            onSelectArtPiece={handleSelectArtPiece}
-            onOpenStory={(idx) => setActiveStoryIndex(idx)}
-          />
-        )}
-
-        {currentPage === 'journal' && <BlogPage />}
-
-        {currentPage === 'article' && (
-          <ArticleDetailPage articleId={currentArticleId} />
-        )}
-
-        {currentPage === 'suivi-commande' && <OrderTrackingPage />}
-        
-        {currentPage === 'atelier' && <AtelierPage />}
       </main>
 
       {/* Footer */}
@@ -181,19 +221,23 @@ const AppContent: React.FC = () => {
 
       {/* Story Viewer Modal */}
       {activeStoryIndex !== null && (
-        <AtelierStoryModal
-          initialIndex={activeStoryIndex}
-          onClose={() => setActiveStoryIndex(null)}
-          onConfigureFromStory={() => navigateTo('sur-mesure')}
-        />
+        <Suspense fallback={null}>
+          <AtelierStoryModal
+            initialIndex={activeStoryIndex}
+            onClose={() => setActiveStoryIndex(null)}
+            onConfigureFromStory={() => navigateTo('sur-mesure')}
+          />
+        </Suspense>
       )}
 
       {/* Proforma Quote / Invoice Modal */}
       {isQuoteModalOpen && (
-        <QuoteEngineModal
-          config={config}
-          onClose={() => setIsQuoteModalOpen(false)}
-        />
+        <Suspense fallback={null}>
+          <QuoteEngineModal
+            config={config}
+            onClose={() => setIsQuoteModalOpen(false)}
+          />
+        </Suspense>
       )}
 
     </div>

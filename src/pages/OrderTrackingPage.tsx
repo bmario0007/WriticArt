@@ -21,12 +21,13 @@ export const OrderTrackingPage: React.FC = () => {
     const clean = rawQuery.toLowerCase();
     if (!clean) return;
 
+    const digits = clean.replace(/[^0-9]/g, '');
     const foundLocal = orders.find(
       (o) =>
         o.id.toLowerCase() === clean ||
-        (clean.replace(/[^0-9]/g, '').length >= 4 &&
-          o.clientPhone.replace(/[^0-9]/g, '').includes(clean.replace(/[^0-9]/g, ''))) ||
-        o.clientName.toLowerCase().includes(clean)
+        (digits.length >= 6 &&
+          o.clientPhone.replace(/[^0-9]/g, '').includes(digits)) ||
+        (clean.length >= 3 && o.clientName.toLowerCase().includes(clean))
     );
 
     if (cloudConfig.appsScriptUrl && clean.startsWith('cmd-')) {

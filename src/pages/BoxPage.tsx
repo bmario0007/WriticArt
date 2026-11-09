@@ -16,7 +16,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { useErp } from '../context/ErpContext';
 import { useNavigation } from '../context/NavigationContext';
-import { TABLEAU_THEMES } from './TableauxPage';
+import { TABLEAU_THEMES } from '../data/acrosticData';
 import { atelierAudio } from '../utils/soundEffects';
 import {
   boxFevrierImg,

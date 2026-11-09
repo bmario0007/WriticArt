@@ -23,7 +23,6 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
   const story = instagramStories[index];
 
   useEffect(() => {
-    setProgress(0);
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {

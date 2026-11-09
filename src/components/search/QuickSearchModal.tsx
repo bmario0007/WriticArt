@@ -20,19 +20,23 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({ isOpen, onCl
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      setQuery('');
-    }
+    if (!isOpen) return;
+    const timer = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        setQuery('');
+        onClose();
+      }
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        if (isOpen) onClose();
+        if (isOpen) {
+          setQuery('');
+          onClose();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);

@@ -21,81 +21,8 @@ import {
   tableauAcrosticheDorureImg
 } from '../assets/images';
 import { OrderDispatchBadges } from '../components/OrderDispatchBadges';
+import { TABLEAU_THEMES, buildAcrosticLines } from '../data/acrosticData';
 import type { ErpOrder, OrderDispatchInfo } from '../types';
-
-const ACROSTIC_FR: Record<string, string> = {
-  A: 'Âme lumineuse dont la douceur éclaire nos jours,',
-  B: 'Beauté sincère qui inspire le respect et la joie,',
-  C: 'Cœur généreux où chaque parole devient refuge,',
-  D: 'Douceur infinie gravée dans le temps qui passe,',
-  E: 'Étoile bienveillante guidant chacun de nos pas,',
-  F: 'Flamme paisible qui réchauffe les souvenirs,',
-  G: 'Grâce naturelle dans chaque geste et chaque mot,',
-  H: 'Harmonie précieuse que rien ne saurait effacer,',
-  I: 'Instant d’éternité suspendu au fil de la plume,',
-  J: 'Joie véritable partagée avec sincérité,',
-  K: 'Keepsake d’émotion offert pour traverser les années,',
-  L: 'Lumière fidèle qui demeure au-delà des saisons,',
-  M: 'Merveilleuse présence dont le nom mérite de rester,',
-  N: 'Noblesse du cœur et tendresse inaltérable,',
-  O: 'Offrande de mots choisis pour toucher l’âme,',
-  P: 'Promesse écrite à l’encre d’un souvenir vrai,',
-  Q: 'Quiétude profonde née d’une affection sincère,',
-  R: 'Rayonnement discret qui embellit chaque instant,',
-  S: 'Sérénité d’un lien tissé avec gratitude,',
-  T: 'Tendresse éternelle gravée sur papier d’art,',
-  U: 'Union précieuse des cœurs et des pensées,',
-  V: 'Vérité d’un sentiment qui résiste au temps,',
-  W: 'WriticArt grave ces lettres pour qu’elles demeurent,',
-  X: 'Xéniale attention portée par un mot juste,',
-  Y: 'Yeux brillants devant l’émotion d’un présent unique,',
-  Z: 'Zénith d’une histoire écrite pour toujours.'
-};
-
-const ACROSTIC_EN: Record<string, string> = {
-  A: 'A radiant soul whose kindness brightens our days,',
-  B: 'Boundless grace felt in every thoughtful gesture,',
-  C: 'Cherished presence woven into lasting memories,',
-  D: 'Deep devotion written gently across time,',
-  E: 'Eternal light guiding every step forward,',
-  F: 'Faithful warmth that stays long after words are spoken,',
-  G: 'Gentle strength admired by all who know you,',
-  H: 'Heartfelt harmony that no distance can fade,',
-  I: 'Infinite gratitude captured letter by letter,',
-  J: 'Joyful spirit that turns moments into treasures,',
-  K: 'Kindness remembered for generations to come,',
-  L: 'Luminous bond inscribed with ink and emotion,',
-  M: 'Meaningful presence whose name deserves to remain,',
-  N: 'Noble heart filled with sincerity and peace,',
-  O: 'Open warmth offered with true affection,',
-  P: 'Poetic promise shaped so it will always endure,',
-  Q: 'Quiet beauty blossoming in everyday moments,',
-  R: 'Resilient affection shining softly through the years,',
-  S: 'Sincere gratitude written cleanly from the heart,',
-  T: 'Timeless tenderness framed as a living memory,',
-  U: 'Unbreakable unity of hearts and intentions,',
-  V: 'Vibrant grace remembered with every glance,',
-  W: 'Words crafted by WriticArt so they forever stay,',
-  X: 'eXtraordinary light carried within a single name,',
-  Y: 'Yearning joy celebrated in enduring verse,',
-  Z: 'Zenith of a story inscribed in timeless form.'
-};
-
-export const TABLEAU_THEMES = [
-  { id: 'Anniversaire', fr: 'Anniversaire', en: 'Birthday / Anniversary' },
-  { id: 'Amour / Couple', fr: 'Amour / Couple', en: 'Love / Couple' },
-  { id: 'Naissance', fr: 'Naissance', en: 'Birth / Newborn' },
-  { id: 'Motivation', fr: 'Motivation', en: 'Motivation' },
-  { id: 'Baptême', fr: 'Baptême', en: 'Baptism / Naming Ceremony' },
-  { id: 'Retraite', fr: 'Retraite', en: 'Retirement' },
-  { id: 'Félicitations', fr: 'Félicitations', en: 'Congratulations' },
-  {
-    id: 'Amitié / Reconnaissance / Réussite',
-    fr: 'Amitié / Reconnaissance / Réussite',
-    en: 'Friendship / Gratitude / Achievement'
-  },
-  { id: 'Autres', fr: 'Autres (préciser)', en: 'Other (please specify)' }
-];
 
 export const TableauxPage: React.FC = () => {
   const { tr, lang } = useLanguage();
@@ -168,13 +95,7 @@ export const TableauxPage: React.FC = () => {
 
   const activeFormulaObj = formulas.find((f) => f.id === tableauType) || formulas[1];
 
-  const cleanLetters = (previewWord || 'AMOUR')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toUpperCase()
-    .replace(/[^A-Z]/g, '')
-    .slice(0, 10)
-    .split('');
+  const acrosticLines = buildAcrosticLines(previewWord, lang);
 
   const scrollToForm = (formulaId?: 'citation' | 'standard' | 'personnalise', chosenTheme?: string) => {
     if (formulaId) setTableauType(formulaId);
@@ -406,15 +327,12 @@ export const TableauxPage: React.FC = () => {
                 </div>
 
                 <div className="space-y-2 py-1">
-                  {cleanLetters.map((letter, idx) => (
-                    <p key={idx} className="font-['Cormorant_Garamond'] text-base sm:text-lg leading-snug text-[#231B26]">
+                  {acrosticLines.map((line, idx) => (
+                    <p key={`${idx}-${line.letter}`} className="font-['Cormorant_Garamond'] text-base sm:text-lg leading-snug text-[#231B26]">
                       <span className="font-['Cinzel'] text-xl sm:text-2xl font-bold text-[#C46A0B] mr-[1px]">
-                        {letter}
+                        {line.letter}
                       </span>
-                      <span className="italic">
-                        {(lang === 'en' ? ACROSTIC_EN[letter] : ACROSTIC_FR[letter])?.slice(1) ||
-                          tr('omme une promesse qui demeure.', 'verlasting tribute written with grace.')}
-                      </span>
+                      <span className="italic">{line.rest}</span>
                     </p>
                   ))}
                 </div>

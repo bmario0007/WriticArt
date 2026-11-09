@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, PhoneCall, MapPin, ShieldCheck } from 'lucide-react';
 import { InstagramIcon } from './InstagramIcon';
 import logoDark from '../assets/brand/logo-dark.jpg';
@@ -8,6 +8,7 @@ import { useLanguage } from '../context/LanguageContext';
 export const Footer: React.FC = () => {
   const { navigateTo } = useNavigation();
   const { tr } = useLanguage();
+  const [currentYear] = useState(() => new Date().getFullYear());
 
   return (
     <footer className="bg-[#231B26] text-[#FAF8F5] pt-16 pb-12 border-t-2 border-[#C5A059]/40">
@@ -166,7 +167,7 @@ export const Footer: React.FC = () => {
         {/* Bottom copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#A69C91] gap-4">
           <p>
-            © {new Date().getFullYear()} WriticArt — « {tr('Les écrits restent', 'Words that stay')} ».{' '}
+            © {currentYear} WriticArt — « {tr('Les écrits restent', 'Words that stay')} ».{' '}
             {tr('Tous droits réservés.', 'All rights reserved.')}
           </p>
           <div className="flex items-center space-x-4">

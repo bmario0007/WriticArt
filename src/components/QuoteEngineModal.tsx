@@ -7,7 +7,8 @@ import {
   ShieldCheck,
   PhoneCall
 } from 'lucide-react';
-import type { QuoteConfiguration } from '../types';
+import type { OrderDispatchInfo, QuoteConfiguration } from '../types';
+import { OrderDispatchBadges } from './OrderDispatchBadges';
 import { atelierAudio } from '../utils/soundEffects';
 import { useLanguage } from '../context/LanguageContext';
 import { useCurrency } from '../context/CurrencyContext';
@@ -23,19 +24,23 @@ interface QuoteEngineModalProps {
 export const QuoteEngineModal: React.FC<QuoteEngineModalProps> = ({ config, onClose }) => {
   const { tr } = useLanguage();
   const { formatPrice, formatExactBoth, currency } = useCurrency();
-  const { addOrder } = useErp();
+  const { submitOrderWithCloud } = useErp();
 
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
   const [clientPhone, setClientPhone] = useState('');
   const [isSent, setIsSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dispatchInfo, setDispatchInfo] = useState<OrderDispatchInfo | undefined>(undefined);
 
   const [quoteNumber] = useState(() => 'DEV-WA-' + Math.floor(100000 + Math.random() * 900000));
-  const today = new Date().toLocaleDateString('fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const [today] = useState(() =>
+    new Date().toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  );
 
   // Calculate detailed items in FCFA aligned with StudioConfigurator
   let baseUnitFCFA = 5000;
@@ -63,33 +68,39 @@ export const QuoteEngineModal: React.FC<QuoteEngineModalProps> = ({ config, onCl
   const finalTotalFCFA = Math.round(subtotal + rushFee);
   const bothFinal = formatExactBoth(finalTotalFCFA);
 
-  const saveQuoteToErp = () => {
-    addOrder({
-      clientName: clientName.trim() || 'Client Studio Sur-Mesure',
-      clientPhone: clientPhone.trim() || '+221 (Non renseigné)',
-      clientEmail: clientEmail.trim() || undefined,
-      city: 'Atelier Sur-Mesure (À confirmer)',
-      items: [
-        {
-          title: `Devis Atelier (${quoteNumber}) — ${config.customTitle || config.eventType}`,
-          quantity: config.quantity,
-          unitPriceFCFA: unitTotal,
-          options: `${config.paperType} • ${config.inkType} • ${config.calligraphyStyle}`
-        }
-      ],
-      totalFCFA: finalTotalFCFA,
-      currencyUsed: currency,
-      offerType: config.eventType === 'tableau' ? 'tableau' : config.eventType === 'writiclove' ? 'writiclove' : 'atelier',
-      questionType: 'Demande de devis Atelier Sur-Mesure',
-      status: 'nouveau',
-      paymentMethod: 'Wave',
-      paymentStatus: 'en_attente',
-      customMessage: config.customMessage,
-      notes: `Devis : ${quoteNumber} | Devise : ${currency}`
-    });
+  const saveQuoteToErp = async () => {
+    setIsSubmitting(true);
+    try {
+      const { dispatch } = await submitOrderWithCloud({
+        clientName: clientName.trim() || 'Client Studio Sur-Mesure',
+        clientPhone: clientPhone.trim() || '+221 (Non renseigné)',
+        clientEmail: clientEmail.trim() || undefined,
+        city: 'Atelier Sur-Mesure (À confirmer)',
+        items: [
+          {
+            title: `Devis Atelier (${quoteNumber}) — ${config.customTitle || config.eventType}`,
+            quantity: config.quantity,
+            unitPriceFCFA: unitTotal,
+            options: `${config.paperType} • ${config.inkType} • ${config.calligraphyStyle}`
+          }
+        ],
+        totalFCFA: finalTotalFCFA,
+        currencyUsed: currency,
+        offerType: config.eventType === 'tableau' ? 'tableau' : config.eventType === 'writiclove' ? 'writiclove' : 'atelier',
+        questionType: 'Demande de devis Atelier Sur-Mesure',
+        status: 'nouveau',
+        paymentMethod: 'Wave',
+        paymentStatus: 'en_attente',
+        customMessage: config.customMessage,
+        notes: `Devis : ${quoteNumber} | Devise : ${currency}`
+      });
+      setDispatchInfo(dispatch);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleSendWhatsApp = () => {
+  const handleSendWhatsApp = async () => {
     atelierAudio.playWaxStamp();
     confetti({
       particleCount: 50,
@@ -97,10 +108,6 @@ export const QuoteEngineModal: React.FC<QuoteEngineModalProps> = ({ config, onCl
       origin: { y: 0.6 },
       colors: ['#E68314', '#231B26', '#25D366']
     });
-
-    if (!isSent) {
-      saveQuoteToErp();
-    }
 
     const message = [
       `Bonjour l'Atelier WriticArt ! ✨`,
@@ -115,12 +122,16 @@ export const QuoteEngineModal: React.FC<QuoteEngineModalProps> = ({ config, onCl
     ].join('\n');
 
     window.open(`https://wa.me/221772348521?text=${encodeURIComponent(message)}`, '_blank');
-    setIsSent(true);
+
+    if (!isSent && !isSubmitting) {
+      await saveQuoteToErp();
+      setIsSent(true);
+    }
   };
 
-  const handleRecordOnly = () => {
-    if (!isSent) {
-      saveQuoteToErp();
+  const handleRecordOnly = async () => {
+    if (!isSent && !isSubmitting) {
+      await saveQuoteToErp();
       setIsSent(true);
     }
   };
@@ -203,16 +214,17 @@ export const QuoteEngineModal: React.FC<QuoteEngineModalProps> = ({ config, onCl
               className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 flex items-center space-x-3"
             >
               <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-              <div className="text-xs">
+              <div className="text-xs space-y-1 flex-1">
                 <span className="font-semibold block">
                   {tr('Demande de devis enregistrée ! Vous serez contacté(e) par la suite.', 'Quote request saved! You will be contacted shortly.')}
                 </span>
-                <span>
+                <span className="block">
                   {tr(
                     `Référence : ${quoteNumber} • Monnaie enregistrée : ${currency}`,
                     `Reference: ${quoteNumber} • Currency saved: ${currency}`
                   )}
                 </span>
+                <OrderDispatchBadges dispatch={dispatchInfo} />
               </div>
             </div>
           )}
@@ -355,15 +367,21 @@ export const QuoteEngineModal: React.FC<QuoteEngineModalProps> = ({ config, onCl
 
             <div className="flex flex-wrap items-center justify-end gap-2.5 w-full sm:w-auto">
               <button
-                onClick={handleRecordOnly}
-                className="px-5 py-3 rounded-full border border-[#DED4C3] dark:border-[#38332E] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:border-[#E68314]"
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => void handleRecordOnly()}
+                className="px-5 py-3 rounded-full border border-[#DED4C3] dark:border-[#38332E] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:border-[#E68314] disabled:opacity-60"
               >
-                {tr('Enregistrer la demande', 'Save Quote Request')}
+                {isSubmitting
+                  ? tr('Enregistrement...', 'Saving...')
+                  : tr('Enregistrer la demande', 'Save Quote Request')}
               </button>
 
               <button
-                onClick={handleSendWhatsApp}
-                className="px-6 py-3 rounded-full bg-[#25D366] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#1EBE5D] transition-all flex items-center justify-center space-x-2 shadow-lg"
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => void handleSendWhatsApp()}
+                className="px-6 py-3 rounded-full bg-[#25D366] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#1EBE5D] disabled:opacity-60 transition-all flex items-center justify-center space-x-2 shadow-lg"
               >
                 <PhoneCall className="w-4 h-4" />
                 <span>WhatsApp (+221 77 234 85 21)</span>
