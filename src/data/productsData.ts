@@ -3,83 +3,145 @@ import feedInstagram from '../assets/brand/feed-instagram.png';
 export interface WriticProduct {
   id: string;
   name: string;
+  nameEn: string;
   subtitle: string;
+  subtitleEn: string;
   priceFCFA: number;
   priceEUR: number;
   badge?: string;
+  badgeEn?: string;
   colorScheme: 'noir-or' | 'rose-or' | 'duo';
   description: string;
+  descriptionEn: string;
   features: string[];
+  featuresEn: string[];
   sampleCards: string[];
+  sampleCardsEn: string[];
   image: string;
 }
+
+// Conversion exacte selon la parité fixe officielle : 1 EUR = 655,957 FCFA
+const convertFCFAtoEUR = (fcfa: number) => Math.round((fcfa / 655.957) * 100) / 100;
 
 export const writicLoveProducts: WriticProduct[] = [
   {
     id: 'writiclove-homme',
-    name: 'Writic’Love Homme',
-    subtitle: '365 Jours d’Amour — Coffret Prestige Noir & Or',
+    name: 'Version Homme',
+    nameEn: 'Men’s Edition',
+    subtitle: '365 cartes + 1 carte bonus • Sortie Fin Déc. 2026 / Début Janv. 2027',
+    subtitleEn: '365 cards + 1 bonus card • Official release: Late Dec 2026 / Early Jan 2027',
     priceFCFA: 30000,
-    priceEUR: 45,
-    badge: 'Best-Seller',
+    priceEUR: convertFCFAtoEUR(30000),
+    badge: 'Précommande',
+    badgeEn: 'Pre-order',
     colorScheme: 'noir-or',
-    description: '365 cartes quotidiennes pensées pour nourrir l’amour, inspirer l’attention et renforcer la complicité au sein du couple, jour après jour.',
+    description:
+      'Coffret de 365 cartes (une par jour de l’année) plus une carte bonus pour renouveler ses intentions, améliorer sa communication, renforcer sa complicité et placer ALLAH au cœur du mariage. (La livraison n’est pas incluse dans le prix).',
+    descriptionEn:
+      'A keepsake box of 365 cards (one for each day of the year) plus 1 bonus card designed to renew daily intentions, strengthen communication, deepen closeness, and place ALLAH at the heart of marriage. (Delivery is not included in the price).',
     features: [
-      '365 cartes imprimées sur papier d’art haute qualité',
-      'Boîte coffret de luxe rigide noir mat & dorure or chaud',
-      'Un rituel quotidien pour élever son couple',
-      'Questions profondes, déclarations et résolutions',
-      'Scellé avec le cachet d’authenticité WriticArt'
+      '365 cartes quotidiennes + 1 carte bonus sur papier noble',
+      'Conseils, réflexions et petites attentions jour après jour',
+      'Certaines cartes rappellent l’importance de placer ALLAH au cœur du mariage',
+      'Sortie officielle : fin décembre 2026 / début janvier 2027',
+      'Précommande ouverte (livraison non incluse dans le prix)'
+    ],
+    featuresEn: [
+      '365 daily cards + 1 bonus card printed on fine textured card stock',
+      'Reflections, advice, and sincere daily gestures',
+      'Selected cards highlight the importance of placing ALLAH at the heart of marriage',
+      'Official release: late December 2026 / early January 2027',
+      'Pre-order open now (delivery not included in the price)'
     ],
     sampleCards: [
-      '« Aujourd’hui, je t’aime plus que jamais. »',
-      '« Jour 010 — Je mesure mes paroles avant de les prononcer. »',
-      '« Une attention vaut mille promesses inexprimées. »'
+      '« Renouveler ses intentions chaque matin, c’est protéger la lumière du foyer. »',
+      '« Prendre soin de son partenaire commence par une écoute sincère et bienveillante. »',
+      '« Placer ALLAH au cœur de notre union donne à chaque geste une valeur éternelle. »'
+    ],
+    sampleCardsEn: [
+      '“Renewing your intentions every morning safeguards the warmth of your home.”',
+      '“Caring for your spouse starts with sincere and gentle listening.”',
+      '“Placing ALLAH at the heart of our union gives every gesture eternal meaning.”'
     ],
     image: feedInstagram
   },
   {
     id: 'writiclove-femme',
-    name: 'Writic’Love Femme',
-    subtitle: '365 Jours d’Amour — Coffret Rose Poudré & Or',
+    name: 'Version Femme',
+    nameEn: 'Women’s Edition',
+    subtitle: '365 cartes + 1 carte bonus • Sortie Fin Déc. 2026 / Début Janv. 2027',
+    subtitleEn: '365 cards + 1 bonus card • Official release: Late Dec 2026 / Early Jan 2027',
     priceFCFA: 30000,
-    priceEUR: 45,
-    badge: 'Coup de Cœur',
+    priceEUR: convertFCFAtoEUR(30000),
+    badge: 'Précommande',
+    badgeEn: 'Pre-order',
     colorScheme: 'rose-or',
-    description: 'Une édition délicate aux teintes rose poudré et or fin, célébrant la douceur, la tendresse et la bienveillance réciproque.',
+    description:
+      'Coffret de 365 cartes (une par jour de l’année) plus une carte bonus pour transformer les petites attentions en habitudes durables et vivre l’amour comme une intention renouvelée, avec ALLAH au cœur du mariage. (Livraison non incluse).',
+    descriptionEn:
+      'A box of 365 cards (one per day of the year) plus 1 bonus card crafted to turn small thoughtful gestures into lasting habits, living love as a daily renewed intention with ALLAH at the heart of marriage. (Delivery not included).',
     features: [
-      '365 pensées et attentions calligraphiées',
-      'Écrin raffiné rose poudré avec gaufrage or',
-      'Inspirations quotidiennes pour cultiver la sérénité du foyer',
-      'Format carte de poche à conserver près de soi',
-      'Ruban de satin et finition artisanale'
+      '365 cartes quotidiennes + 1 carte bonus sur papier noble',
+      'Cultiver la douceur, l’écoute et les attentions sincères',
+      'Certaines cartes rappellent l’importance de placer ALLAH au cœur du mariage',
+      'Sortie officielle : fin décembre 2026 / début janvier 2027',
+      'Précommande ouverte (livraison non incluse dans le prix)'
+    ],
+    featuresEn: [
+      '365 daily cards + 1 bonus card on luxury paper',
+      'Nurture gentleness, empathy, and sincere gestures',
+      'Selected cards highlight placing ALLAH at the heart of marriage',
+      'Official release: late December 2026 / early January 2027',
+      'Pre-order open now (delivery not included)'
     ],
     sampleCards: [
-      '« Jour 009 — Le respect, l’acceptation mutuelle et la confiance sont le socle de notre amour. »',
-      '« Chaque jour à tes côtés est une bénédiction qui se réinvente. »',
-      '« Jour 289 — Être en couple, c’est apprécier les moments partagés et aussi notre liberté intérieure. »'
+      '« Les petites attentions deviennent, avec la constance, les plus grandes preuves d’amour. »',
+      '« Chaque jour à tes côtés est une bénédiction qui se réinvente dans la paix. »',
+      '« Placer ALLAH au centre de notre foyer nous guide vers la sérénité. »'
+    ],
+    sampleCardsEn: [
+      '“With consistency, small thoughtful gestures become the greatest expressions of love.”',
+      '“Every day beside you is a blessing renewed in peace.”',
+      '“Placing ALLAH at the center of our home guides us toward serenity.”'
     ],
     image: feedInstagram
   },
   {
     id: 'writiclove-duo',
-    name: 'Le Duo d’Exception',
-    subtitle: 'Coffret Homme + Coffret Femme (Pack Complémentaire)',
+    name: 'Pack couple',
+    nameEn: 'Couple Pack',
+    subtitle: 'Version Homme + Version Femme • Sortie Fin Déc. 2026 / Début Janv. 2027',
+    subtitleEn: 'Men’s + Women’s Editions • Official release: Late Dec 2026 / Early Jan 2027',
     priceFCFA: 50000,
-    priceEUR: 75,
-    badge: 'Offre Spéciale (-10 000 FCFA)',
+    priceEUR: convertFCFAtoEUR(50000),
+    badge: 'Offre Couple • -10.000 FCFA',
+    badgeEn: 'Couple Offer • Save 10,000 FCFA',
     colorScheme: 'duo',
-    description: 'L’expérience ultime pour le couple : les deux coffrets complémentaires pour partager chaque matin ou soir une attention croisée.',
+    description:
+      'Réunit la Version Homme et la Version Femme : 2 coffrets de 365 cartes + 1 carte bonus chacun. Conçu pour vivre ensemble ce rituel quotidien, renforcer la complicité et placer ALLAH au cœur du mariage. (La livraison n’est pas incluse dans le prix).',
+    descriptionEn:
+      'Brings together both the Men’s and Women’s Editions: two boxes of 365 cards + 1 bonus card each. Designed to share this daily ritual together, strengthen intimacy, and place ALLAH at the heart of marriage. (Delivery not included).',
     features: [
-      'Les 2 coffrets complets (730 cartes d’amour au total)',
-      'Économie immédiate de 10 000 FCFA par rapport à l’achat individuel',
-      'Emballage cadeau VIP scellé à la cire et ruban de soie',
-      'Livraison prioritaire sur Dakar & expéditions internationales',
-      'Livret d’introduction au rituel d’amour WriticArt inclus'
+      'Les 2 coffrets complets : Version Homme + Version Femme (365 + 1 cartes chacun)',
+      'Économie de 10.000 FCFA par rapport à l’achat individuel',
+      'Certaines cartes rappellent l’importance de placer ALLAH au cœur du mariage',
+      'Sortie officielle : fin décembre 2026 / début janvier 2027',
+      'Précommande ouverte (livraison non incluse dans le prix)'
+    ],
+    featuresEn: [
+      'Both complete boxes: Men’s + Women’s Editions (365 + 1 cards each)',
+      'Save 10,000 FCFA compared to individual purchase',
+      'Selected cards remind couples to place ALLAH at the heart of marriage',
+      'Official release: late December 2026 / early January 2027',
+      'Pre-order open now (delivery not included)'
     ],
     sampleCards: [
-      '« Deux coffrets, deux regards, une seule et même promesse. »',
-      '« Le rituel amoureux qui a transformé des centaines de relations. »'
+      '« Deux coffrets, deux regards, une seule intention renouvelée chaque jour. »',
+      '« Nourrir votre amour au quotidien par la parole sincère et la bienveillance. »'
+    ],
+    sampleCardsEn: [
+      '“Two boxes, two hearts, one daily renewed intention.”',
+      '“Nurturing your love every day through sincere words and kindness.”'
     ],
     image: feedInstagram
   }
@@ -88,26 +150,26 @@ export const writicLoveProducts: WriticProduct[] = [
 export const instagramHighlightsData = [
   {
     id: 'writic-love',
-    name: "Writic'Love",
-    subtitle: 'Coffrets 365 Jours',
+    name: "WriticLove",
+    subtitle: 'Coffrets 365 + 1 Cartes',
     icon: '❤️'
   },
   {
     id: 'tableaux',
-    name: 'Tableaux Réalisés',
-    subtitle: 'Toiles d’Art Manuscrites',
+    name: 'Tableaux Acrostiches',
+    subtitle: 'À partir de 5.000 FCFA',
     icon: '🎨'
   },
   {
-    id: 'cadres',
-    name: 'Cadres Déco',
-    subtitle: 'Citations Encadrées',
-    icon: '🖼️'
+    id: 'box-fevrier',
+    name: 'Box Février',
+    subtitle: 'WriticLove + Tableau + Parfum',
+    icon: '✨'
   },
   {
     id: 'feedbacks',
-    name: 'Feedbacks',
-    subtitle: 'Avis & Vidéos Clients',
+    name: 'Témoignages',
+    subtitle: 'Avis Clients',
     icon: '⭐'
   }
 ];

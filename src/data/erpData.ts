@@ -7,92 +7,111 @@ import feedInstagram from '../assets/brand/feed-instagram.png';
 export const initialCatalogProducts: CatalogProduct[] = [
   {
     id: 'writiclove-duo',
-    name: 'Le Duo d’Exception Writic’Love',
+    name: 'Pack Couple WriticLove (365 + 1 Cartes)',
     category: 'writiclove',
-    categoryLabel: 'Coffrets 365 Jours',
-    subtitle: 'Coffret Homme + Coffret Femme (Pack Complémentaire)',
+    categoryLabel: 'Coffrets 365 Jours • Précommande',
+    subtitle: 'Version Homme + Version Femme (Sortie Fin Déc. 2026 / Début Janv. 2027)',
     priceFCFA: 50000,
-    badge: 'Offre Spéciale Duo',
+    badge: 'Précommande • -10k FCFA',
     inStock: true,
     image: feedInstagram,
-    description: 'L’expérience ultime pour le couple : les 2 coffrets complémentaires réunis dans un emballage cadeau de prestige scellé au sceau de cire WriticArt.',
+    description: 'Et si vous faisiez de l’amour une intention renouvelée chaque jour ? Pack complet des deux coffrets (Homme & Femme) avec 365 cartes quotidiennes + 1 carte bonus. Inclut des cartes rappelant l’importance de placer ALLAH au cœur du mariage. (Livraison non incluse).',
     features: [
-      '2 coffrets complets (730 cartes quotidiennes au total)',
-      'Écrins de luxe noir mat et rose poudré avec dorure à chaud',
-      'Économie immédiate de 10 000 FCFA sur le duo',
-      'Scellé à la main avec cire d’atelier et ruban de soie',
-      'Livraison express Dakar & expédition internationale'
+      '2 coffrets complets : Version Homme + Version Femme (365 cartes + 1 carte bonus chacun)',
+      'Certaines cartes rappellent l’importance de placer ALLAH au cœur du mariage',
+      'Écrins de luxe noir mat & or / rose poudré avec finition dorure',
+      'Sortie officielle : fin décembre 2026 / début janvier 2027',
+      'Précommande ouverte — Économie de 10.000 FCFA (Livraison non incluse)'
     ]
   },
   {
     id: 'writiclove-homme',
-    name: 'Coffret Writic’Love Homme',
+    name: 'WriticLove — Version Homme',
     category: 'writiclove',
-    categoryLabel: 'Coffrets 365 Jours',
-    subtitle: '365 Jours d’Amour — Prestige Noir & Or',
+    categoryLabel: 'Coffrets 365 Jours • Précommande',
+    subtitle: '365 Cartes + 1 Carte Bonus • Sortie Fin Déc. 2026',
     priceFCFA: 30000,
-    badge: 'Best-Seller',
+    badge: 'Précommande',
     inStock: true,
     image: feedInstagram,
-    description: '365 cartes quotidiennes pensées pour nourrir l’amour, inspirer l’attention et fortifier la complicité au sein du couple, jour après jour.',
+    description: 'Coffret de 365 cartes (une par jour de l’année) plus une carte bonus pour renouveler ses intentions, améliorer sa communication et placer ALLAH au cœur du mariage. (Livraison non incluse dans le prix).',
     features: [
-      '365 cartes imprimées sur papier d’art 350g',
-      'Boîte rigide noir mat & dorure or fin',
-      'Questions d’intimité, déclarations et résolutions',
-      'Un rituel quotidien pour élever votre relation'
+      '365 cartes quotidiennes + 1 carte bonus sur papier noble',
+      'Renouveler ses intentions & renforcer la complicité du couple',
+      'Certaines cartes rappellent l’importance de placer ALLAH au cœur du mariage',
+      'Sortie officielle : fin décembre 2026 / début janvier 2027'
     ]
   },
   {
     id: 'writiclove-femme',
-    name: 'Coffret Writic’Love Femme',
+    name: 'WriticLove — Version Femme',
     category: 'writiclove',
-    categoryLabel: 'Coffrets 365 Jours',
-    subtitle: '365 Jours d’Amour — Rose Poudré & Or',
+    categoryLabel: 'Coffrets 365 Jours • Précommande',
+    subtitle: '365 Cartes + 1 Carte Bonus • Sortie Fin Déc. 2026',
     priceFCFA: 30000,
-    badge: 'Coup de Cœur',
+    badge: 'Précommande',
     inStock: true,
     image: feedInstagram,
-    description: 'Une édition délicate aux teintes rose poudré et or fin, célébrant la douceur, la tendresse et la bienveillance réciproque.',
+    description: 'Coffret de 365 cartes (une par jour de l’année) plus une carte bonus conçu pour accompagner la vie de couple à travers de petites attentions sincères et inspirantes. (Livraison non incluse).',
     features: [
-      '365 pensées et attentions poétiques',
-      'Écrin raffiné rose poudré avec gaufrage or',
-      'Inspirations quotidiennes pour le cœur et l’esprit',
-      'Ruban de satin et finition artisanale'
+      '365 cartes quotidiennes + 1 carte bonus',
+      'Améliorer la communication et transformer les attentions en habitudes durables',
+      'Dimensions spirituelles : placer ALLAH au cœur du mariage',
+      'Sortie officielle : fin décembre 2026 / début janvier 2027'
     ]
   },
   {
-    id: 'tableau-toile',
-    name: 'Tableau d’Art Calligraphié sur Toile',
+    id: 'tableau-citation-simple',
+    name: 'Tableau Acrostiche — Citation Simple',
     category: 'tableau',
-    categoryLabel: 'Tableaux & Toiles',
-    subtitle: 'Toile en Lin Pur 40x50cm & Feuilles d’Or 24K',
-    priceFCFA: 35000,
-    badge: 'Sur-Mesure',
+    categoryLabel: 'Tableaux Personnalisés',
+    subtitle: 'À partir de 5.000 FCFA jusqu’à 10.000 FCFA • Livraison incluse en France',
+    priceFCFA: 5000,
+    badge: 'À partir de 5.000 FCFA',
     inStock: true,
     image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80',
-    description: 'Une pièce unique exécutée entièrement à la main sur toile de lin tendue sur châssis en bois noble. Vos vœux, versets ou poèmes manuscrits à l’or 24 carats.',
+    description: 'Un mot, un prénom ou une expression mis en valeur sous forme d’acrostiche poétique ou de citation courte dans un univers visuel adapté au thème de votre choix (Anniversaire, Amour, Naissance...). Livraison incluse uniquement en France.',
     features: [
-      'Châssis bois avec toile lin pur de maître',
-      'Dorure à la feuille d’or libre 24K en relief',
-      'Encre de Chine et pigments minéraux résistants au temps',
-      'Validation préalable par Bon à Tirer (BAT)'
+      'Concept exclusif : l’art de l’acrostiche (chaque lettre ouvre une ligne poétique)',
+      'Tarif : à partir de 5.000 FCFA jusqu’à 10.000 FCFA selon le format',
+      '9 thèmes au choix : Anniversaire, Amour, Naissance, Motivation, Baptême, Retraite...',
+      'Livraison incluse dans le prix uniquement si la livraison se fait en France'
     ]
   },
   {
-    id: 'cadre-poetique',
-    name: 'Cadre Poétique Écrin Bois Doré',
-    category: 'cadre',
-    categoryLabel: 'Cadres Décoratifs',
-    subtitle: 'Format 30x40cm sous Verre Minéral',
-    priceFCFA: 20000,
+    id: 'tableau-poeme-standard',
+    name: 'Tableau Acrostiche — Poème Standard',
+    category: 'tableau',
+    categoryLabel: 'Tableaux Personnalisés',
+    subtitle: 'À partir de 10.000 FCFA jusqu’à 15.000 FCFA • Livraison incluse en France',
+    priceFCFA: 10000,
+    badge: 'À partir de 10.000 FCFA',
     inStock: true,
     image: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=1200&q=80',
-    description: 'Déclaration ou poème calligraphié sur papier coton frangé 350g, inséré dans un cadre mouluré au style atelier d’antan avec passe-partout ivoire.',
+    description: 'Composition poétique équilibrée basée sur l’acrostiche d’un prénom ou d’une expression forte, calligraphiée et mise en scène avec soin. Une histoire mise en image et un souvenir éternel.',
     features: [
-      'Papier pur coton bords frangés à la main',
-      'Cadre bois doré à la patine vénitienne',
-      'Cachet de cire estampillé à chaud',
-      'Attache murale et chevalet intégrés'
+      'Tarif : à partir de 10.000 FCFA jusqu’à 15.000 FCFA',
+      'Acrostiche poétique complet personnalisé au thème choisi',
+      'Encadrement soigné et papier d’art haute tenue',
+      'Livraison incluse dans le prix uniquement si la livraison se fait en France'
+    ]
+  },
+  {
+    id: 'tableau-poeme-personnalise',
+    name: 'Tableau Acrostiche — Poème Personnalisé',
+    category: 'tableau',
+    categoryLabel: 'Tableaux Personnalisés',
+    subtitle: 'À partir de 15.000 FCFA jusqu’à 20.000 FCFA • Livraison incluse en France',
+    priceFCFA: 15000,
+    badge: 'À partir de 15.000 FCFA',
+    inStock: true,
+    image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
+    description: 'Création d’exception entièrement écrite sur mesure à partir de votre histoire, vos prénoms et vos souvenirs les plus précieux, sublimée en tableau d’art. Livraison incluse uniquement si en France.',
+    features: [
+      'Tarif : à partir de 15.000 FCFA jusqu’à 20.000 FCFA',
+      'Texte 100% unique rédigé selon votre récit personnel et le thème souhaité',
+      'Finitions luxe, formats divers disponibles et dorures d’atelier',
+      'Livraison incluse dans le prix uniquement si la livraison se fait en France'
     ]
   },
   {
@@ -102,7 +121,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     categoryLabel: 'Accessoires & Cire',
     subtitle: 'Sceau en Laiton Massif Gravé + 3 Bâtons de Cire Souple',
     priceFCFA: 15000,
-    badge: 'Nouveau',
+    badge: 'Atelier',
     inStock: true,
     image: 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?auto=format&fit=crop&w=1200&q=80',
     description: 'Apportez le rituel du scellé à vos propres correspondances. Matrice de laiton gravée au monogramme WA et cire souple qui ne casse pas à l’envoi postal.',
@@ -112,29 +131,11 @@ export const initialCatalogProducts: CatalogProduct[] = [
       'Cuillère de fonte en cuivre et bougie végétale',
       'Pochon en lin naturel WriticArt'
     ]
-  },
-  {
-    id: 'papeterie-nuptiale',
-    name: 'Suite Nuptiale & Faire-Part Vénitien',
-    category: 'mariage',
-    categoryLabel: 'Événements & Mariages',
-    subtitle: 'Pack de 25 Faire-part sur Papier Deckle Edge 350g',
-    priceFCFA: 65000,
-    badge: 'Prestige',
-    inStock: true,
-    image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
-    description: 'L’élégance ultime pour annoncer votre union. Papier coton à bords déchirés à la main, calligraphie personnalisée et sceau de cire bordeaux avec ruban de soie sauvage.',
-    features: [
-      'Lot de 25 invitations nominatives complètes',
-      'Enveloppes vélin coordonnées faites main',
-      'Sceau de cire personnalisé au monogramme des mariés',
-      'Rubans de soie ivoire effilochés à la main'
-    ]
   }
 ];
 
 // -------------------------------------------------------------
-// SEED ERP ORDERS (Commandes réelles d'atelier à Dakar)
+// SEED ERP ORDERS (Commandes réelles d'atelier — FCFA & EUR)
 // -------------------------------------------------------------
 export const initialErpOrders: ErpOrder[] = [
   {
@@ -145,13 +146,18 @@ export const initialErpOrders: ErpOrder[] = [
     city: 'Dakar (Almadies)',
     date: '1 Nov 2026',
     items: [
-      { title: 'Le Duo d’Exception Writic’Love', quantity: 1, unitPriceFCFA: 50000, options: 'Pack Homme + Femme' }
+      { title: 'Pack Couple WriticLove (365 + 1 Cartes)', quantity: 1, unitPriceFCFA: 50000, options: 'Précommande • Pack Homme + Femme' }
     ],
     totalFCFA: 50000,
+    currencyUsed: 'FCFA',
+    offerType: 'writiclove',
+    isPreorder: true,
+    questionType: 'Précommande officielle',
+    deliveryType: 'Coursier Dakar & Banlieue',
     status: 'pret_livraison',
     paymentMethod: 'Wave',
     paymentStatus: 'paye',
-    notes: 'Cadeau d’anniversaire de mariage. Livrer avant 17h.',
+    notes: 'Précommande WriticLove — Livraison non incluse. Cadeau anniversaire de mariage.',
     customMessage: '« Pour notre 3ème année d’amour, chaque jour à tes côtés est une bénédiction. »'
   },
   {
@@ -162,13 +168,20 @@ export const initialErpOrders: ErpOrder[] = [
     city: 'Dakar (Point E)',
     date: '1 Nov 2026',
     items: [
-      { title: 'Tableau d’Art Calligraphié sur Toile', quantity: 1, unitPriceFCFA: 35000, options: 'Toile lin 40x50cm, Dorure 24K' }
+      { title: 'Tableau Acrostiche — Poème Personnalisé', quantity: 1, unitPriceFCFA: 15000, options: 'Thème : Amour / Couple • Format A3' }
     ],
-    totalFCFA: 35000,
+    totalFCFA: 15000,
+    currencyUsed: 'FCFA',
+    offerType: 'tableau',
+    questionType: 'Passer une commande ferme',
+    deliveryType: 'Coursier Dakar & Banlieue',
+    theme: 'Amour / Couple',
+    tableauFormula: 'Poème personnalisé (à partir de 15.000 FCFA)',
+    tableauSize: 'Format A3 (30 x 42 cm)',
     status: 'en_calligraphie',
     paymentMethod: 'Orange Money',
     paymentStatus: 'acompte',
-    notes: 'Acompte de 20 000 FCFA reçu via OM. Solde à la livraison.',
+    notes: 'Acrostiche sur le prénom MARIAMA.',
     customMessage: '« Que la paix et la grâce habitent cette demeure. »'
   },
   {
@@ -179,45 +192,65 @@ export const initialErpOrders: ErpOrder[] = [
     city: 'Dakar (Mermoz)',
     date: '31 Oct 2026',
     items: [
-      { title: 'Coffret Writic’Love Homme', quantity: 1, unitPriceFCFA: 30000 }
+      { title: 'WriticLove — Version Homme (365 + 1 Cartes)', quantity: 1, unitPriceFCFA: 30000 }
     ],
     totalFCFA: 30000,
+    currencyUsed: 'FCFA',
+    offerType: 'writiclove',
+    isPreorder: true,
+    questionType: 'Précommande officielle',
+    deliveryType: 'Retrait à l’atelier (Dakar)',
     status: 'livre',
     paymentMethod: 'Wave',
     paymentStatus: 'paye',
-    notes: 'Livraison effectuée avec succès par coursier.'
+    notes: 'Sortie fin décembre 2026 / début janvier 2027.'
   },
   {
     id: 'CMD-WA-1021',
-    clientName: 'Cheikh Tidiane Ba',
-    clientPhone: '+221 77 654 32 10',
+    clientName: 'Claire & Cheikh Tidiane Ba',
+    clientPhone: '+33 6 45 89 12 30',
     clientEmail: 'cba.architect@gmail.com',
-    city: 'Dakar (Plateau)',
+    city: 'Paris 16ème (France)',
     date: '31 Oct 2026',
     items: [
-      { title: 'Cadre Poétique Écrin Bois Doré', quantity: 2, unitPriceFCFA: 20000, options: 'Sceau Or WA' }
+      { title: 'Tableau Acrostiche — Poème Standard', quantity: 1, unitPriceFCFA: 10000, options: 'Thème : Anniversaire • Livraison incluse (France)' }
     ],
-    totalFCFA: 40000,
+    totalFCFA: 10000,
+    currencyUsed: 'EUR',
+    offerType: 'tableau',
+    questionType: 'Passer une commande ferme',
+    deliveryType: 'Livraison incluse (France uniquement)',
+    theme: 'Anniversaire',
+    tableauFormula: 'Poème standard (à partir de 10.000 FCFA)',
+    tableauSize: 'Format A4 (21 x 30 cm)',
     status: 'bat_validation',
-    paymentMethod: 'Virement',
-    paymentStatus: 'en_attente',
-    notes: 'BAT envoyé par WhatsApp pour validation du poème.'
+    paymentMethod: 'Carte Bancaire',
+    paymentStatus: 'paye',
+    notes: 'Client a payé en EUR (15,24 €) • Livraison France incluse dans le prix du tableau.'
   },
   {
     id: 'CMD-WA-1020',
     clientName: 'Amina Ba & David Leroy',
-    clientPhone: '+33 6 45 89 12 30',
+    clientPhone: '+33 6 12 34 56 78',
     clientEmail: 'amina.david.wedding@gmail.com',
-    city: 'Paris (DHL International)',
+    city: 'Lyon (France)',
     date: '30 Oct 2026',
     items: [
-      { title: 'Suite Nuptiale & Faire-Part Vénitien', quantity: 2, unitPriceFCFA: 65000, options: '50 faire-part au total' }
+      { title: 'Box WriticArt Février — Pack Couple + Tableau 10.000 FCFA + Parfum', quantity: 1, unitPriceFCFA: 60000, options: 'Parfum : Oud Royal & Ambre • Thème : Amour / Couple' }
     ],
-    totalFCFA: 130000,
+    totalFCFA: 60000,
+    currencyUsed: 'EUR',
+    offerType: 'box',
+    isPreorder: true,
+    questionType: 'Réservation Box Février',
+    deliveryType: 'Expédition France / Europe',
+    theme: 'Amour / Couple',
+    tableauFormula: 'Tableau inclus 10.000 FCFA',
+    parfumChoice: 'Oud Royal & Ambre',
     status: 'en_calligraphie',
-    paymentMethod: 'Wave',
+    paymentMethod: 'Virement',
     paymentStatus: 'paye',
-    notes: 'Expédition internationale via DHL Express le 5 Nov.'
+    notes: 'Client a réglé en EUR (91,47 €) • Réservation Box de Février.'
   },
   {
     id: 'CMD-WA-1019',
@@ -226,13 +259,18 @@ export const initialErpOrders: ErpOrder[] = [
     city: 'Saint-Louis',
     date: '29 Oct 2026',
     items: [
-      { title: 'Coffret Writic’Love Femme', quantity: 1, unitPriceFCFA: 30000 }
+      { title: 'WriticLove — Version Femme (365 + 1 Cartes)', quantity: 1, unitPriceFCFA: 30000 }
     ],
     totalFCFA: 30000,
+    currencyUsed: 'FCFA',
+    offerType: 'writiclove',
+    isPreorder: true,
+    questionType: 'Précommande officielle',
+    deliveryType: 'Expédition Régionale / GP',
     status: 'livre',
     paymentMethod: 'Espèces',
     paymentStatus: 'paye',
-    notes: 'Envoyé par colis express La Poste / GP.'
+    notes: 'Envoyé par colis express.'
   }
 ];
 
@@ -535,20 +573,20 @@ export const initialMedia: MediaItem[] = [
 // SEED SITE SETTINGS (Mise en page & Page Builder)
 // -------------------------------------------------------------
 export const initialSiteSettings: SiteSettings = {
-  announcementText: "✦ ATELIER WRITICART DAKAR • « Transformer les mots en œuvres » • Coffrets 365 Jours disponibles pour commande immédiate",
+  announcementText: "✦ WRITICART — « Les écrits restent » • Tableaux Acrostiches & Précommande WriticLove (365 + 1 cartes)",
   announcementPhone: "+221 77 234 85 21",
-  heroSlogan: "Atelier de Haute Calligraphie • Dakar, Sénégal",
-  heroTitle: "L'Art du Verbe,",
-  heroHighlightText: "des Coffrets d'Amour aux Toiles Éternelles.",
-  heroSubtitle: "Découvrez nos célèbres coffrets « 365 Jours d'Amour », nos tableaux calligraphiés à l'or pur 24 carats et notre papeterie sur-mesure scellée à la cire d'atelier.",
-  heroCtaText: "Visiter la Boutique",
+  heroSlogan: "WriticArt — « Les écrits restent »",
+  heroTitle: "Les mots ont un super pouvoir.",
+  heroHighlightText: "WriticArt leur donne une forme pour qu’ils restent.",
+  heroSubtitle: "Marque créative d'œuvres poétiques sur mesure : tableaux personnalisés en acrostiche dès 5.000 FCFA, coffrets WriticLove de 365 + 1 cartes et Box WriticArt de Février.",
+  heroCtaText: "Découvrir les Tableaux",
   showReassuranceBar: true,
   showDiscoveryPortals: true,
   showFeaturedSection: true,
   showAtelierBanner: true,
-  siteTitle: "WriticArt Dakar — Haute Calligraphie & Coffrets 365 Jours",
+  siteTitle: "WriticArt — « Les écrits restent » • Tableaux Acrostiches & WriticLove",
   contactEmail: "kaynubind@gmail.com",
   whatsappContact: "+221 77 234 85 21",
-  workshopAddress: "Dakar, Sénégal"
+  workshopAddress: "Dakar, Sénégal & Expéditions France / International"
 };
 

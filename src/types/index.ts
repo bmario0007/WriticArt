@@ -104,8 +104,17 @@ export interface ErpOrder {
   date: string;
   items: OrderItemLine[];
   totalFCFA: number;
+  currencyUsed?: 'FCFA' | 'EUR';
+  offerType?: 'tableau' | 'writiclove' | 'box' | 'boutique' | 'atelier';
+  isPreorder?: boolean;
+  questionType?: string;
+  deliveryType?: string;
+  theme?: string;
+  tableauFormula?: string;
+  tableauSize?: string;
+  parfumChoice?: string;
   status: OrderStatus;
-  paymentMethod: 'Wave' | 'Orange Money' | 'Espèces' | 'Virement';
+  paymentMethod: 'Wave' | 'Orange Money' | 'Espèces' | 'Virement' | 'Carte Bancaire' | 'Autre';
   paymentStatus: 'paye' | 'acompte' | 'en_attente';
   notes?: string;
   customMessage?: string;

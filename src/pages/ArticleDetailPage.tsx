@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft, Calendar, Clock, Share2, PhoneCall, Heart, ArrowRight } from 'lucide-react';
 import { useErp } from '../context/ErpContext';
 import { useNavigation } from '../context/NavigationContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ArticleDetailPageProps {
   articleId: string | null;
@@ -10,19 +11,20 @@ interface ArticleDetailPageProps {
 export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId }) => {
   const { articles } = useErp();
   const { navigateTo } = useNavigation();
+  const { tr } = useLanguage();
 
   // Find article
-  const article = articles.find(a => a.id === articleId) || articles[0];
+  const article = articles.find((a) => a.id === articleId) || articles[0];
 
   if (!article) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-4">
-        <h2 className="text-2xl font-['Cormorant_Garamond']">Article introuvable</h2>
+        <h2 className="text-2xl font-['Cormorant_Garamond']">{tr('Article introuvable', 'Article not found')}</h2>
         <button
           onClick={() => navigateTo('journal')}
-          className="px-6 py-2 rounded-full bg-[#181716] text-white text-xs font-['Cinzel']"
+          className="px-6 py-2 rounded-full bg-[#231B26] text-white text-xs font-['Cinzel']"
         >
-          Retour au Journal
+          {tr('Retour au Journal', 'Back to Journal')}
         </button>
       </div>
     );
@@ -30,7 +32,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
 
   // Related articles in same category or other published
   const relatedArticles = articles
-    .filter(a => a.id !== article.id && a.status === 'publie')
+    .filter((a) => a.id !== article.id && a.status === 'publie')
     .slice(0, 2);
 
   // Render text with headings & paragraphs
@@ -40,7 +42,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
       const trimmed = paragraph.trim();
       if (trimmed.startsWith('### ')) {
         return (
-          <h3 
+          <h3
             key={index}
             className="font-['Cormorant_Garamond'] text-2xl sm:text-3xl font-medium text-[#181716] dark:text-[#FAF8F5] pt-6 pb-2"
           >
@@ -49,8 +51,8 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
         );
       }
       return (
-        <p 
-          key={index} 
+        <p
+          key={index}
           className="text-base sm:text-lg text-[#4A453F] dark:text-[#C5BCB0] leading-relaxed font-light"
         >
           {trimmed}
@@ -61,7 +63,6 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
 
   return (
     <article className="pb-24 pt-8">
-      
       {/* 1. TOP NAV / BACK BUTTON */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-8 flex items-center justify-between">
         <button
@@ -69,7 +70,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
           className="inline-flex items-center space-x-2 text-xs font-['Cinzel'] uppercase font-bold text-[#8C8074] hover:text-[#E68314] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Retour au Journal d'Atelier</span>
+          <span>{tr('Retour au Journal d’Atelier', 'Back to Workshop Journal')}</span>
         </button>
 
         <span className="text-[11px] uppercase tracking-wider font-['Cinzel'] text-[#E68314] font-semibold">
@@ -87,7 +88,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
           <span>•</span>
           <span className="flex items-center space-x-1">
             <Clock className="w-3.5 h-3.5" />
-            <span>{article.readTime} de lecture</span>
+            <span>{tr(`${article.readTime} de lecture`, `${article.readTime} read`)}</span>
           </span>
         </div>
 
@@ -111,7 +112,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
 
       {/* 3. COVER IMAGE */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-14">
-        <div className="aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl border border-[#E8DFD1] dark:border-[#2E2A26] bg-[#181716]">
+        <div className="aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl border border-[#E8DFD1] dark:border-[#2E2A26] bg-[#231B26]">
           <img
             src={article.coverImage}
             alt={article.title}
@@ -130,17 +131,23 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
             <Heart className="w-6 h-6" />
           </div>
           <h4 className="font-['Cormorant_Garamond'] text-2xl sm:text-3xl font-light text-[#181716] dark:text-[#FAF8F5]">
-            Envie de faire sceller ces mots à la cire et à la plume ?
+            {tr(
+              'Envie de donner forme à ces mots pour qu’ils restent ?',
+              'Ready to give shape to words so they stay forever?'
+            )}
           </h4>
           <p className="text-xs sm:text-sm text-[#685F56] dark:text-[#A8A096] max-w-md mx-auto leading-relaxed">
-            Que ce soit pour le rituel « 365 Jours d'Amour », une toile de lin sur-mesure ou une suite nuptiale, notre maître calligraphe vous conseille en direct à Dakar.
+            {tr(
+              'Découvrez nos tableaux personnalisés en acrostiche ou précommandez votre coffret WriticLove (365 + 1 cartes).',
+              'Explore our bespoke acrostic paintings or preorder your WriticLove box (365 + 1 cards).'
+            )}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <button
-              onClick={() => navigateTo('boutique')}
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] transition-all"
+              onClick={() => navigateTo('writiclove')}
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] transition-all"
             >
-              Commander un Coffret
+              {tr('Découvrir WriticLove', 'Discover WriticLove')}
             </button>
             <a
               href="https://wa.me/221772348521?text=Bonjour%20WriticArt,%20j'ai%20lu%20votre%20article%20et%20je%20souhaite%20un%20conseil"
@@ -149,7 +156,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
               className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#25D366] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow hover:bg-[#20ba59] transition-all"
             >
               <PhoneCall className="w-3.5 h-3.5" />
-              <span>Échanger sur WhatsApp</span>
+              <span>{tr('Échanger sur WhatsApp', 'Chat on WhatsApp')}</span>
             </a>
           </div>
         </div>
@@ -161,17 +168,17 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
             className="inline-flex items-center space-x-2 text-xs font-['Cinzel'] uppercase font-bold text-[#8C8074] hover:text-[#E68314] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Tous les articles</span>
+            <span>{tr('Tous les articles', 'All articles')}</span>
           </button>
 
           <a
-            href={`https://wa.me/?text=${encodeURIComponent(`${article.title} - Découvrir sur WriticArt: https://bmario0007.github.io/WriticArt/#/article/${article.id}`)}`}
+            href={`https://wa.me/?text=${encodeURIComponent(`${article.title} - WriticArt: https://bmario0007.github.io/WriticArt/#/article/${article.id}`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center space-x-1.5 text-xs text-[#25D366] font-['Cinzel'] font-bold hover:underline"
           >
             <Share2 className="w-4 h-4" />
-            <span>Partager cet article</span>
+            <span>{tr('Partager cet article', 'Share article')}</span>
           </a>
         </div>
       </div>
@@ -180,10 +187,10 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
       {relatedArticles.length > 0 && (
         <aside className="max-w-5xl mx-auto px-4 sm:px-6 pt-16 mt-16 border-t border-[#E8DFD1] dark:border-[#2E2A26]">
           <h3 className="font-['Cinzel'] text-xs uppercase tracking-widest text-[#8C8074] font-bold text-center mb-8">
-            À Découvrir Également
+            {tr('À Découvrir Également', 'Also Discover')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {relatedArticles.map(rel => (
+            {relatedArticles.map((rel) => (
               <div
                 key={rel.id}
                 onClick={() => navigateTo('article', rel.id)}
@@ -202,7 +209,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
                 </div>
 
                 <div className="pt-4 border-t border-[#F2ECE1] dark:border-[#26221E] mt-4 flex items-center justify-between text-xs font-['Cinzel'] font-bold text-[#E68314]">
-                  <span>Lire l'article</span>
+                  <span>{tr('Lire l’article', 'Read article')}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
@@ -210,7 +217,6 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ articleId 
           </div>
         </aside>
       )}
-
     </article>
   );
 };

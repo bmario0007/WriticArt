@@ -1,30 +1,27 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type CurrencyCode = 'FCFA' | 'EUR' | 'USD';
+export type CurrencyCode = 'FCFA' | 'EUR';
+
+// Parité fixe officielle UEMOA / Zone CFA (Cahier des charges p.3)
+export const EUR_TO_FCFA_RATE = 655.957;
 
 interface CurrencyContextType {
   currency: CurrencyCode;
   setCurrency: (c: CurrencyCode) => void;
+  convertToEUR: (amountFCFA: number) => number;
   formatPrice: (amountFCFA: number) => string;
-  rateToFCFA: number;
+  formatExactBoth: (amountFCFA: number) => { fcfa: string; eur: string };
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
-const CURRENCY_STORAGE_KEY = 'writicart_currency_v1';
-
-// Exact parity rates
-const RATES: Record<CurrencyCode, number> = {
-  FCFA: 1,
-  EUR: 1 / 655.957,
-  USD: 1 / 600
-};
+const CURRENCY_STORAGE_KEY = 'writicart_currency_v2';
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currency, setCurrencyState] = useState<CurrencyCode>(() => {
     try {
       const saved = localStorage.getItem(CURRENCY_STORAGE_KEY) as CurrencyCode;
-      return (saved && RATES[saved]) ? saved : 'FCFA';
+      return saved === 'EUR' ? 'EUR' : 'FCFA';
     } catch {
       return 'FCFA';
     }
@@ -38,23 +35,28 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setCurrencyState(c);
   };
 
+  const convertToEUR = (amountFCFA: number): number => {
+    return Math.round((amountFCFA / EUR_TO_FCFA_RATE) * 100) / 100;
+  };
+
   const formatPrice = (amountFCFA: number): string => {
-    if (currency === 'FCFA') {
-      return `${Math.round(amountFCFA).toLocaleString('fr-FR')} FCFA`;
-    }
     if (currency === 'EUR') {
-      const eur = amountFCFA * RATES.EUR;
-      return `${eur.toLocaleString('fr-FR', { minimumFractionDigits: eur % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 })} €`;
+      const eur = convertToEUR(amountFCFA);
+      return `${eur.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
     }
-    if (currency === 'USD') {
-      const usd = amountFCFA * RATES.USD;
-      return `$${usd.toLocaleString('en-US', { minimumFractionDigits: usd % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 })}`;
-    }
-    return `${amountFCFA.toLocaleString('fr-FR')} FCFA`;
+    return `${Math.round(amountFCFA).toLocaleString('fr-FR')} FCFA`;
+  };
+
+  const formatExactBoth = (amountFCFA: number) => {
+    const eur = convertToEUR(amountFCFA);
+    return {
+      fcfa: `${Math.round(amountFCFA).toLocaleString('fr-FR')} FCFA`,
+      eur: `${eur.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+    };
   };
 
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency, formatPrice, rateToFCFA: RATES[currency] }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency, convertToEUR, formatPrice, formatExactBoth }}>
       {children}
     </CurrencyContext.Provider>
   );

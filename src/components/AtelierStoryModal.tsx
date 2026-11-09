@@ -3,6 +3,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { instagramStories } from '../data/galleryData';
 import { atelierAudio } from '../utils/soundEffects';
 import { InstagramIcon } from './InstagramIcon';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AtelierStoryModalProps {
   initialIndex: number;
@@ -15,6 +16,7 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
   onClose,
   onConfigureFromStory
 }) => {
+  const { tr } = useLanguage();
   const [index, setIndex] = useState(initialIndex);
   const [progress, setProgress] = useState(0);
 
@@ -61,10 +63,10 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-      
       {/* Close button */}
       <button
         onClick={onClose}
+        aria-label={tr('Fermer', 'Close')}
         className="absolute top-6 right-6 z-30 p-2.5 rounded-full bg-white/20 hover:bg-white text-white hover:text-black transition-colors"
       >
         <X className="w-6 h-6" />
@@ -74,6 +76,7 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
       <button
         onClick={handlePrev}
         disabled={index === 0}
+        aria-label={tr('Précédent', 'Previous')}
         className="hidden md:flex absolute left-8 z-30 p-3 rounded-full bg-white/10 hover:bg-white/30 text-white disabled:opacity-20 transition-all"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -81,6 +84,7 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
 
       <button
         onClick={handleNext}
+        aria-label={tr('Suivant', 'Next')}
         className="hidden md:flex absolute right-8 z-30 p-3 rounded-full bg-white/10 hover:bg-white/30 text-white transition-all"
       >
         <ChevronRight className="w-6 h-6" />
@@ -88,7 +92,6 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
 
       {/* Story Container (Phone ratio) */}
       <div className="relative w-full max-w-[390px] h-[680px] rounded-3xl overflow-hidden shadow-2xl bg-[#141312] border border-white/10 flex flex-col justify-between">
-        
         {/* Progress bars */}
         <div className="absolute top-3 inset-x-3 z-20 flex space-x-1.5">
           {instagramStories.map((_, i) => (
@@ -125,6 +128,7 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
             href="https://www.instagram.com/writicart"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Instagram @writicart"
             className="p-1.5 rounded-full bg-white/15 text-white hover:bg-white hover:text-black transition-colors"
           >
             <InstagramIcon className="w-4 h-4" />
@@ -154,12 +158,10 @@ export const AtelierStoryModal: React.FC<AtelierStoryModalProps> = ({
             }}
             className="w-full py-3.5 rounded-full bg-[#C5A059] text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-white transition-all shadow-lg"
           >
-            Créer ma pièce personnalisée
+            {tr('Créer ma pièce personnalisée', 'Customize my artwork')}
           </button>
         </div>
-
       </div>
-
     </div>
   );
 };

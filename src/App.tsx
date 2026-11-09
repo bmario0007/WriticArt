@@ -8,6 +8,8 @@ import { QuoteEngineModal } from './components/QuoteEngineModal';
 
 // Dedicated Separate Pages (No continuous feed)
 import { HomePage } from './pages/HomePage';
+import { TableauxPage } from './pages/TableauxPage';
+import { BoxPage } from './pages/BoxPage';
 import { ShopPage } from './pages/ShopPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { WriticLovePage } from './pages/WriticLovePage';
@@ -21,6 +23,7 @@ import { OrderTrackingPage } from './pages/OrderTrackingPage';
 
 // Contexts
 import { ThemeProvider } from './context/ThemeContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { CartProvider } from './context/CartContext';
 import { ErpProvider } from './context/ErpContext';
 import { NavigationProvider, useNavigation } from './context/NavigationContext';
@@ -44,9 +47,9 @@ const AppContent: React.FC = () => {
     hasHandmadeEnvelope: true,
     hasWaxSeal: true,
     quantity: 1,
-    customTitle: 'Coffret Writic’Love Duo — 365 Jours d’Amour',
+    customTitle: 'Coffret WriticLove — 365 + 1 Cartes',
     customNames: 'Pour l’amour de ma vie',
-    customMessage: 'Aujourd’hui, je t’aime plus que jamais. Que chaque jour scelle notre promesse.',
+    customMessage: 'Les mots ont un super pouvoir. WriticArt leur donne une forme pour qu’ils restent.',
     rushOrder: false,
     deliveryOption: 'standard',
     currency: 'FCFA'
@@ -63,7 +66,7 @@ const AppContent: React.FC = () => {
       eventType: 'quotidien',
       paperType: thought.paperType,
       waxColor: thought.waxColor,
-      customTitle: `Pensée Writic’Love • ${thought.date}`,
+      customTitle: `Pensée WriticLove • ${thought.date}`,
       customNames: 'Pour toi mon amour',
       customMessage: thought.quote,
       quantity: 1,
@@ -119,20 +122,24 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#FAF8F5] dark:bg-[#121110] text-[#1E1C1A] dark:text-[#FAF8F5] transition-colors duration-300">
       
-      {/* Navigation bar with links to separate pages, cart drawer and dark mode */}
+      {/* Navigation bar with FR/EN + FCFA/EUR selectors, separate pages & cart drawer */}
       <Navbar />
 
       {/* DEDICATED SEPARATE PAGES (No continuous feed) */}
-      <main className="flex-1">
+      <main className="flex-1" id="main-content">
         {currentPage === 'home' && <HomePage />}
+        
+        {currentPage === 'tableaux' && <TableauxPage />}
+
+        {currentPage === 'writiclove' && <WriticLovePage />}
+
+        {currentPage === 'box' && <BoxPage />}
         
         {currentPage === 'boutique' && <ShopPage />}
         
         {currentPage === 'product-detail' && (
           <ProductDetailPage productId={currentProductId} />
         )}
-        
-        {currentPage === 'writiclove' && <WriticLovePage />}
         
         {currentPage === 'sur-mesure' && (
           <StudioPage
@@ -196,15 +203,17 @@ const AppContent: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <ErpProvider>
-        <CurrencyProvider>
-          <CartProvider>
-            <NavigationProvider>
-              <AppContent />
-            </NavigationProvider>
-          </CartProvider>
-        </CurrencyProvider>
-      </ErpProvider>
+      <LanguageProvider>
+        <ErpProvider>
+          <CurrencyProvider>
+            <CartProvider>
+              <NavigationProvider>
+                <AppContent />
+              </NavigationProvider>
+            </CartProvider>
+          </CurrencyProvider>
+        </ErpProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 };

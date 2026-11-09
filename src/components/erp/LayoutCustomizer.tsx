@@ -17,7 +17,7 @@ export const LayoutCustomizer: React.FC = () => {
   };
 
   const handleReset = () => {
-    if (confirm('Rétablir la mise en page par défaut ?')) {
+    if (confirm('Rétablir la mise en page officielle WriticArt par défaut ?')) {
       setFormData({ ...initialSiteSettings });
       updateSiteSettings(initialSiteSettings);
     }
@@ -25,7 +25,6 @@ export const LayoutCustomizer: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      
       {/* Header */}
       <div className="bg-white dark:bg-[#181716] p-6 rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -33,10 +32,10 @@ export const LayoutCustomizer: React.FC = () => {
             WordPress Customizer • Éditeur de Mise en Page
           </span>
           <h3 className="font-['Cormorant_Garamond'] text-2xl font-bold">
-            Personnalisation de la Page d'Accueil & Textes
+            Personnalisation de la Page d’Accueil & Textes
           </h3>
           <p className="text-xs text-[#8C8074]">
-            Modifiez en direct les textes du Hero, le bandeau supérieur et l'agencement des sections.
+            Modifiez en direct les textes du Hero, le bandeau supérieur et l’agencement des sections.
           </p>
         </div>
 
@@ -61,19 +60,17 @@ export const LayoutCustomizer: React.FC = () => {
       </div>
 
       <form onSubmit={handleSave} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
         {/* Left 7 cols: Controls Form */}
         <div className="lg:col-span-7 space-y-6">
-          
           {/* Section 1: Announcement Bar */}
           <div className="bg-white dark:bg-[#181716] p-6 rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4">
             <h4 className="font-['Cinzel'] text-xs uppercase font-bold text-[#E68314] flex items-center space-x-2">
-              <span>1. Bandeau d'Annonce Supérieur (Ticker)</span>
+              <span>1. Bandeau d’Annonce Supérieur (Ticker)</span>
             </h4>
 
             <div>
               <label className="block text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] mb-1">
-                Message d'annonce en haut du site :
+                Message d’annonce en haut du site :
               </label>
               <textarea
                 rows={2}
@@ -99,7 +96,7 @@ export const LayoutCustomizer: React.FC = () => {
           {/* Section 2: Hero Section Texts */}
           <div className="bg-white dark:bg-[#181716] p-6 rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4">
             <h4 className="font-['Cinzel'] text-xs uppercase font-bold text-[#E68314] flex items-center space-x-2">
-              <span>2. Textes Principaux du Hero (En-tête d'accueil)</span>
+              <span>2. Textes Principaux du Hero (En-tête d’accueil)</span>
             </h4>
 
             <div>
@@ -168,17 +165,36 @@ export const LayoutCustomizer: React.FC = () => {
           {/* Section 3: Layout Section Visibility Toggles */}
           <div className="bg-white dark:bg-[#181716] p-6 rounded-3xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4">
             <h4 className="font-['Cinzel'] text-xs uppercase font-bold text-[#E68314]">
-              3. Gestion de l'Affichage des Sections (Page Builder)
+              3. Gestion de l’Affichage des Sections (Page Builder)
             </h4>
 
             <div className="space-y-3">
               {[
-                { key: 'showDiscoveryPortals', label: 'Afficher les 3 Portails d\'Accès (Coffrets, Sur-Mesure, La Pensée)', desc: 'Présente les 3 univers sous le Hero.' },
-                { key: 'showFeaturedSection', label: 'Afficher la Sélection des Créations Vedettes', desc: 'Met en avant les 3 créations phares avec bouton d\'achat rapide.' },
-                { key: 'showReassuranceBar', label: 'Afficher la Barre de Réassurance (4 Piliers façon Rahiya)', desc: 'Fait main à Dakar, 365 Jours, Livraison express, WhatsApp direct.' },
-                { key: 'showAtelierBanner', label: 'Afficher la Bannière de l\'Âme de l\'Atelier', desc: 'Présente la vision de la calligraphie avec lien vers le manifeste.' }
+                {
+                  key: 'showDiscoveryPortals',
+                  label: 'Afficher les 3 Offres Officiels (Tableaux, WriticLove 365+1, Box Février)',
+                  desc: 'Présente les 3 univers principaux du cahier des charges sous le Hero.'
+                },
+                {
+                  key: 'showFeaturedSection',
+                  label: 'Afficher la Sélection des Créations Vedettes',
+                  desc: 'Met en avant la boutique avec bouton d’achat rapide et conversion FCFA / EUR.'
+                },
+                {
+                  key: 'showReassuranceBar',
+                  label: 'Afficher la Barre de Réassurance (4 Piliers)',
+                  desc: 'Acrostiches sur mesure, 365+1 Cartes, Livraison France/Dakar, WhatsApp direct.'
+                },
+                {
+                  key: 'showAtelierBanner',
+                  label: 'Afficher la Bannière « Les mots ont un super pouvoir »',
+                  desc: 'Présente la citation signature avec accès à la page Tableaux & Manifeste.'
+                }
               ].map((sec) => (
-                <label key={sec.key} className="flex items-start space-x-3 p-3 rounded-2xl border border-[#ECE3D5] dark:border-[#2E2A26] cursor-pointer hover:bg-black/[0.02] dark:hover:bg-white/[0.02]">
+                <label
+                  key={sec.key}
+                  className="flex items-start space-x-3 p-3 rounded-2xl border border-[#ECE3D5] dark:border-[#2E2A26] cursor-pointer hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                >
                   <input
                     type="checkbox"
                     checked={(formData as any)[sec.key]}
@@ -198,13 +214,12 @@ export const LayoutCustomizer: React.FC = () => {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] transition-all flex items-center justify-center space-x-2 shadow-xl"
+              className="w-full py-4 rounded-full bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] transition-all flex items-center justify-center space-x-2 shadow-xl"
             >
               <Save className="w-4 h-4 text-[#E68314]" />
               <span>Publier les Modifications sur le Site Public</span>
             </button>
           </div>
-
         </div>
 
         {/* Right 5 cols: Live Simulation Preview */}
@@ -219,27 +234,27 @@ export const LayoutCustomizer: React.FC = () => {
             </div>
 
             {/* Micro Ticker */}
-            <div className="p-2 rounded-lg bg-[#181716] text-white text-[9px] truncate">
+            <div className="p-2 rounded-lg bg-[#231B26] text-white text-[9px] truncate border-b border-[#C5A059]/40">
               {formData.announcementText}
             </div>
 
             {/* Micro Hero Box */}
-            <div className="p-5 rounded-2xl bg-[#FAF8F5] dark:bg-[#121110] border border-[#ECE3D5] dark:border-[#26221E] space-y-3 text-center">
-              <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#FFF7EE] dark:bg-[#1E1914] text-[9px] font-['Cinzel'] font-bold text-[#E68314] border border-[#E68314]/30">
+            <div className="p-5 rounded-2xl bg-[#231B26] text-white border border-[#C5A059]/40 space-y-3 text-center">
+              <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/10 text-[9px] font-['Cinzel'] font-bold text-[#E68314] border border-[#C5A059]/40">
                 {formData.heroSlogan}
               </span>
 
               <h4 className="font-['Cormorant_Garamond'] text-xl font-bold leading-tight">
                 {formData.heroTitle} <br />
-                <span className="italic font-serif text-[#C46A0B] dark:text-[#E68314]">{formData.heroHighlightText}</span>
+                <span className="italic font-serif text-[#E68314]">{formData.heroHighlightText}</span>
               </h4>
 
-              <p className="text-[10px] text-[#6E645A] dark:text-[#A8A096] leading-relaxed line-clamp-3">
+              <p className="text-[10px] text-[#D3C7D6] leading-relaxed line-clamp-3">
                 {formData.heroSubtitle}
               </p>
 
               <div className="pt-2">
-                <span className="inline-block px-4 py-2 rounded-full bg-[#181716] dark:bg-white text-white dark:text-black text-[9px] font-['Cinzel'] font-bold uppercase tracking-wider">
+                <span className="inline-block px-4 py-2 rounded-full bg-[#E68314] text-white text-[9px] font-['Cinzel'] font-bold uppercase tracking-wider">
                   {formData.heroCtaText}
                 </span>
               </div>
@@ -248,10 +263,10 @@ export const LayoutCustomizer: React.FC = () => {
             {/* Sections checklist summary */}
             <div className="space-y-1.5 pt-2 text-xs">
               <span className="text-[10px] font-['Cinzel'] uppercase font-bold text-[#8C8074] block">
-                Sections actives sur la page d'accueil :
+                Sections actives sur la page d’accueil :
               </span>
               <p className="text-[11px] text-[#6E645A] dark:text-[#A8A096]">
-                • Portails d'accès : <strong>{formData.showDiscoveryPortals ? 'Activé' : 'Désactivé'}</strong>
+                • Les 3 Offres Officiels : <strong>{formData.showDiscoveryPortals ? 'Activé' : 'Désactivé'}</strong>
               </p>
               <p className="text-[11px] text-[#6E645A] dark:text-[#A8A096]">
                 • Créations vedettes : <strong>{formData.showFeaturedSection ? 'Activé' : 'Désactivé'}</strong>
@@ -260,14 +275,12 @@ export const LayoutCustomizer: React.FC = () => {
                 • Barre 4 Piliers : <strong>{formData.showReassuranceBar ? 'Activé' : 'Désactivé'}</strong>
               </p>
               <p className="text-[11px] text-[#6E645A] dark:text-[#A8A096]">
-                • Bannière de l'Atelier : <strong>{formData.showAtelierBanner ? 'Activé' : 'Désactivé'}</strong>
+                • Bannière Citation : <strong>{formData.showAtelierBanner ? 'Activé' : 'Désactivé'}</strong>
               </p>
             </div>
           </div>
         </div>
-
       </form>
-
     </div>
   );
 };

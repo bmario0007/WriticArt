@@ -4,6 +4,7 @@ import { useErp } from '../context/ErpContext';
 import { useCart } from '../context/CartContext';
 import { useNavigation } from '../context/NavigationContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { useLanguage } from '../context/LanguageContext';
 import { TestimonialsSection } from '../components/TestimonialsSection';
 import { atelierAudio } from '../utils/soundEffects';
 
@@ -16,6 +17,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
   const { addToCart } = useCart();
   const { navigateTo } = useNavigation();
   const { formatPrice, currency } = useCurrency();
+  const { tr } = useLanguage();
 
   const product = products.find((p) => p.id === productId) || products[0];
 
@@ -38,23 +40,29 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
 
   const handleOrderWhatsApp = () => {
     atelierAudio.playWaxStamp();
-    const text = `Bonjour l'Atelier WriticArt ! ✨%0A%0AJe souhaite commander :%0A👉 *${product.name}* (Quantité : ${quantity})%0A💰 Montant estimé : *${(product.priceFCFA * quantity).toLocaleString('fr-FR')} FCFA*%0A${selectedOption ? `Option : ${selectedOption}%0A` : ''}${customMessage ? `Message personnalisé : « ${customMessage} »%0A` : ''}%0APouvez-vous me confirmer les modalités de livraison à Dakar ? Merci !`;
+    const total = product.priceFCFA * quantity;
+    const text = `Bonjour WriticArt ! ✨%0A%0AJe souhaite commander :%0A👉 *${product.name}* (Quantité : ${quantity})%0A💰 Montant : *${formatPrice(total)}* (${currency})%0A${selectedOption ? `Option : ${selectedOption}%0A` : ''}${customMessage ? `Message personnalisé : « ${customMessage} »%0A` : ''}%0AMerci !`;
     window.open(`https://wa.me/221772348521?text=${text}`, '_blank');
   };
 
   const related = products.filter((p) => p.id !== product.id).slice(0, 3);
 
   return (
-    <div className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-      
+    <div className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 pb-24 sm:pb-12">
       {/* Back button & Breadcrumbs */}
       <div className="flex items-center justify-between text-xs text-[#8C8074]">
         <div className="flex items-center space-x-2">
-          <button onClick={() => navigateTo('home')} className="hover:underline">Accueil</button>
+          <button onClick={() => navigateTo('home')} className="hover:underline">
+            {tr('Accueil', 'Home')}
+          </button>
           <span>/</span>
-          <button onClick={() => navigateTo('boutique')} className="hover:underline">Boutique</button>
+          <button onClick={() => navigateTo('boutique')} className="hover:underline">
+            {tr('Boutique', 'Shop')}
+          </button>
           <span>/</span>
-          <span className="font-semibold text-[#181716] dark:text-[#FAF8F5] truncate max-w-xs">{product.name}</span>
+          <span className="font-semibold text-[#181716] dark:text-[#FAF8F5] truncate max-w-xs">
+            {product.name}
+          </span>
         </div>
 
         <button
@@ -62,30 +70,22 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
           className="flex items-center space-x-1.5 hover:text-[#E68314] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Retour à la Boutique</span>
+          <span>{tr('Retour à la Boutique', 'Back to Shop')}</span>
         </button>
       </div>
 
       {/* Main Product Showcase */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        
-        {/* Left: Product Image */}
         <div className="lg:col-span-7 bg-[#EFE8DC] dark:bg-[#1A1816] rounded-3xl overflow-hidden border border-[#E8DFD1] dark:border-[#2E2A26] shadow-xl relative aspect-square sm:aspect-[4/3] flex items-center justify-center">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover"
-          />
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
           {product.badge && (
-            <span className="absolute top-6 left-6 px-4 py-1.5 rounded-full bg-[#181716]/90 dark:bg-[#FAF8F5]/90 text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold tracking-wider uppercase backdrop-blur-sm shadow-md">
+            <span className="absolute top-6 left-6 px-4 py-1.5 rounded-full bg-[#231B26]/90 dark:bg-[#FAF8F5]/90 text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold tracking-wider uppercase backdrop-blur-sm shadow-md">
               {product.badge}
             </span>
           )}
         </div>
 
-        {/* Right: Buy Box & Customization */}
         <div className="lg:col-span-5 space-y-6">
-          
           <div className="space-y-2 border-b border-[#E8DFD1] dark:border-[#2E2A26] pb-6">
             <span className="text-[11px] uppercase tracking-[0.25em] text-[#B86209] dark:text-[#E68314] font-['Cinzel'] font-bold block">
               {product.categoryLabel}
@@ -93,11 +93,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
             <h1 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl font-semibold leading-tight text-[#181716] dark:text-[#FAF8F5]">
               {product.name}
             </h1>
-            <p className="text-xs text-[#8C8074]">
-              {product.subtitle}
-            </p>
+            <p className="text-xs text-[#8C8074]">{product.subtitle}</p>
 
             <div className="pt-2 flex items-baseline space-x-3">
+              {product.category === 'tableau' && (
+                <span className="text-xs font-['Cinzel'] uppercase text-[#8C8074]">
+                  {tr('À partir de', 'Starting from')}
+                </span>
+              )}
               <span className="font-['Cinzel'] text-3xl font-bold text-[#E68314]">
                 {formatPrice(product.priceFCFA)}
               </span>
@@ -113,20 +116,20 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
             {product.description}
           </p>
 
-          {/* Options for Writic'Love */}
           {product.category === 'writiclove' && (
             <div className="space-y-2">
-              <label className="block text-[11px] font-['Cinzel'] uppercase font-bold text-[#8C8074]">
-                Choisir la formule :
-              </label>
+              <span className="block text-[11px] font-['Cinzel'] uppercase font-bold text-[#8C8074]">
+                {tr('Choisir la formule :', 'Choose Edition:')}
+              </span>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: 'Homme', label: 'Homme (30k)' },
-                  { id: 'Femme', label: 'Femme (30k)' },
-                  { id: 'Duo', label: 'Duo (50k)' }
+                  { id: 'Homme', label: tr('Homme (30k)', 'Men (30k)') },
+                  { id: 'Femme', label: tr('Femme (30k)', 'Women (30k)') },
+                  { id: 'Couple', label: tr('Couple (50k)', 'Couple (50k)') }
                 ].map((opt) => (
                   <button
                     key={opt.id}
+                    type="button"
                     onClick={() => setSelectedOption(opt.label)}
                     className={`py-2 px-3 rounded-xl text-xs font-['Cinzel'] border text-center transition-all ${
                       selectedOption === opt.label
@@ -141,26 +144,29 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
             </div>
           )}
 
-          {/* Custom dedication optional input */}
           <div className="space-y-1.5">
-            <label className="block text-[11px] font-sans text-[#70675E] dark:text-[#A8A096]">
-              Dédicace ou mot personnalisé à sceller (optionnel) :
+            <label htmlFor="pd-dedication" className="block text-[11px] font-sans text-[#70675E] dark:text-[#A8A096]">
+              {tr('Prénom pour l’acrostiche ou mot personnalisé (optionnel) :', 'Name for acrostic or personal note (optional):')}
             </label>
             <textarea
+              id="pd-dedication"
               rows={2}
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
-              placeholder="Ex : Que chaque jour scelle notre promesse d'amour éternel..."
+              placeholder={tr(
+                'Ex : Prénom pour acrostiche, dédicace ou thème souhaité...',
+                'Ex: Name for acrostic, dedication, or theme...'
+              )}
               className="w-full px-3.5 py-2 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#1C1A18] text-xs focus:outline-none focus:border-[#E68314]"
             />
           </div>
 
-          {/* Quantity and Primary Buy Buttons */}
           <div className="space-y-3 pt-2">
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-3 border border-[#DED4C3] dark:border-[#38332E] rounded-full px-4 py-2 bg-white dark:bg-[#1C1A18]">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  aria-label={tr('Diminuer la quantité', 'Decrease quantity')}
                   className="text-[#8C8074] hover:text-[#181716] dark:hover:text-white"
                 >
                   <Minus className="w-3.5 h-3.5" />
@@ -168,6 +174,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                 <span className="text-xs font-bold font-mono px-2">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
+                  aria-label={tr('Augmenter la quantité', 'Increase quantity')}
                   className="text-[#8C8074] hover:text-[#181716] dark:hover:text-white"
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -176,27 +183,25 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
 
               <button
                 onClick={handleAddToCart}
-                className="flex-1 py-3.5 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] dark:hover:bg-[#E68314] dark:hover:text-white transition-all shadow-md flex items-center justify-center space-x-2"
+                className="flex-1 py-3.5 rounded-full bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#E68314] hover:text-white transition-all shadow-md flex items-center justify-center space-x-2"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Ajouter au Panier</span>
+                <span>{tr('Ajouter au Panier', 'Add to Cart')}</span>
               </button>
             </div>
 
-            {/* Direct WhatsApp Order */}
             <button
               onClick={handleOrderWhatsApp}
               className="w-full py-3.5 rounded-full bg-[#25D366] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider hover:bg-[#1EBE5D] transition-all shadow-md flex items-center justify-center space-x-2"
             >
               <PhoneCall className="w-4 h-4" />
-              <span>Commander directement via WhatsApp (+221 77 234 85 21)</span>
+              <span>{tr('Commander via WhatsApp (+221 77 234 85 21)', 'Order on WhatsApp (+221 77 234 85 21)')}</span>
             </button>
           </div>
 
-          {/* Features check */}
           <div className="pt-4 border-t border-[#E8DFD1] dark:border-[#2E2A26] space-y-2">
             <h4 className="font-['Cinzel'] text-xs uppercase font-bold text-[#181716] dark:text-[#FAF8F5]">
-              Spécifications de l'Œuvre :
+              {tr('Spécifications de la Création :', 'Artwork Specifications:')}
             </h4>
             <div className="space-y-1.5">
               {product.features.map((f, i) => (
@@ -207,15 +212,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
               ))}
             </div>
           </div>
-
         </div>
-
       </div>
 
       {/* Related Creations */}
       <div className="pt-12 border-t border-[#E8DFD1] dark:border-[#2E2A26] space-y-6">
         <h3 className="font-['Cormorant_Garamond'] text-2xl font-bold">
-          Créations Complémentaires
+          {tr('Créations Complémentaires', 'You May Also Like')}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {related.map((rel) => (
@@ -224,13 +227,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
               onClick={() => navigateTo('product-detail', rel.id)}
               className="cursor-pointer bg-white dark:bg-[#181716] p-4 rounded-2xl border border-[#E8DFD1] dark:border-[#2E2A26] hover:shadow-lg transition-all flex space-x-4 items-center group"
             >
-              <img
-                src={rel.image}
-                alt={rel.name}
-                className="w-16 h-16 rounded-xl object-cover shrink-0"
-              />
+              <img src={rel.image} alt={rel.name} className="w-16 h-16 rounded-xl object-cover shrink-0" />
               <div className="min-w-0 flex-1">
-                <span className="text-[10px] text-[#8C8074] uppercase font-['Cinzel'] block">{rel.categoryLabel}</span>
+                <span className="text-[10px] text-[#8C8074] uppercase font-['Cinzel'] block">
+                  {rel.categoryLabel}
+                </span>
                 <h4 className="font-['Cormorant_Garamond'] text-lg font-bold truncate group-hover:text-[#E68314] transition-colors">
                   {rel.name}
                 </h4>
@@ -243,10 +244,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
         </div>
       </div>
 
-      {/* Verified Customer Reviews */}
       <TestimonialsSection />
 
-      {/* Sticky Mobile Buy Bar (Instant Mobile Conversion) */}
+      {/* Sticky Mobile Buy Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#141210]/95 backdrop-blur-md border-t border-[#E8DFD1] dark:border-[#2E2A26] px-4 py-3 sm:hidden shadow-2xl flex items-center justify-between gap-3">
         <div className="flex items-center space-x-2.5 min-w-0">
           <img
@@ -267,8 +267,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
         <div className="flex items-center space-x-2 shrink-0">
           <button
             onClick={handleAddToCart}
-            className="p-2.5 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] hover:bg-[#E68314] shadow"
-            title="Ajouter au Panier"
+            aria-label={tr('Ajouter au panier', 'Add to Cart')}
+            className="p-2.5 rounded-full bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] hover:bg-[#E68314] shadow"
           >
             <ShoppingBag className="w-4 h-4" />
           </button>
@@ -278,11 +278,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
             className="px-3.5 py-2.5 rounded-full bg-[#25D366] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-wider flex items-center space-x-1 shadow"
           >
             <PhoneCall className="w-3.5 h-3.5" />
-            <span>Commander</span>
+            <span>{tr('Commander', 'Order')}</span>
           </button>
         </div>
       </div>
-
     </div>
   );
 };

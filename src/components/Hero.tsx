@@ -54,7 +54,7 @@ export const Hero: React.FC<HeroProps> = () => {
             {/* Pill Slogan */}
             <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border border-[#E68314]/30 dark:border-[#E68314]/50 bg-[#FFF7EE] dark:bg-[#1E1914] text-xs text-[#B86209] dark:text-[#E68314] font-['Cinzel'] tracking-wider shadow-sm font-semibold">
               <span className="w-2 h-2 rounded-full bg-[#E68314] animate-ping" />
-              <span>Transformer les mots en œuvres • Dakar</span>
+              <span>WriticArt — « Les écrits restent » • Dakar</span>
             </div>
 
             {/* Main Title (Rahiya refined serif) */}

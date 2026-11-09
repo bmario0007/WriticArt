@@ -131,14 +131,20 @@ export const AdminERP: React.FC = () => {
   };
 
   const handleExportCSV = () => {
-    const headers = ['ID', 'Client', 'Telephone', 'Ville', 'Articles', 'Total_FCFA', 'Statut', 'Paiement', 'Date'];
+    const headers = ['ID', 'Offre', 'Client', 'Telephone', 'Email', 'Ville', 'Articles', 'Total_FCFA', 'Monnaie_Client', 'Theme', 'Parfum', 'Livraison', 'Statut', 'Paiement', 'Date'];
     const rows = orders.map((o) => [
       o.id,
+      o.offerType || 'boutique',
       `"${o.clientName}"`,
       `"${o.clientPhone}"`,
+      `"${o.clientEmail || ''}"`,
       `"${o.city}"`,
       `"${o.items.map((i) => `${i.title} (${i.quantity})`).join(', ')}"`,
       o.totalFCFA,
+      o.currencyUsed || 'FCFA',
+      `"${o.theme || ''}"`,
+      `"${o.parfumChoice || ''}"`,
+      `"${o.deliveryType || ''}"`,
       o.status,
       o.paymentMethod,
       o.date
@@ -155,7 +161,7 @@ export const AdminERP: React.FC = () => {
 
   const handleExportAllJSON = () => {
     const fullBackup = {
-      version: '1.0',
+      version: '2.0',
       date: new Date().toISOString(),
       orders,
       inventory,
@@ -163,7 +169,7 @@ export const AdminERP: React.FC = () => {
       products,
       articles,
       mediaList,
-      siteSettings: localStorage.getItem('writicart_cms_settings_v1')
+      siteSettings: localStorage.getItem('writicart_cms_settings_v2')
     };
     const blob = new Blob([JSON.stringify(fullBackup, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -183,13 +189,13 @@ export const AdminERP: React.FC = () => {
     reader.onload = (evt) => {
       try {
         const data = JSON.parse(evt.target?.result as string);
-        if (data.orders) localStorage.setItem('writicart_erp_orders_v2', JSON.stringify(data.orders));
+        if (data.orders) localStorage.setItem('writicart_erp_orders_v3', JSON.stringify(data.orders));
         if (data.inventory) localStorage.setItem('writicart_erp_inventory_v2', JSON.stringify(data.inventory));
         if (data.clients) localStorage.setItem('writicart_erp_clients_v2', JSON.stringify(data.clients));
-        if (data.products) localStorage.setItem('writicart_erp_products_v2', JSON.stringify(data.products));
+        if (data.products) localStorage.setItem('writicart_erp_products_v3', JSON.stringify(data.products));
         if (data.articles) localStorage.setItem('writicart_cms_articles_v1', JSON.stringify(data.articles));
         if (data.mediaList) localStorage.setItem('writicart_cms_media_v1', JSON.stringify(data.mediaList));
-        if (data.siteSettings) localStorage.setItem('writicart_cms_settings_v1', data.siteSettings);
+        if (data.siteSettings) localStorage.setItem('writicart_cms_settings_v2', data.siteSettings);
         alert('Sauvegarde restaurée avec succès ! La page va s’actualiser.');
         window.location.reload();
       } catch {
@@ -284,17 +290,17 @@ export const AdminERP: React.FC = () => {
 
       {/* Main ERP Navigation Tabs (WordPress Style) */}
       <nav className="bg-white/80 dark:bg-[#141312]/90 backdrop-blur-md border-b border-[#E8DFD1] dark:border-[#2E2A26] px-4 sm:px-8 sticky top-[65px] z-30">
-        <div className="flex space-x-1 sm:space-x-3 overflow-x-auto scrollbar-none py-2.5">
+        <div className="flex space-x-1 overflow-x-auto scrollbar-none py-2">
           {[
             { id: 'dashboard', label: 'Tableau de Bord', icon: LayoutDashboard },
-            { id: 'articles', label: `Articles & Blog (${articles.length})`, icon: FileText },
-            { id: 'media', label: `Médiathèque Photos (${mediaList.length})`, icon: ImageIcon },
-            { id: 'layout', label: 'Mise en Page (Builder)', icon: Palette },
-            { id: 'catalog', label: `Catalogue Produits (${products.length})`, icon: Tags },
+            { id: 'articles', label: `Articles (${articles.length})`, icon: FileText },
+            { id: 'media', label: `Médiathèque (${mediaList.length})`, icon: ImageIcon },
+            { id: 'layout', label: 'Mise en Page', icon: Palette },
+            { id: 'catalog', label: `Catalogue (${products.length})`, icon: Tags },
             { id: 'orders', label: `Commandes (${orders.length})`, icon: Package },
-            { id: 'inventory', label: `Stocks Matières (${inventory.length})`, icon: Boxes, badge: lowStockItemsCount > 0 ? `${lowStockItemsCount} bas` : undefined },
-            { id: 'clients', label: `Fichier Clients (${clients.length})`, icon: Users },
-            { id: 'settings', label: 'Réglages & Export', icon: Settings }
+            { id: 'inventory', label: `Stocks (${inventory.length})`, icon: Boxes, badge: lowStockItemsCount > 0 ? `${lowStockItemsCount} bas` : undefined },
+            { id: 'clients', label: `Clients (${clients.length})`, icon: Users },
+            { id: 'settings', label: 'Réglages', icon: Settings }
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -305,7 +311,7 @@ export const AdminERP: React.FC = () => {
                   atelierAudio.playPaperSlide();
                   setActiveTab(tab.id as any);
                 }}
-                className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-['Cinzel'] tracking-wider font-semibold whitespace-nowrap transition-all ${
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-[11px] font-['Cinzel'] tracking-wider font-semibold whitespace-nowrap transition-all ${
                   isActive
                     ? 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm'
                     : 'text-[#70675E] dark:text-[#A8A096] hover:bg-black/5 dark:hover:bg-white/5'
@@ -764,17 +770,69 @@ export const AdminERP: React.FC = () => {
                           <span className="text-[10px] text-[#8C8074] block">{order.city}</span>
                         </td>
 
-                        <td className="py-3.5 px-4 max-w-xs">
+                        <td className="py-3.5 px-4 max-w-xs space-y-1">
+                          <div className="flex flex-wrap gap-1 mb-0.5">
+                            {order.offerType && (
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-['Cinzel'] font-bold uppercase bg-[#231B26] text-[#F3D69B]">
+                                {order.offerType === 'tableau'
+                                  ? 'Tableau Acrostiche'
+                                  : order.offerType === 'writiclove'
+                                  ? 'Préco WriticLove'
+                                  : order.offerType === 'box'
+                                  ? 'Box Février'
+                                  : order.offerType === 'atelier'
+                                  ? 'Sur-Mesure'
+                                  : 'Boutique'}
+                              </span>
+                            )}
+                            {order.isPreorder && (
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-[#E68314]/20 text-[#B86209] dark:text-[#E68314]">
+                                Précommande
+                              </span>
+                            )}
+                          </div>
                           {order.items.map((it, i) => (
                             <div key={i} className="truncate">
                               <span className="font-medium">{it.title}</span>
                               <span className="text-[10px] text-[#8C8074]"> (x{it.quantity})</span>
                             </div>
                           ))}
+                          {(order.theme || order.parfumChoice || order.deliveryType) && (
+                            <p className="text-[10px] text-[#70675E] dark:text-[#A8A096] truncate">
+                              {[
+                                order.theme && `Thème: ${order.theme}`,
+                                order.parfumChoice && `Parfum: ${order.parfumChoice}`,
+                                order.deliveryType && `${order.deliveryType}`
+                              ]
+                                .filter(Boolean)
+                                .join(' • ')}
+                            </p>
+                          )}
                         </td>
 
-                        <td className="py-3.5 px-4 font-['Cinzel'] font-bold text-sm">
-                          {order.totalFCFA.toLocaleString('fr-FR')} FCFA
+                        <td className="py-3.5 px-4">
+                          <span className="font-['Cinzel'] font-bold text-sm block">
+                            {order.currencyUsed === 'EUR'
+                              ? `${(Math.round((order.totalFCFA / 655.957) * 100) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+                              : `${order.totalFCFA.toLocaleString('fr-FR')} FCFA`}
+                          </span>
+                          <span className="inline-flex items-center space-x-1 mt-0.5">
+                            <span
+                              className={`px-1.5 py-0.5 rounded text-[9px] font-['Cinzel'] font-bold ${
+                                order.currencyUsed === 'EUR'
+                                  ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300'
+                                  : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                              }`}
+                              title="Monnaie choisie par le client au moment de la commande"
+                            >
+                              {order.currencyUsed || 'FCFA'}
+                            </span>
+                            {order.currencyUsed === 'EUR' && (
+                              <span className="text-[10px] text-[#8C8074]">
+                                ({order.totalFCFA.toLocaleString('fr-FR')} FCFA)
+                              </span>
+                            )}
+                          </span>
                         </td>
 
                         <td className="py-3.5 px-4">

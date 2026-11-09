@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { 
-  Sparkles, 
-  Check, 
-  Eye, 
+import {
+  Sparkles,
+  Check,
+  Eye,
   FileText,
   PhoneCall
 } from 'lucide-react';
-import type { 
-  QuoteConfiguration, 
-  EventType, 
-  PaperType, 
-  InkType, 
-  CalligraphyStyle, 
-  WaxColor, 
-  WaxStamp 
+import type {
+  QuoteConfiguration,
+  EventType,
+  PaperType,
+  InkType,
+  CalligraphyStyle,
+  WaxColor,
+  WaxStamp
 } from '../types';
 import { atelierAudio } from '../utils/soundEffects';
+import { useLanguage } from '../context/LanguageContext';
+import { useCurrency } from '../context/CurrencyContext';
 
 interface StudioConfiguratorProps {
   config: QuoteConfiguration;
@@ -28,6 +30,8 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
   onChangeConfig,
   onOpenQuoteSummary
 }) => {
+  const { tr } = useLanguage();
+  const { formatPrice, formatExactBoth, currency } = useCurrency();
   const [viewMode, setViewMode] = useState<'card' | 'envelope'>('card');
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
@@ -46,12 +50,11 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
     setTilt({ x: 0, y: 0 });
   };
 
-  // Dynamic pricing calculation in FCFA (and EUR)
+  // Dynamic pricing calculation aligned with Cahier des Charges (FCFA & EUR)
   const getBasePrice = () => {
-    // Base unit price in FCFA
-    let unitFCFA = 3000;
-    if (config.eventType === 'tableau') unitFCFA = 35000;
-    else if (config.eventType === 'cadre') unitFCFA = 20000;
+    let unitFCFA = 5000;
+    if (config.eventType === 'tableau') unitFCFA = 10000; // Poème standard base
+    else if (config.eventType === 'cadre') unitFCFA = 15000; // Poème personnalisé base
     else if (config.eventType === 'writiclove') unitFCFA = 30000;
 
     if (config.paperType === 'deckle-edge') unitFCFA += 1500;
@@ -68,17 +71,16 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
 
     const totalFCFA = unitFCFA * config.quantity;
     const rushMultiplier = config.rushOrder ? 1.25 : 1.0;
-    const finalFCFA = totalFCFA * rushMultiplier;
-    const finalEUR = (finalFCFA / 655.957).toFixed(2);
+    const finalFCFA = Math.round(totalFCFA * rushMultiplier);
 
     return {
-      unitPriceFCFA: unitFCFA.toLocaleString('fr-FR'),
-      totalPriceFCFA: Math.round(finalFCFA).toLocaleString('fr-FR'),
-      totalEUR: finalEUR
+      unitFCFA,
+      finalFCFA
     };
   };
 
   const pricing = getBasePrice();
+  const bothPrices = formatExactBoth(pricing.finalFCFA);
 
   // Color mapping for wax seals
   const waxColorMap = {
@@ -118,7 +120,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
       case 'parchemin-or':
         return 'bg-gradient-to-br from-[#F5EEDC] via-[#EFE6CF] to-[#E3D6B5] text-[#292218] border-[#CFBE9B] shadow-2xl';
       case 'noir-nuit':
-        return 'bg-[#181716] text-[#FAF8F5] border-[#383431] shadow-2xl';
+        return 'bg-[#231B26] text-[#FAF8F5] border-[#C5A059]/40 shadow-2xl';
       case 'coton-350':
       default:
         return 'bg-[#FFFFFF] text-[#1E1C1A] border-[#E8DFD1] shadow-xl';
@@ -155,29 +157,29 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
   };
 
   return (
-    <section id="studio" className="py-24 bg-[#FAF8F5] dark:bg-[#0F0E0D] relative transition-colors duration-300">
+    <section id="studio" className="py-12 bg-[#FAF8F5] dark:bg-[#0F0E0D] relative transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.25em] text-[#B86209] font-['Cinzel'] font-semibold">
             <Sparkles className="w-4 h-4 text-[#E68314]" />
-            <span>Configurateur d'Atelier • Sur-Mesure WriticArt</span>
+            <span>{tr('Atelier Sur-Mesure • « Les écrits restent »', 'Bespoke Workshop • "Words that stay"')}</span>
           </div>
           <h2 className="font-['Cormorant_Garamond'] text-3xl sm:text-4xl lg:text-5xl font-light text-[#181716] dark:text-[#FAF8F5]">
-            Configurez Votre Création Unique
+            {tr('Configurez Votre Création Unique', 'Configure Your Unique Artwork')}
           </h2>
           <p className="font-sans text-sm sm:text-base text-[#6B635B] dark:text-[#A8A096] font-light">
-            Tableau d'art, cadre poétique, coffret personnalisé ou papeterie nuptiale : composez votre support, vos pigments et vos vœux avec devis instantané en FCFA.
+            {tr(
+              `Composez votre support, vos pigments et votre message personnalisé avec devis instantané en ${currency}.`,
+              `Select your fine paper, pigments, and custom poem or quote with instant pricing in ${currency}.`
+            )}
           </p>
         </div>
 
         {/* Studio Grid: Controls & 3D Interactive Canvas */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          
-          {/* LEFT: 3D Interactive Canvas & Live Preview (Sticky ONLY on desktop lg:) */}
+          {/* LEFT: 3D Interactive Canvas & Live Preview */}
           <div className="lg:col-span-7 lg:sticky lg:top-28 space-y-6">
-            
             {/* Canvas controls header */}
             <div className="flex items-center justify-between bg-white/80 dark:bg-[#1A1816]/90 p-3 rounded-2xl border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm backdrop-blur-sm">
               <div className="flex items-center space-x-2">
@@ -188,11 +190,11 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   }}
                   className={`px-4 py-2 rounded-xl text-xs font-['Cinzel'] tracking-wider transition-all ${
                     viewMode === 'card'
-                      ? 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm'
+                      ? 'bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm'
                       : 'text-[#70675E] dark:text-[#A8A096] hover:text-[#181716] dark:hover:text-white'
                   }`}
                 >
-                  Vue Carte / Toile
+                  {tr('Vue Carte / Tableau', 'Card / Frame View')}
                 </button>
                 <button
                   onClick={() => {
@@ -201,17 +203,17 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   }}
                   className={`px-4 py-2 rounded-xl text-xs font-['Cinzel'] tracking-wider transition-all ${
                     viewMode === 'envelope'
-                      ? 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm'
+                      ? 'bg-[#231B26] dark:bg-[#FAF8F5] text-white dark:text-[#181716] shadow-sm'
                       : 'text-[#70675E] dark:text-[#A8A096] hover:text-[#181716] dark:hover:text-white'
                   }`}
                 >
-                  Vue Enveloppe & Sceau
+                  {tr('Vue Enveloppe & Sceau', 'Envelope & Seal View')}
                 </button>
               </div>
 
               <div className="flex items-center space-x-2 text-xs text-[#8A7F75] dark:text-[#9C9286] font-sans">
                 <Eye className="w-3.5 h-3.5 text-[#E68314]" />
-                <span className="hidden sm:inline">Rendu 3D en direct</span>
+                <span className="hidden sm:inline">{tr('Rendu 3D en direct', 'Live 3D Preview')}</span>
               </div>
             </div>
 
@@ -221,11 +223,9 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
-              
-              {/* Background table grain simulation */}
+              {/* Background texture */}
               <div className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#181716_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
-              {/* VIEW MODE: ENVELOPE */}
               {viewMode === 'envelope' ? (
                 <div
                   style={{
@@ -234,26 +234,23 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   }}
                   className="relative w-full max-w-[420px] aspect-[4/3] rounded-2xl bg-[#EBE4D5] border border-[#D5C7B2] shadow-2xl p-6 flex flex-col justify-between items-center transform-style-3d paper-deckle-edge"
                 >
-                  {/* Flap triangle */}
                   <div className="absolute top-0 left-0 right-0 h-1/2 bg-[#DFD5C2] [clip-path:polygon(0_0,100%_0,50%_100%)] border-b border-[#C8BBA4] shadow-md z-10" />
 
-                  {/* Envelope Address Area */}
                   <div className="relative z-20 text-center mt-auto mb-auto w-full px-4">
                     <p className="text-[10px] uppercase font-['Cinzel'] tracking-[0.25em] text-[#8C8074] mb-2">
-                      À l'attention de
+                      {tr('À l’attention de', 'Dedicated to')}
                     </p>
                     <p className={`text-2xl sm:text-3xl ${getFontFamily()} ${getInkStyle()} truncate`}>
-                      {config.customNames || 'Madame, Monsieur'}
+                      {config.customNames || tr('Madame, Monsieur', 'Dear Recipient')}
                     </p>
                     <p className="text-xs font-['Cormorant_Garamond'] italic text-[#7E7469] mt-1">
-                      {config.customTitle || 'Création Personnalisée WriticArt'}
+                      {config.customTitle || tr('Création Personnalisée WriticArt', 'Custom WriticArt Artwork')}
                     </p>
                   </div>
 
-                  {/* 3D Wax Seal */}
                   {config.hasWaxSeal && (
-                    <div 
-                      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-16 h-16 rounded-full bg-gradient-to-br ${currentWax.bg} border-2 ${currentWax.border} shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95`}
+                    <div
+                      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-16 h-16 rounded-full bg-gradient-to-br ${currentWax.bg} border-2 ${currentWax.border} shadow-2xl flex items-center justify-center`}
                       style={{ boxShadow: `0 12px 25px ${currentWax.shadow}` }}
                     >
                       <div className="w-12 h-12 rounded-full border border-dashed border-white/30 flex items-center justify-center">
@@ -264,18 +261,16 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                     </div>
                   )}
 
-                  {/* Silk ribbon simulation */}
                   {config.hasSilkRibbon && (
                     <div className="absolute inset-y-0 w-8 bg-[#EFE9DC]/90 left-12 border-x border-[#DDD2BE] shadow-sm z-0 pointer-events-none" />
                   )}
 
                   <div className="w-full flex justify-between items-center text-[10px] text-[#8C8074] font-['Cinzel'] tracking-wider z-20">
                     <span>Atelier WriticArt Dakar</span>
-                    <span>Scellé à la cire</span>
+                    <span>« {tr('Les écrits restent', 'Words that stay')} »</span>
                   </div>
                 </div>
               ) : (
-                /* VIEW MODE: CARD */
                 <div
                   style={{
                     transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
@@ -283,13 +278,10 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   }}
                   className={`relative w-full max-w-[440px] rounded-2xl sm:rounded-3xl p-5 sm:p-10 border transition-all duration-300 transform-style-3d paper-deckle-edge ${getPaperClasses()}`}
                 >
-                  
-                  {/* Gold leaf foil border if enabled */}
                   {config.hasGoldLeafFoil && (
                     <div className="absolute inset-2.5 rounded-2xl border border-[#E68314]/40 pointer-events-none" />
                   )}
 
-                  {/* Silk Ribbon across the top */}
                   {config.hasSilkRibbon && (
                     <div className="absolute top-0 right-8 sm:right-12 w-5 sm:w-6 h-12 sm:h-16 bg-gradient-to-b from-[#EFE5D5] to-[#D5C4A9] shadow-md rounded-b-md z-20 border-x border-[#BFAFA0] pointer-events-none" />
                   )}
@@ -297,20 +289,26 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   {/* Header Monogram / Brand */}
                   <div className="text-center pb-3 sm:pb-4 border-b border-black/10">
                     <span className="text-[9px] sm:text-[10px] uppercase font-['Cinzel'] tracking-[0.25em] opacity-60 block">
-                      WriticArt • Transformer les mots en œuvres
+                      WriticArt • « {tr('Les écrits restent', 'Words that stay')} »
                     </span>
                     <h3 className={`text-2xl sm:text-4xl mt-2 mb-1 ${getFontFamily()} ${getInkStyle()}`}>
-                      {config.customTitle || 'Titre de Votre Création'}
+                      {config.customTitle || tr('Titre de Votre Création', 'Artwork Title')}
                     </h3>
                     <p className="text-[11px] sm:text-xs font-['Cinzel'] tracking-widest opacity-70">
-                      {config.customNames || 'Noms des Destinataires'}
+                      {config.customNames || tr('Noms des Destinataires', 'Recipient Names')}
                     </p>
                   </div>
 
-                  {/* Handwritten Message Body */}
+                  {/* Message Body */}
                   <div className="py-5 sm:py-8 text-center min-h-[110px] sm:min-h-[140px] flex items-center justify-center">
                     <p className={`text-base sm:text-2xl ${getFontFamily()} ${getInkStyle()} leading-relaxed px-1 sm:px-2`}>
-                      « {config.customMessage || 'Votre texte manuscrit ou déclaration apparaîtra ici avec les pigments choisis.'} »
+                      «{' '}
+                      {config.customMessage ||
+                        tr(
+                          'Les mots ont un super pouvoir. WriticArt leur donne une forme pour qu’ils restent.',
+                          'Words carry a superpower. WriticArt gives them form so they forever stay.'
+                        )}{' '}
+                      »
                     </p>
                   </div>
 
@@ -318,19 +316,18 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                   <div className="pt-4 border-t border-black/10 flex items-center justify-between">
                     <div>
                       <span className="text-[10px] uppercase font-['Cinzel'] tracking-wider opacity-60 block">
-                        Finition d'Art
+                        {tr('Finition d’Art', 'Artisan Finish')}
                       </span>
                       <span className="text-xs font-sans font-medium">
-                        {config.paperType === 'deckle-edge' && 'Papier Coton Frangé 350g'}
-                        {config.paperType === 'parchemin-or' && 'Parchemin Vénitien Doré'}
-                        {config.paperType === 'noir-nuit' && 'Papier Noir Minéral'}
-                        {config.paperType === 'coton-350' && 'Vélin Blanc 350g'}
+                        {config.paperType === 'deckle-edge' && tr('Papier Coton Frangé 350g', '350g Deckle-Edge Cotton')}
+                        {config.paperType === 'parchemin-or' && tr('Parchemin Vénitien Doré', 'Gilded Venetian Parchment')}
+                        {config.paperType === 'noir-nuit' && tr('Prune Impérial & Dorure', 'Imperial Plum & Gold')}
+                        {config.paperType === 'coton-350' && tr('Vélin Blanc 350g', '350g Ivory Vellum')}
                       </span>
                     </div>
 
-                    {/* Wax Stamp Seal icon */}
                     {config.hasWaxSeal && (
-                      <div 
+                      <div
                         className={`w-10 h-10 rounded-full bg-gradient-to-br ${currentWax.bg} border ${currentWax.border} shadow-md flex items-center justify-center`}
                       >
                         <span className={`font-['Cinzel'] text-xs font-bold ${currentWax.text}`}>
@@ -339,24 +336,23 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                       </div>
                     )}
                   </div>
-
                 </div>
               )}
-
             </div>
 
-            {/* Price Preview Card in FCFA */}
+            {/* Price Preview Card */}
             <div className="bg-white dark:bg-[#1A1816] rounded-2xl p-5 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
               <div>
                 <p className="text-xs text-[#8A8075] dark:text-[#A09589] uppercase font-['Cinzel'] tracking-wider">
-                  Estimation Chiffrée ({config.quantity} {config.quantity > 1 ? 'exemplaires' : 'pièce'})
+                  {tr('Estimation Chiffrée', 'Estimated Total')} ({config.quantity}{' '}
+                  {config.quantity > 1 ? tr('exemplaires', 'pieces') : tr('pièce', 'piece')})
                 </p>
                 <div className="flex items-baseline space-x-2 mt-0.5">
                   <span className="text-2xl font-['Cormorant_Garamond'] font-bold text-[#181716] dark:text-[#FAF8F5]">
-                    {pricing.totalPriceFCFA} FCFA
+                    {formatPrice(pricing.finalFCFA)}
                   </span>
-                  <span className="text-xs text-[#8A8075] dark:text-[#A09589]">
-                    (~{pricing.totalEUR} €)
+                  <span className="text-xs text-[#8A8074]">
+                    ({bothPrices.fcfa} • {bothPrices.eur})
                   </span>
                 </div>
               </div>
@@ -367,40 +363,40 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                     atelierAudio.playWaxStamp();
                     onOpenQuoteSummary();
                   }}
-                  className="px-5 py-3 rounded-full bg-[#181716] dark:bg-[#FAF8F5] text-[#FAF8F5] dark:text-[#181716] text-xs uppercase tracking-widest font-['Cinzel'] hover:bg-[#E68314] dark:hover:bg-[#E68314] dark:hover:text-white transition-all flex items-center space-x-2 shadow-md hover:shadow-lg"
+                  className="px-5 py-3 rounded-full bg-[#231B26] dark:bg-[#FAF8F5] text-[#FAF8F5] dark:text-[#181716] text-xs uppercase tracking-widest font-['Cinzel'] hover:bg-[#E68314] dark:hover:bg-[#E68314] dark:hover:text-white transition-all flex items-center space-x-2 shadow-md hover:shadow-lg"
                 >
                   <FileText className="w-3.5 h-3.5 text-[#E68314]" />
-                  <span>Voir le Devis</span>
+                  <span>{tr('Valider / Devis', 'Review Quote')}</span>
                 </button>
 
                 <a
-                  href={`https://wa.me/221772348521?text=Bonjour%20WriticArt%20!%20Je%20souhaite%20commander%20une%20création%20sur-mesure%20:%20${encodeURIComponent(config.customTitle)}%20-%20Total%20estimé%20:%20${pricing.totalPriceFCFA}%20FCFA`}
+                  href={`https://wa.me/221772348521?text=${encodeURIComponent(
+                    `Bonjour WriticArt ! Je souhaite commander une création sur-mesure : ${config.customTitle} - Total estimé : ${formatPrice(pricing.finalFCFA)} (${currency})`
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Commander sur WhatsApp"
                   className="p-3 rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] transition-all shadow-md"
-                  title="Commander directement sur WhatsApp"
                 >
                   <PhoneCall className="w-4 h-4" />
                 </a>
               </div>
             </div>
-
           </div>
 
           {/* RIGHT: Customization Parameters */}
           <div className="lg:col-span-5 space-y-6">
-            
             {/* Event & Product Category */}
             <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-3 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
-                1. Type d'Œuvre WriticArt
+                1. {tr('Type d’Œuvre WriticArt', 'Artwork Category')}
               </label>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
-                  { id: 'writiclove', label: 'Coffret 365 Jours', icon: '❤️' },
-                  { id: 'tableau', label: 'Tableau d’Art sur Toile', icon: '🎨' },
-                  { id: 'cadre', label: 'Cadre Poétique Déco', icon: '🖼️' },
-                  { id: 'mariage', label: 'Mariage & Galas', icon: '💍' },
+                  { id: 'writiclove', label: tr('Coffret WriticLove', 'WriticLove Box'), icon: '❤️' },
+                  { id: 'tableau', label: tr('Tableau Acrostiche', 'Acrostic Painting'), icon: '🎨' },
+                  { id: 'cadre', label: tr('Cadre Poème Luxe', 'Luxury Poem Frame'), icon: '🖼️' },
+                  { id: 'mariage', label: tr('Mariage & Vœux', 'Wedding & Vows'), icon: '💍' }
                 ].map((ev) => (
                   <button
                     key={ev.id}
@@ -424,14 +420,14 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             {/* Paper Selection */}
             <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-3 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
-                2. Papier d'Art & Support
+                2. {tr('Papier d’Art & Support', 'Paper & Support')}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {[
-                  { id: 'deckle-edge', title: 'Coton Bord Frangé', desc: 'Bords effilochés à la main 350g' },
-                  { id: 'parchemin-or', title: 'Parchemin Vénitien', desc: 'Nuance dorée patinée à la flamme' },
-                  { id: 'noir-nuit', title: 'Noir Nuit Minéral', desc: 'Papier d’ébène velouté pour or' },
-                  { id: 'coton-350', title: 'Vélin Blanc Crème', desc: 'Grain pur classique intemporel' },
+                  { id: 'deckle-edge', title: tr('Coton Bord Frangé', 'Deckle-Edge Cotton'), desc: tr('Bords effilochés main 350g', 'Hand-torn edges 350g') },
+                  { id: 'parchemin-or', title: tr('Parchemin Vénitien', 'Venetian Parchment'), desc: tr('Nuance dorée patinée', 'Warm gilded shade') },
+                  { id: 'noir-nuit', title: tr('Prune Impérial', 'Imperial Plum'), desc: tr('Fond sombre Oud Bar Palace', 'Deep luxury finish') },
+                  { id: 'coton-350', title: tr('Vélin Blanc Crème', 'Ivory Vellum'), desc: tr('Grain pur classique', 'Classic cotton finish') }
                 ].map((paper) => (
                   <button
                     key={paper.id}
@@ -459,18 +455,19 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             {/* Ink & Calligraphy Style */}
             <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
-                3. Plume & Pigments Minéraux
+                3. {tr('Plume & Pigments', 'Nib & Ink Pigments')}
               </label>
 
-              {/* Ink choice */}
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-2">Pigment de l'encre :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-2">
+                  {tr('Pigment de l’encre :', 'Ink pigment:')}
+                </span>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { id: 'or-24k', label: 'Dorure Or 24K en relief' },
-                    { id: 'encre-chine', label: 'Encre de Chine Noire' },
-                    { id: 'sepia', label: 'Sépia Vénitien Noyer' },
-                    { id: 'blanc-nacré', label: 'Encre Blanche Opaque' },
+                    { id: 'or-24k', label: tr('Dorure Or 24K', '24K Gold Foil') },
+                    { id: 'encre-chine', label: tr('Encre de Chine Noire', 'Deep India Ink') },
+                    { id: 'sepia', label: tr('Sépia Vénitien', 'Venetian Sepia') },
+                    { id: 'blanc-nacré', label: tr('Blanc Nacré Opaque', 'Pearl White Ink') }
                   ].map((ink) => (
                     <button
                       key={ink.id}
@@ -490,15 +487,16 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                 </div>
               </div>
 
-              {/* Calligraphy font style */}
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-2">Style Calligraphique :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-2">
+                  {tr('Style Calligraphique :', 'Calligraphy Style:')}
+                </span>
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { id: 'spencerian', label: 'Spencerian Romantique', font: "font-['Great_Vibes'] text-base" },
                     { id: 'editorial', label: 'Éditorial Sérif', font: "font-['Cormorant_Garamond'] italic text-sm" },
                     { id: 'brush-moderne', label: 'Brush Artistique', font: "font-['Alex_Brush'] text-base" },
-                    { id: 'gothique-poetique', label: 'Lapidaire Majuscule', font: "font-['Cinzel'] text-xs" },
+                    { id: 'gothique-poetique', label: 'Lapidaire Majuscule', font: "font-['Cinzel'] text-xs" }
                   ].map((sty) => (
                     <button
                       key={sty.id}
@@ -523,7 +521,7 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4 transition-colors">
               <div className="flex items-center justify-between">
                 <label className="text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
-                  4. Sceau de Cire & Finitions
+                  4. {tr('Sceau de Cire & Finitions', 'Wax Seal & Finishing')}
                 </label>
                 <input
                   type="checkbox"
@@ -535,13 +533,15 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
 
               {config.hasWaxSeal && (
                 <div className="space-y-3 pt-2 border-t border-[#ECE4D8] dark:border-[#2E2A26]">
-                  <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block">Nuance de la cire :</span>
+                  <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block">
+                    {tr('Nuance de la cire :', 'Wax color:')}
+                  </span>
                   <div className="flex items-center space-x-3">
                     {[
                       { id: 'or', label: 'Or WriticArt', colorClass: 'bg-[#E68314]' },
                       { id: 'bordeaux', label: 'Bordeaux', colorClass: 'bg-[#6E1A24]' },
                       { id: 'emeraude', label: 'Émeraude', colorClass: 'bg-[#1B4332]' },
-                      { id: 'noir', label: 'Noir Mat', colorClass: 'bg-[#181716]' },
+                      { id: 'noir', label: 'Noir Mat', colorClass: 'bg-[#181716]' }
                     ].map((w) => (
                       <button
                         key={w.id}
@@ -561,15 +561,16 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
                     ))}
                   </div>
 
-                  {/* Stamp engraving pattern */}
                   <div className="pt-2">
-                    <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1.5">Motif gravé :</span>
+                    <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1.5">
+                      {tr('Motif gravé :', 'Stamp design:')}
+                    </span>
                     <div className="grid grid-cols-4 gap-2">
                       {[
                         { id: 'monogramme', label: 'Logo WA' },
-                        { id: 'coeur', label: 'Cœur Sacré' },
-                        { id: 'fleur-de-lys', label: 'Fleur de Lys' },
-                        { id: 'olivier', label: 'Olivier' },
+                        { id: 'coeur', label: tr('Cœur', 'Heart') },
+                        { id: 'fleur-de-lys', label: 'Fleur Lys' },
+                        { id: 'olivier', label: tr('Olivier', 'Olive') }
                       ].map((st) => (
                         <button
                           key={st.id}
@@ -595,63 +596,68 @@ export const StudioConfigurator: React.FC<StudioConfiguratorProps> = ({
             {/* Custom Content Inputs */}
             <div className="bg-white dark:bg-[#1A1816] rounded-3xl p-6 border border-[#E8DFD1] dark:border-[#2E2A26] shadow-sm space-y-4 transition-colors">
               <label className="block text-xs uppercase font-['Cinzel'] tracking-wider text-[#B86209] font-bold">
-                5. Votre Texte & Noms Personnalisés
+                5. {tr('Votre Texte & Noms Personnalisés', 'Custom Text & Names')}
               </label>
 
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">Titre ou Occasion :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">
+                  {tr('Titre ou Occasion :', 'Title or Occasion:')}
+                </span>
                 <input
                   type="text"
                   value={config.customTitle}
                   onChange={(e) => update({ customTitle: e.target.value })}
-                  placeholder="Ex : Tableau Anniversaire de Mariage"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] dark:placeholder-[#6E665E] text-sm focus:outline-none focus:border-[#E68314] font-sans"
+                  placeholder={tr('Ex : Tableau Anniversaire', 'Ex: Birthday Painting')}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] text-sm focus:outline-none focus:border-[#E68314] font-sans"
                 />
               </div>
 
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">Destinataires / Noms :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">
+                  {tr('Destinataires / Noms :', 'Recipients / Names:')}
+                </span>
                 <input
                   type="text"
                   value={config.customNames}
                   onChange={(e) => update({ customNames: e.target.value })}
                   placeholder="Ex : Mariama & Ousmane"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] dark:placeholder-[#6E665E] text-sm focus:outline-none focus:border-[#E68314] font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] text-sm focus:outline-none focus:border-[#E68314] font-sans"
                 />
               </div>
 
               <div>
-                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">Message ou Vœux manuscrits :</span>
+                <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096] block mb-1">
+                  {tr('Message ou Acrostiche souhaité :', 'Message or Acrostic wording:')}
+                </span>
                 <textarea
                   rows={3}
                   value={config.customMessage}
                   onChange={(e) => update({ customMessage: e.target.value })}
-                  placeholder="Ex : Que chaque jour passé à tes côtés soit une œuvre d'amour éternelle."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] dark:placeholder-[#6E665E] text-sm focus:outline-none focus:border-[#E68314] font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DED4C3] dark:border-[#38332E] dark:bg-[#141312] dark:text-[#FAF8F5] text-sm focus:outline-none focus:border-[#E68314] font-sans"
                 />
               </div>
 
-              {/* Quantity */}
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096]">Quantité souhaitée :</span>
-                  <span className="text-xs font-semibold font-['Cinzel'] text-[#181716] dark:text-[#FAF8F5]">{config.quantity} {config.quantity > 1 ? 'pièces' : 'pièce unique'}</span>
+                  <span className="text-[11px] font-sans text-[#70675E] dark:text-[#A8A096]">
+                    {tr('Quantité souhaitée :', 'Quantity:')}
+                  </span>
+                  <span className="text-xs font-semibold font-['Cinzel'] text-[#181716] dark:text-[#FAF8F5]">
+                    {config.quantity} {config.quantity > 1 ? tr('pièces', 'pieces') : tr('pièce unique', 'single piece')}
+                  </span>
                 </div>
                 <input
                   type="range"
                   min="1"
                   max="100"
                   value={config.quantity}
-                  onChange={(e) => update({ quantity: parseInt(e.target.value) || 1 })}
+                  onChange={(e) => update({ quantity: parseInt(e.target.value, 10) || 1 })}
                   className="w-full accent-[#E68314]"
                 />
               </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );

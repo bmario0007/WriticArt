@@ -2,9 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type PageRoute = 
   | 'home' 
+  | 'tableaux'
+  | 'writiclove' 
+  | 'box'
   | 'boutique' 
   | 'product-detail' 
-  | 'writiclove' 
   | 'sur-mesure' 
   | 'pensee' 
   | 'galerie' 
@@ -42,6 +44,8 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       return { page: 'journal', productId: null, articleId: null };
     }
 
+    if (hash === 'tableaux' || hash === 'paintings' || hash === 'acrostiche') return { page: 'tableaux', productId: null, articleId: null };
+    if (hash === 'box' || hash === 'coffret-fevrier') return { page: 'box', productId: null, articleId: null };
     if (hash === 'boutique' || hash === 'catalogue') return { page: 'boutique', productId: null, articleId: null };
     if (hash === 'writiclove' || hash === 'coffrets') return { page: 'writiclove', productId: null, articleId: null };
     if (hash === 'sur-mesure' || hash === 'studio') return { page: 'sur-mesure', productId: null, articleId: null };
@@ -74,7 +78,9 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const navigateTo = (page: PageRoute, itemId?: string) => {
     let targetHash = '#/';
-    if (page === 'boutique') targetHash = '#/boutique';
+    if (page === 'tableaux') targetHash = '#/tableaux';
+    else if (page === 'box') targetHash = '#/box';
+    else if (page === 'boutique') targetHash = '#/boutique';
     else if (page === 'product-detail' && itemId) targetHash = `#/produit/${itemId}`;
     else if (page === 'journal') targetHash = '#/journal';
     else if (page === 'article' && itemId) targetHash = `#/article/${itemId}`;

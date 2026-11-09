@@ -87,7 +87,14 @@ export const PrintInvoiceModal: React.FC<PrintInvoiceModalProps> = ({ order, onC
             <div>
               <span className="text-[10px] uppercase font-['Cinzel'] text-[#8C8074] font-bold block">Lieu de Livraison & Paiement</span>
               <p className="font-medium text-[#181716]">{order.city}</p>
-              <p className="text-[#554C43]">Mode : {order.paymentMethod} ({order.paymentStatus === 'paye' ? 'Réglé' : 'Acompte'})</p>
+              <p className="text-[#554C43]">
+                Mode : {order.paymentMethod} ({order.paymentStatus === 'paye' ? 'Réglé' : order.paymentStatus === 'acompte' ? 'Acompte' : 'En attente'}) • Monnaie client : <strong>{order.currencyUsed || 'FCFA'}</strong>
+              </p>
+              {(order.theme || order.parfumChoice || order.deliveryType) && (
+                <p className="text-[11px] text-[#B86209] mt-0.5">
+                  {[order.theme && `Thème : ${order.theme}`, order.parfumChoice && `Parfum : ${order.parfumChoice}`, order.deliveryType].filter(Boolean).join(' • ')}
+                </p>
+              )}
             </div>
           </div>
 
@@ -154,8 +161,8 @@ export const PrintInvoiceModal: React.FC<PrintInvoiceModalProps> = ({ order, onC
             </div>
 
             <div className="text-right text-[10px]">
-              <p className="font-semibold text-[#181716]">« Transformer les mots en œuvres »</p>
-              <p>Merci pour votre confiance en l'artisanat d'art sénégalais.</p>
+              <p className="font-semibold text-[#181716]">« Les écrits restent »</p>
+              <p>Les mots ont un super pouvoir. WriticArt leur donne une forme pour qu’ils restent.</p>
             </div>
           </div>
 
