@@ -192,9 +192,9 @@ export const AdminERP: React.FC = () => {
         if (data.orders) localStorage.setItem('writicart_erp_orders_v3', JSON.stringify(data.orders));
         if (data.inventory) localStorage.setItem('writicart_erp_inventory_v2', JSON.stringify(data.inventory));
         if (data.clients) localStorage.setItem('writicart_erp_clients_v2', JSON.stringify(data.clients));
-        if (data.products) localStorage.setItem('writicart_erp_products_v3', JSON.stringify(data.products));
-        if (data.articles) localStorage.setItem('writicart_cms_articles_v1', JSON.stringify(data.articles));
-        if (data.mediaList) localStorage.setItem('writicart_cms_media_v1', JSON.stringify(data.mediaList));
+        if (data.products) localStorage.setItem('writicart_erp_products_v4', JSON.stringify(data.products));
+        if (data.articles) localStorage.setItem('writicart_cms_articles_v2', JSON.stringify(data.articles));
+        if (data.mediaList) localStorage.setItem('writicart_cms_media_v2', JSON.stringify(data.mediaList));
         if (data.siteSettings) localStorage.setItem('writicart_cms_settings_v2', data.siteSettings);
         alert('Sauvegarde restaurée avec succès ! La page va s’actualiser.');
         window.location.reload();

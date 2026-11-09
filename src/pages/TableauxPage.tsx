@@ -15,6 +15,11 @@ import { useCurrency } from '../context/CurrencyContext';
 import { useErp } from '../context/ErpContext';
 import { useNavigation } from '../context/NavigationContext';
 import { atelierAudio } from '../utils/soundEffects';
+import {
+  heroEditorialImg,
+  tableauMinimalisteImg,
+  tableauAcrosticheDorureImg
+} from '../assets/images';
 import type { ErpOrder } from '../types';
 
 const ACROSTIC_FR: Record<string, string> = {
@@ -125,6 +130,7 @@ export const TableauxPage: React.FC = () => {
       title: tr('Citation simple', 'Simple Quote'),
       minFCFA: 5000,
       maxFCFA: 10000,
+      image: tableauMinimalisteImg,
       desc: tr(
         'Une phrase inspirante ou un court acrostiche mis en page dans un univers visuel élégant.',
         'An inspiring quote or short acrostic staged within an elegant visual theme.'
@@ -136,6 +142,7 @@ export const TableauxPage: React.FC = () => {
       title: tr('Poème standard', 'Standard Poem'),
       minFCFA: 10000,
       maxFCFA: 15000,
+      image: heroEditorialImg,
       desc: tr(
         'Acrostiche poétique équilibré autour d’un prénom, d’un mot ou d’une émotion qui mérite de rester.',
         'Balanced poetic acrostic built around a name, a word, or an emotion meant to last.'
@@ -147,6 +154,7 @@ export const TableauxPage: React.FC = () => {
       title: tr('Poème personnalisé', 'Bespoke Poem'),
       minFCFA: 15000,
       maxFCFA: 20000,
+      image: tableauAcrosticheDorureImg,
       desc: tr(
         'Œuvre sur mesure écrite intégralement à partir de votre histoire, vos souvenirs et votre message.',
         'One-of-a-kind poem written entirely from your personal story, memories, and message.'
@@ -263,41 +271,57 @@ export const TableauxPage: React.FC = () => {
             </span>
           </nav>
 
-          <div className="max-w-3xl space-y-5">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-[#C5A059]/40 text-[#E68314] text-[11px] font-['Cinzel'] font-bold uppercase tracking-[0.2em]">
-              <Feather className="w-3.5 h-3.5" />
-              <span>WriticArt — « {tr('Les écrits restent', 'Words that stay')} »</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7 space-y-5">
+              <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-[#C5A059]/40 text-[#E68314] text-[11px] font-['Cinzel'] font-bold uppercase tracking-[0.2em]">
+                <Feather className="w-3.5 h-3.5" />
+                <span>WriticArt — « {tr('Les écrits restent', 'Words that stay')} »</span>
+              </div>
+
+              <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-5xl xl:text-6xl font-light leading-tight">
+                {tr('Tableaux Poétiques Personnalisés', 'Bespoke Poetic Art Frames')}
+                <span className="block italic text-[#E68314] font-serif mt-1">
+                  {tr('L’art de l’acrostiche sur mesure', 'The timeless art of the acrostic')}
+                </span>
+              </h1>
+
+              <blockquote className="pl-4 border-l-2 border-[#C5A059] italic font-['Cormorant_Garamond'] text-xl sm:text-2xl text-[#EADBC2]">
+                « {tr(
+                  'Les mots ont un super pouvoir. WriticArt leur donne une forme pour qu’ils restent.',
+                  'Words carry a superpower. WriticArt gives them form so they forever stay.'
+                )} »
+              </blockquote>
+
+              <p className="text-sm sm:text-base text-[#D3C7D6] font-light leading-relaxed max-w-2xl">
+                {tr(
+                  'Chaque tableau est une création personnalisée conçue pour raconter une histoire, transmettre un message ou immortaliser une pensée qui mérite de rester.',
+                  'Each framed piece is a custom artwork crafted to tell a story, convey a heartfelt message, or immortalize a thought meant to stay forever.'
+                )}
+              </p>
+
+              <div className="pt-2 flex flex-wrap gap-3">
+                <button
+                  onClick={() => scrollToForm()}
+                  className="px-7 py-3.5 rounded-full bg-[#E68314] hover:bg-[#C46A0B] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-lg flex items-center space-x-2"
+                >
+                  <span>{tr('Commander un tableau', 'Order a Custom Painting')}</span>
+                  <ArrowDown className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
-            <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-6xl font-light leading-tight">
-              {tr('Tableaux Poétiques Personnalisés', 'Bespoke Poetic Art Frames')}
-              <span className="block italic text-[#E68314] font-serif mt-1">
-                {tr('L’art de l’acrostiche sur mesure', 'The timeless art of the acrostic')}
-              </span>
-            </h1>
-
-            <blockquote className="pl-4 border-l-2 border-[#C5A059] italic font-['Cormorant_Garamond'] text-xl sm:text-2xl text-[#EADBC2]">
-              « {tr(
-                'Les mots ont un super pouvoir. WriticArt leur donne une forme pour qu’ils restent.',
-                'Words carry a superpower. WriticArt gives them form so they forever stay.'
-              )} »
-            </blockquote>
-
-            <p className="text-sm sm:text-base text-[#D3C7D6] font-light leading-relaxed max-w-2xl">
-              {tr(
-                'Chaque tableau est une création personnalisée conçue pour raconter une histoire, transmettre un message ou immortaliser une pensée qui mérite de rester.',
-                'Each framed piece is a custom artwork crafted to tell a story, convey a heartfelt message, or immortalize a thought meant to stay forever.'
-              )}
-            </p>
-
-            <div className="pt-2 flex flex-wrap gap-3">
-              <button
-                onClick={() => scrollToForm()}
-                className="px-7 py-3.5 rounded-full bg-[#E68314] hover:bg-[#C46A0B] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-lg flex items-center space-x-2"
-              >
-                <span>{tr('Commander un tableau', 'Order a Custom Painting')}</span>
-                <ArrowDown className="w-4 h-4" />
-              </button>
+            <div className="lg:col-span-5">
+              <div className="rounded-3xl p-2 bg-gradient-to-br from-[#C5A059]/60 via-[#231B26] to-[#E68314]/35 shadow-2xl">
+                <div className="aspect-[4/3] rounded-[20px] overflow-hidden bg-[#18121A]">
+                  <img
+                    src={tableauMinimalisteImg}
+                    alt={tr('Tableau personnalisé encadré WriticArt sur travertin', 'Framed bespoke poetic artwork by WriticArt')}
+                    fetchPriority="high"
+                    decoding="sync"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -462,52 +486,63 @@ export const TableauxPage: React.FC = () => {
             return (
               <div
                 key={f.id}
-                className={`rounded-3xl p-8 flex flex-col justify-between transition-all border ${
+                className={`rounded-3xl overflow-hidden flex flex-col justify-between transition-all border ${
                   isMiddle
                     ? 'bg-[#231B26] text-[#FAF8F5] border-[#C5A059] shadow-2xl'
                     : 'bg-white dark:bg-[#181716] text-[#181716] dark:text-[#FAF8F5] border-[#E8DFD1] dark:border-[#2E2A26] shadow-md'
                 }`}
               >
-                <div className="space-y-4">
-                  <span className="inline-block px-3 py-1 rounded-full bg-[#E68314]/15 text-[#E68314] border border-[#E68314]/30 text-[10px] font-['Cinzel'] font-bold uppercase tracking-widest">
-                    {f.badge}
-                  </span>
-
-                  <h3 className="font-['Cormorant_Garamond'] text-3xl font-semibold">
-                    {f.title}
-                  </h3>
-
-                  <div className="py-4 border-y border-current/10 space-y-1">
-                    <span className="text-xs uppercase font-['Cinzel'] tracking-wider text-[#E68314] block">
-                      {tr('À partir de', 'Starting from')}
+                <div>
+                  <div className="relative aspect-[16/10] overflow-hidden bg-[#1D1620]">
+                    <img
+                      src={f.image}
+                      alt={f.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute top-4 left-4 inline-block px-3 py-1 rounded-full bg-[#231B26]/90 text-[#E68314] border border-[#E68314]/40 text-[10px] font-['Cinzel'] font-bold uppercase tracking-widest backdrop-blur-sm">
+                      {f.badge}
                     </span>
-                    <p className="font-['Cinzel'] text-2xl sm:text-3xl font-bold">
-                      {formatPrice(f.minFCFA)}
-                    </p>
-                    <p className={`text-xs ${isMiddle ? 'text-[#D3C7D6]' : 'text-[#8C8074]'}`}>
-                      {tr(
-                        `jusqu’à ${formatPrice(f.maxFCFA)} selon le format`,
-                        `up to ${formatPrice(f.maxFCFA)} depending on size`
-                      )}
-                    </p>
                   </div>
 
-                  <p className={`text-xs leading-relaxed ${isMiddle ? 'text-[#D3C7D6]' : 'text-[#61584F] dark:text-[#B5ABA0]'}`}>
-                    {f.desc}
-                  </p>
+                  <div className="p-8 pb-4 space-y-4">
+                    <h3 className="font-['Cormorant_Garamond'] text-3xl font-semibold">
+                      {f.title}
+                    </h3>
+
+                    <div className="py-4 border-y border-current/10 space-y-1">
+                      <span className="text-xs uppercase font-['Cinzel'] tracking-wider text-[#E68314] block">
+                        {tr('À partir de', 'Starting from')}
+                      </span>
+                      <p className="font-['Cinzel'] text-2xl sm:text-3xl font-bold">
+                        {formatPrice(f.minFCFA)}
+                      </p>
+                      <p className={`text-xs ${isMiddle ? 'text-[#D3C7D6]' : 'text-[#8C8074]'}`}>
+                        {tr(
+                          `jusqu’à ${formatPrice(f.maxFCFA)} selon le format`,
+                          `up to ${formatPrice(f.maxFCFA)} depending on size`
+                        )}
+                      </p>
+                    </div>
+
+                    <p className={`text-xs leading-relaxed ${isMiddle ? 'text-[#D3C7D6]' : 'text-[#61584F] dark:text-[#B5ABA0]'}`}>
+                      {f.desc}
+                    </p>
+                  </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => scrollToForm(f.id)}
-                  className={`mt-8 w-full py-3.5 rounded-full text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all ${
-                    isMiddle
-                      ? 'bg-[#E68314] text-white hover:bg-[#C46A0B]'
-                      : 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] hover:bg-[#E68314] dark:hover:text-white'
-                  }`}
-                >
-                  {tr('Commander', 'Order')}
-                </button>
+                <div className="px-8 pb-8 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => scrollToForm(f.id)}
+                    className={`w-full py-3.5 rounded-full text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all ${
+                      isMiddle
+                        ? 'bg-[#E68314] text-white hover:bg-[#C46A0B]'
+                        : 'bg-[#181716] dark:bg-[#FAF8F5] text-white dark:text-[#181716] hover:bg-[#E68314] dark:hover:text-white'
+                    }`}
+                  >
+                    {tr('Commander', 'Order')}
+                  </button>
+                </div>
               </div>
             );
           })}

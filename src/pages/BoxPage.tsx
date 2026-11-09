@@ -18,6 +18,11 @@ import { useErp } from '../context/ErpContext';
 import { useNavigation } from '../context/NavigationContext';
 import { TABLEAU_THEMES } from './TableauxPage';
 import { atelierAudio } from '../utils/soundEffects';
+import {
+  boxFevrierImg,
+  writicloveDuoImg,
+  tableauMinimalisteImg
+} from '../assets/images';
 import type { ErpOrder } from '../types';
 
 export const BoxPage: React.FC = () => {
@@ -172,37 +177,53 @@ export const BoxPage: React.FC = () => {
             </span>
           </nav>
 
-          <div className="max-w-3xl space-y-5">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-[#C5A059]/50 text-[#E68314] text-xs uppercase tracking-[0.2em] font-['Cinzel'] font-bold">
-              <Calendar className="w-3.5 h-3.5" />
-              <span>{tr('À venir • Lancement en Février', 'Coming Soon • February Launch')}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7 space-y-5">
+              <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-[#C5A059]/50 text-[#E68314] text-xs uppercase tracking-[0.2em] font-['Cinzel'] font-bold">
+                <Calendar className="w-3.5 h-3.5" />
+                <span>{tr('À venir • Lancement en Février', 'Coming Soon • February Launch')}</span>
+              </div>
+
+              <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-5xl xl:text-6xl font-light leading-tight">
+                {tr('La Box Cadeau WriticArt', 'The WriticArt Gift Box')}
+                <span className="block italic font-serif text-[#E68314] mt-1">
+                  {tr('Un moment complet à offrir ou à partager', 'A complete sensory keepsake to gift or share')}
+                </span>
+              </h1>
+
+              <p className="text-sm sm:text-base text-[#D3C7D6] font-light leading-relaxed max-w-2xl">
+                {tr(
+                  'En février, WriticArt lancera des box cadeaux réunissant l’émotion des mots, la beauté de l’art calligraphié et l’élégance d’un parfum signature.',
+                  'In February, WriticArt launches signature gift boxes uniting heartfelt daily words, bespoke art framing, and fine fragrance.'
+                )}
+              </p>
+
+              <button
+                type="button"
+                onClick={() => {
+                  atelierAudio.playPaperSlide();
+                  formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className="px-7 py-3.5 rounded-full bg-[#E68314] hover:bg-[#C46A0B] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-lg inline-flex items-center space-x-2"
+              >
+                <span>{tr('Commander / Réserver une Box', 'Order / Reserve a Box')}</span>
+                <ArrowDown className="w-4 h-4" />
+              </button>
             </div>
 
-            <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-6xl font-light leading-tight">
-              {tr('La Box Cadeau WriticArt', 'The WriticArt Gift Box')}
-              <span className="block italic font-serif text-[#E68314] mt-1">
-                {tr('Un moment complet à offrir ou à partager', 'A complete sensory keepsake to gift or share')}
-              </span>
-            </h1>
-
-            <p className="text-sm sm:text-base text-[#D3C7D6] font-light leading-relaxed max-w-2xl">
-              {tr(
-                'En février, WriticArt lancera des box cadeaux réunissant l’émotion des mots, la beauté de l’art calligraphié et l’élégance d’un parfum signature.',
-                'In February, WriticArt launches signature gift boxes uniting heartfelt daily words, bespoke art framing, and fine fragrance.'
-              )}
-            </p>
-
-            <button
-              type="button"
-              onClick={() => {
-                atelierAudio.playPaperSlide();
-                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-              className="px-7 py-3.5 rounded-full bg-[#E68314] hover:bg-[#C46A0B] text-white text-xs font-['Cinzel'] font-bold uppercase tracking-widest transition-all shadow-lg inline-flex items-center space-x-2"
-            >
-              <span>{tr('Commander / Réserver une Box', 'Order / Reserve a Box')}</span>
-              <ArrowDown className="w-4 h-4" />
-            </button>
+            <div className="lg:col-span-5">
+              <div className="rounded-3xl p-2 bg-gradient-to-br from-[#C5A059]/70 via-[#231B26] to-[#E68314]/40 shadow-2xl">
+                <div className="aspect-[4/3] rounded-[20px] overflow-hidden bg-[#18121A]">
+                  <img
+                    src={boxFevrierImg}
+                    alt={tr('Box WriticArt Février — Écrin prune, coffret, tableau et parfum signature', 'WriticArt February Gift Box with keepsake box, framed poem, and amber perfume')}
+                    fetchPriority="high"
+                    decoding="sync"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -220,51 +241,78 @@ export const BoxPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Pilier 1 */}
-          <div className="p-8 rounded-3xl bg-white dark:bg-[#181716] border border-[#E8DFD1] dark:border-[#2E2A26] shadow-md space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#231B26] text-[#E68314] flex items-center justify-center">
-              <Heart className="w-6 h-6" />
+          <div className="rounded-3xl overflow-hidden bg-white dark:bg-[#181716] border border-[#E8DFD1] dark:border-[#2E2A26] shadow-md flex flex-col">
+            <div className="aspect-[16/10] overflow-hidden bg-[#EFE8DC] dark:bg-[#141210]">
+              <img
+                src={writicloveDuoImg}
+                alt={tr('Le coffret WriticLove', 'The WriticLove Box')}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold">
-              {tr('1. Le coffret WriticLove', '1. The WriticLove Box')}
-            </h3>
-            <p className="text-xs sm:text-sm text-[#61584F] dark:text-[#B5ABA0] leading-relaxed">
-              {tr(
-                '365 cartes (une par jour de l’année) + 1 carte bonus en Version Homme, Version Femme ou Pack couple.',
-                '365 cards (one per day of the year) + 1 bonus card in Men’s, Women’s, or Couple edition.'
-              )}
-            </p>
+            <div className="p-7 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#231B26] text-[#E68314] flex items-center justify-center">
+                <Heart className="w-5 h-5" />
+              </div>
+              <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold">
+                {tr('1. Le coffret WriticLove', '1. The WriticLove Box')}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#61584F] dark:text-[#B5ABA0] leading-relaxed">
+                {tr(
+                  '365 cartes (une par jour de l’année) + 1 carte bonus en Version Homme, Version Femme ou Pack couple.',
+                  '365 cards (one per day of the year) + 1 bonus card in Men’s, Women’s, or Couple edition.'
+                )}
+              </p>
+            </div>
           </div>
 
           {/* Pilier 2 */}
-          <div className="p-8 rounded-3xl bg-white dark:bg-[#181716] border border-[#E8DFD1] dark:border-[#2E2A26] shadow-md space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#231B26] text-[#E68314] flex items-center justify-center">
-              <Frame className="w-6 h-6" />
+          <div className="rounded-3xl overflow-hidden bg-white dark:bg-[#181716] border border-[#E8DFD1] dark:border-[#2E2A26] shadow-md flex flex-col">
+            <div className="aspect-[16/10] overflow-hidden bg-[#EFE8DC] dark:bg-[#141210]">
+              <img
+                src={tableauMinimalisteImg}
+                alt={tr('Un tableau personnalisé WriticArt', 'Custom WriticArt Painting')}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold">
-              {tr('2. Un tableau personnalisé', '2. A Custom Poetic Painting')}
-            </h3>
-            <p className="text-xs sm:text-sm text-[#61584F] dark:text-[#B5ABA0] leading-relaxed">
-              {tr(
-                `Tableau à ${formatPrice(5000)} ou ${formatPrice(10000)} au choix, réalisé selon le thème souhaité (Amour, Anniversaire, Félicitations...).`,
-                `Choice of ${formatPrice(5000)} or ${formatPrice(10000)} artwork crafted in your chosen occasion theme.`
-              )}
-            </p>
+            <div className="p-7 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#231B26] text-[#E68314] flex items-center justify-center">
+                <Frame className="w-5 h-5" />
+              </div>
+              <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold">
+                {tr('2. Un tableau personnalisé', '2. A Custom Poetic Painting')}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#61584F] dark:text-[#B5ABA0] leading-relaxed">
+                {tr(
+                  `Tableau à ${formatPrice(5000)} ou ${formatPrice(10000)} au choix, réalisé selon le thème souhaité (Amour, Anniversaire, Félicitations...).`,
+                  `Choice of ${formatPrice(5000)} or ${formatPrice(10000)} artwork crafted in your chosen occasion theme.`
+                )}
+              </p>
+            </div>
           </div>
 
           {/* Pilier 3 */}
-          <div className="p-8 rounded-3xl bg-[#231B26] text-[#FAF8F5] border border-[#C5A059] shadow-xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#E68314]/20 border border-[#C5A059]/40 text-[#E68314] flex items-center justify-center">
-              <Droplets className="w-6 h-6" />
+          <div className="rounded-3xl overflow-hidden bg-[#231B26] text-[#FAF8F5] border border-[#C5A059] shadow-xl flex flex-col">
+            <div className="aspect-[16/10] overflow-hidden bg-[#18121A]">
+              <img
+                src={boxFevrierImg}
+                alt={tr('Parfum signature et Box WriticArt', 'Signature perfume inside WriticArt Gift Box')}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold">
-              {tr('3. Un parfum signature', '3. A Signature Fragrance')}
-            </h3>
-            <p className="text-xs sm:text-sm text-[#D3C7D6] leading-relaxed">
-              {tr(
-                'Senteurs orientales et boisées raffinées (Oud Royal, Musc Blanc, Rose de Damas...) pour sublimer l’expérience sensorielle.',
-                'Refined oriental and woody fragrances (Royal Oud, White Musk, Damask Rose...) to elevate the sensory unboxing.'
-              )}
-            </p>
+            <div className="p-7 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#E68314]/20 border border-[#C5A059]/40 text-[#E68314] flex items-center justify-center">
+                <Droplets className="w-5 h-5" />
+              </div>
+              <h3 className="font-['Cormorant_Garamond'] text-2xl font-semibold">
+                {tr('3. Un parfum signature', '3. A Signature Fragrance')}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#D3C7D6] leading-relaxed">
+                {tr(
+                  'Senteurs orientales et boisées raffinées (Oud Royal, Musc Blanc, Rose de Damas...) pour sublimer l’expérience sensorielle.',
+                  'Refined oriental and woody fragrances (Royal Oud, White Musk, Damask Rose...) to elevate the sensory unboxing.'
+                )}
+              </p>
+            </div>
           </div>
         </div>
       </section>

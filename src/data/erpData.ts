@@ -1,5 +1,15 @@
 import type { ErpOrder, InventoryItem, ErpClient, CatalogProduct, ArticlePost, MediaItem, SiteSettings } from '../types';
-import feedInstagram from '../assets/brand/feed-instagram.png';
+import {
+  heroEditorialImg,
+  tableauMinimalisteImg,
+  tableauAcrosticheDorureImg,
+  writicloveDuoImg,
+  writicloveHommeImg,
+  writicloveFemmeImg,
+  boxFevrierImg,
+  kitSceauCireImg,
+  feedInstagramImg
+} from '../assets/images';
 
 // -------------------------------------------------------------
 // SEED CATALOG PRODUCTS (For the Minimalist Rahiya Storefront)
@@ -14,7 +24,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     priceFCFA: 50000,
     badge: 'Précommande • -10k FCFA',
     inStock: true,
-    image: feedInstagram,
+    image: writicloveDuoImg,
     description: 'Et si vous faisiez de l’amour une intention renouvelée chaque jour ? Pack complet des deux coffrets (Homme & Femme) avec 365 cartes quotidiennes + 1 carte bonus. Inclut des cartes rappelant l’importance de placer ALLAH au cœur du mariage. (Livraison non incluse).',
     features: [
       '2 coffrets complets : Version Homme + Version Femme (365 cartes + 1 carte bonus chacun)',
@@ -33,7 +43,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     priceFCFA: 30000,
     badge: 'Précommande',
     inStock: true,
-    image: feedInstagram,
+    image: writicloveHommeImg,
     description: 'Coffret de 365 cartes (une par jour de l’année) plus une carte bonus pour renouveler ses intentions, améliorer sa communication et placer ALLAH au cœur du mariage. (Livraison non incluse dans le prix).',
     features: [
       '365 cartes quotidiennes + 1 carte bonus sur papier noble',
@@ -51,7 +61,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     priceFCFA: 30000,
     badge: 'Précommande',
     inStock: true,
-    image: feedInstagram,
+    image: writicloveFemmeImg,
     description: 'Coffret de 365 cartes (une par jour de l’année) plus une carte bonus conçu pour accompagner la vie de couple à travers de petites attentions sincères et inspirantes. (Livraison non incluse).',
     features: [
       '365 cartes quotidiennes + 1 carte bonus',
@@ -69,7 +79,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     priceFCFA: 5000,
     badge: 'À partir de 5.000 FCFA',
     inStock: true,
-    image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80',
+    image: tableauMinimalisteImg,
     description: 'Un mot, un prénom ou une expression mis en valeur sous forme d’acrostiche poétique ou de citation courte dans un univers visuel adapté au thème de votre choix (Anniversaire, Amour, Naissance...). Livraison incluse uniquement en France.',
     features: [
       'Concept exclusif : l’art de l’acrostiche (chaque lettre ouvre une ligne poétique)',
@@ -87,7 +97,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     priceFCFA: 10000,
     badge: 'À partir de 10.000 FCFA',
     inStock: true,
-    image: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=1200&q=80',
+    image: heroEditorialImg,
     description: 'Composition poétique équilibrée basée sur l’acrostiche d’un prénom ou d’une expression forte, calligraphiée et mise en scène avec soin. Une histoire mise en image et un souvenir éternel.',
     features: [
       'Tarif : à partir de 10.000 FCFA jusqu’à 15.000 FCFA',
@@ -105,7 +115,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     priceFCFA: 15000,
     badge: 'À partir de 15.000 FCFA',
     inStock: true,
-    image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
+    image: tableauAcrosticheDorureImg,
     description: 'Création d’exception entièrement écrite sur mesure à partir de votre histoire, vos prénoms et vos souvenirs les plus précieux, sublimée en tableau d’art. Livraison incluse uniquement si en France.',
     features: [
       'Tarif : à partir de 15.000 FCFA jusqu’à 20.000 FCFA',
@@ -123,7 +133,7 @@ export const initialCatalogProducts: CatalogProduct[] = [
     priceFCFA: 15000,
     badge: 'Atelier',
     inStock: true,
-    image: 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?auto=format&fit=crop&w=1200&q=80',
+    image: kitSceauCireImg,
     description: 'Apportez le rituel du scellé à vos propres correspondances. Matrice de laiton gravée au monogramme WA et cire souple qui ne casse pas à l’envoi postal.',
     features: [
       'Matrice en laiton massif avec manche en palissandre',
@@ -469,7 +479,7 @@ Depuis le lancement des éditions Homme, Femme et Duo, plus de 500 couples nous 
     author: 'Maître Calligraphe WriticArt',
     date: '31 Octobre 2026',
     readTime: '4 min',
-    coverImage: feedInstagram,
+    coverImage: writicloveDuoImg,
     status: 'publie',
     featured: true
   },
@@ -489,7 +499,7 @@ Poser une feuille d'or exige d'arrêter de respirer. Au moindre souffle, la feui
     author: 'Atelier WriticArt Dakar',
     date: '24 Octobre 2026',
     readTime: '5 min',
-    coverImage: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80',
+    coverImage: tableauAcrosticheDorureImg,
     status: 'publie',
     featured: false
   },
@@ -512,7 +522,7 @@ Une fois scellés du sceau de cire aux armoiries des mariés, vos vœux ne sont 
     author: 'Conseillère Nuptiale WriticArt',
     date: '18 Octobre 2026',
     readTime: '6 min',
-    coverImage: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
+    coverImage: kitSceauCireImg,
     status: 'publie',
     featured: false
   }
@@ -524,47 +534,65 @@ Une fois scellés du sceau de cire aux armoiries des mariés, vos vœux ne sont 
 export const initialMedia: MediaItem[] = [
   {
     id: 'med-1',
-    title: 'Coffret Writic\'Love 365 Jours d\'Amour (Photo officielle)',
-    url: feedInstagram,
+    title: 'Pack Couple WriticLove 365+1 (Studio Duo)',
+    url: writicloveDuoImg,
     category: 'coffret',
     date: '1 Nov 2026',
-    size: '794 KB',
+    size: '91 KB',
     type: 'image'
   },
   {
     id: 'med-2',
-    title: 'Toile Lin Pur Calligraphiée à l\'Or 24K',
-    url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80',
+    title: 'Tableau Acrostiche & Enluminure Or 24K',
+    url: tableauAcrosticheDorureImg,
     category: 'tableau',
     date: '28 Oct 2026',
-    size: '1.2 MB',
+    size: '113 KB',
     type: 'image'
   },
   {
     id: 'med-3',
-    title: 'Suite Nuptiale Papier Deckle Edge 350g & Sceau Bordeaux',
-    url: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
-    category: 'mariage',
+    title: 'Box WriticArt Février — Écrin Prune & Parfum Signature',
+    url: boxFevrierImg,
+    category: 'coffret',
     date: '25 Oct 2026',
-    size: '980 KB',
+    size: '140 KB',
     type: 'image'
   },
   {
     id: 'med-4',
-    title: 'Cadre Poétique Écrin Doré sous Verre Minéral',
-    url: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=1200&q=80',
+    title: 'Cadre Minimaliste Citation & Initiale Dorée',
+    url: tableauMinimalisteImg,
     category: 'tableau',
     date: '22 Oct 2026',
-    size: '850 KB',
+    size: '103 KB',
     type: 'image'
   },
   {
     id: 'med-5',
-    title: 'Matrice Sceau de Cire en Laiton & Bâton Doré WriticArt',
-    url: 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?auto=format&fit=crop&w=1200&q=80',
+    title: 'Matrice Sceau de Cire en Laiton & Cire Dorée WriticArt',
+    url: kitSceauCireImg,
     category: 'atelier',
     date: '20 Oct 2026',
-    size: '1.1 MB',
+    size: '106 KB',
+    type: 'image'
+  },
+  {
+    id: 'med-6',
+    title: 'Vitrine Atelier WriticArt (Hero Editorial)',
+    url: heroEditorialImg,
+    category: 'atelier',
+    date: '18 Oct 2026',
+    size: '120 KB',
+    type: 'image'
+  },
+  {
+    id: 'med-7',
+    title: 'Feed Officiel Instagram @writicart (WebP optimisé)',
+    url: feedInstagramImg,
+    category: 'coffret',
+    date: '15 Oct 2026',
+    size: '77 KB',
     type: 'image'
   }
 ];

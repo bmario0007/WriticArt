@@ -1,4 +1,11 @@
-import feedInstagram from '../assets/brand/feed-instagram.png';
+import {
+  writicloveHommeImg,
+  writicloveFemmeImg,
+  writicloveDuoImg,
+  tableauAcrosticheDorureImg,
+  boxFevrierImg,
+  kitSceauCireImg
+} from '../assets/images';
 
 export interface WriticProduct {
   id: string;
@@ -63,7 +70,7 @@ export const writicLoveProducts: WriticProduct[] = [
       '“Caring for your spouse starts with sincere and gentle listening.”',
       '“Placing ALLAH at the heart of our union gives every gesture eternal meaning.”'
     ],
-    image: feedInstagram
+    image: writicloveHommeImg
   },
   {
     id: 'writiclove-femme',
@@ -104,7 +111,7 @@ export const writicLoveProducts: WriticProduct[] = [
       '“Every day beside you is a blessing renewed in peace.”',
       '“Placing ALLAH at the center of our home guides us toward serenity.”'
     ],
-    image: feedInstagram
+    image: writicloveFemmeImg
   },
   {
     id: 'writiclove-duo',
@@ -143,7 +150,7 @@ export const writicLoveProducts: WriticProduct[] = [
       '“Two boxes, two hearts, one daily renewed intention.”',
       '“Nurturing your love every day through sincere words and kindness.”'
     ],
-    image: feedInstagram
+    image: writicloveDuoImg
   }
 ];
 
@@ -152,24 +159,28 @@ export const instagramHighlightsData = [
     id: 'writic-love',
     name: "WriticLove",
     subtitle: 'Coffrets 365 + 1 Cartes',
-    icon: '❤️'
+    icon: '❤️',
+    image: writicloveDuoImg
   },
   {
     id: 'tableaux',
     name: 'Tableaux Acrostiches',
     subtitle: 'À partir de 5.000 FCFA',
-    icon: '🎨'
+    icon: '🎨',
+    image: tableauAcrosticheDorureImg
   },
   {
     id: 'box-fevrier',
     name: 'Box Février',
     subtitle: 'WriticLove + Tableau + Parfum',
-    icon: '✨'
+    icon: '✨',
+    image: boxFevrierImg
   },
   {
     id: 'feedbacks',
     name: 'Témoignages',
     subtitle: 'Avis Clients',
-    icon: '⭐'
+    icon: '⭐',
+    image: kitSceauCireImg
   }
 ];

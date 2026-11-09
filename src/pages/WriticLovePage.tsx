@@ -19,6 +19,7 @@ import { useErp } from '../context/ErpContext';
 import { InteractiveBoxDrawer } from '../components/writiclove/InteractiveBoxDrawer';
 import { TestimonialsSection } from '../components/TestimonialsSection';
 import { atelierAudio } from '../utils/soundEffects';
+import { writicloveDuoImg } from '../assets/images';
 import type { ErpOrder } from '../types';
 
 export const WriticLovePage: React.FC = () => {
@@ -158,44 +159,60 @@ export const WriticLovePage: React.FC = () => {
             </span>
           </nav>
 
-          <div className="text-center max-w-3xl mx-auto space-y-5">
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-[#C5A059]/40 text-[#E68314] text-xs uppercase tracking-[0.2em] font-['Cinzel'] font-bold">
-              <Heart className="w-3.5 h-3.5 fill-[#E68314] text-[#E68314]" />
-              <span>WriticLove — « {tr('Nourrir votre amour au quotidien', 'Nurturing your love daily')} »</span>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7 text-center lg:text-left space-y-5">
+              <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-[#C5A059]/40 text-[#E68314] text-xs uppercase tracking-[0.2em] font-['Cinzel'] font-bold">
+                <Heart className="w-3.5 h-3.5 fill-[#E68314] text-[#E68314]" />
+                <span>WriticLove — « {tr('Nourrir votre amour au quotidien', 'Nurturing your love daily')} »</span>
+              </div>
 
-            <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-6xl font-light leading-tight">
-              {tr('365 cartes + 1 carte bonus', '365 cards + 1 bonus card')} <br />
-              <span className="italic font-serif text-[#E68314]">
-                {tr(
-                  'Et si vous faisiez de l’amour une intention renouvelée chaque jour ?',
-                  'What if love became a renewed intention every single day?'
-                )}
-              </span>
-            </h1>
-
-            <p className="font-sans text-sm sm:text-base text-[#D3C7D6] font-light max-w-2xl mx-auto leading-relaxed">
-              {tr(
-                'WriticLove est un coffret de 365 cartes (une par jour de l’année) plus une carte bonus, conçu pour accompagner la vie de couple à travers des conseils, des réflexions et de petites attentions quotidiennes.',
-                'WriticLove is a keepsake box of 365 cards (one for every day of the year) plus one bonus card, designed to guide married and committed couples through advice, reflections, and daily thoughtful gestures.'
-              )}
-            </p>
-
-            {/* Release Date & Preorder Status Callout */}
-            <div className="inline-flex flex-col sm:flex-row items-center gap-3 px-6 py-3.5 rounded-2xl bg-white/10 border border-[#C5A059]/50 text-xs sm:text-sm backdrop-blur-sm">
-              <div className="flex items-center space-x-2 text-[#F3D69B] font-semibold">
-                <Calendar className="w-4 h-4 shrink-0" />
-                <span>
+              <h1 className="font-['Cormorant_Garamond'] text-4xl sm:text-5xl xl:text-6xl font-light leading-tight">
+                {tr('365 cartes + 1 carte bonus', '365 cards + 1 bonus card')} <br />
+                <span className="italic font-serif text-[#E68314]">
                   {tr(
-                    'Sortie officielle : fin décembre 2026 / début janvier 2027',
-                    'Official release: late December 2026 / early January 2027'
+                    'Et si vous faisiez de l’amour une intention renouvelée chaque jour ?',
+                    'What if love became a renewed intention every single day?'
                   )}
                 </span>
+              </h1>
+
+              <p className="font-sans text-sm sm:text-base text-[#D3C7D6] font-light max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                {tr(
+                  'WriticLove est un coffret de 365 cartes (une par jour de l’année) plus une carte bonus, conçu pour accompagner la vie de couple à travers des conseils, des réflexions et de petites attentions quotidiennes.',
+                  'WriticLove is a keepsake box of 365 cards (one for every day of the year) plus one bonus card, designed to guide married and committed couples through advice, reflections, and daily thoughtful gestures.'
+                )}
+              </p>
+
+              {/* Release Date & Preorder Status Callout */}
+              <div className="inline-flex flex-col sm:flex-row items-center gap-3 px-6 py-3.5 rounded-2xl bg-white/10 border border-[#C5A059]/50 text-xs sm:text-sm backdrop-blur-sm">
+                <div className="flex items-center space-x-2 text-[#F3D69B] font-semibold">
+                  <Calendar className="w-4 h-4 shrink-0" />
+                  <span>
+                    {tr(
+                      'Sortie officielle : fin décembre 2026 / début janvier 2027',
+                      'Official release: late December 2026 / early January 2027'
+                    )}
+                  </span>
+                </div>
+                <span className="hidden sm:inline text-white/30">•</span>
+                <span className="text-white/85">
+                  {tr('Précommande ouverte dès maintenant', 'Pre-orders open now')}
+                </span>
               </div>
-              <span className="hidden sm:inline text-white/30">•</span>
-              <span className="text-white/85">
-                {tr('Précommande ouverte dès maintenant', 'Pre-orders open now')}
-              </span>
+            </div>
+
+            <div className="lg:col-span-5">
+              <div className="rounded-3xl p-2 bg-gradient-to-br from-[#C5A059]/60 via-[#231B26] to-[#E68314]/35 shadow-2xl">
+                <div className="aspect-[4/3] rounded-[20px] overflow-hidden bg-[#18121A]">
+                  <img
+                    src={writicloveDuoImg}
+                    alt={tr('Pack couple coffrets WriticLove noir mat & rose poudré', 'WriticLove black & blush couple keepsake boxes')}
+                    fetchPriority="high"
+                    decoding="sync"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -296,6 +313,14 @@ export const WriticLovePage: React.FC = () => {
                   )}
 
                   <div>
+                    <div className="mb-5 aspect-[4/3] rounded-2xl overflow-hidden bg-[#EFE8DC] dark:bg-[#141210] border border-[#E8DFD1]/60 dark:border-white/10">
+                      <img
+                        src={prod.image}
+                        alt={displayName}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
                     <div className="text-center pb-6 border-b border-[#E8DFD1]/80 dark:border-white/10">
                       <span
                         className={`text-[10px] uppercase font-['Cinzel'] tracking-[0.25em] font-semibold block mb-1 ${

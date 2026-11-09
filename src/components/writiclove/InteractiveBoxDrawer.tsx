@@ -5,6 +5,11 @@ import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useLanguage } from '../../context/LanguageContext';
 import confetti from 'canvas-confetti';
+import {
+  writicloveDuoImg,
+  writicloveHommeImg,
+  writicloveFemmeImg
+} from '../../assets/images';
 
 export const InteractiveBoxDrawer: React.FC = () => {
   const { addToCart } = useCart();
@@ -109,13 +114,19 @@ export const InteractiveBoxDrawer: React.FC = () => {
         : tr('WriticLove — Version Femme', 'WriticLove — Women’s Edition');
 
     const price = activeEdition === 'duo' ? 50000 : 30000;
+    const editionImg =
+      activeEdition === 'duo'
+        ? writicloveDuoImg
+        : activeEdition === 'homme'
+        ? writicloveHommeImg
+        : writicloveFemmeImg;
 
     addToCart({
       productId: `writiclove-${activeEdition}`,
       name: productName,
       subtitle: tr('365 Cartes + 1 Carte Bonus • Précommande', '365 Cards + 1 Bonus Card • Pre-order'),
       priceFCFA: price,
-      image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+      image: editionImg,
       selectedOption: activeEdition === 'duo' ? 'Pack couple' : activeEdition === 'homme' ? 'Version Homme' : 'Version Femme',
       customMessage: currentCard.text
     });

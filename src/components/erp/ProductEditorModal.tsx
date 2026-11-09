@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import type { CatalogProduct } from '../../types';
 import { useErp } from '../../context/ErpContext';
+import { tableauAcrosticheDorureImg } from '../../assets/images';
 
 interface ProductEditorModalProps {
   product: CatalogProduct | null;
@@ -53,7 +54,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
         priceFCFA,
         badge: badge || undefined,
         inStock,
-        image: image || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80',
+        image: image || tableauAcrosticheDorureImg,
         description,
         features: features.length ? features : ['Création artisanale WriticArt Dakar', 'Finitions dorées à la main']
       });

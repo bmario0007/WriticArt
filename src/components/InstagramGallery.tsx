@@ -15,7 +15,7 @@ import { InstagramIcon } from './InstagramIcon';
 import { useLanguage } from '../context/LanguageContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { useNavigation } from '../context/NavigationContext';
-import feedInstagram from '../assets/brand/feed-instagram.png';
+import { feedInstagramImg } from '../assets/images';
 
 interface InstagramGalleryProps {
   onSelectArtPiece: (item: GalleryItem) => void;
@@ -113,8 +113,12 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
                 className="flex flex-col items-center space-y-2 group shrink-0 focus:outline-none"
               >
                 <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full p-[2.5px] bg-gradient-to-tr from-[#231B26] via-[#E68314] to-[#C46A0B] group-hover:scale-105 transition-transform duration-300 shadow-md">
-                  <div className="w-full h-full rounded-full p-0.5 bg-[#231B26] flex items-center justify-center">
-                    <span className="text-2xl">{hl.icon}</span>
+                  <div className="w-full h-full rounded-full p-0.5 bg-[#231B26] overflow-hidden">
+                    <img
+                      src={hl.image}
+                      alt={hl.name}
+                      className="w-full h-full rounded-full object-cover"
+                    />
                   </div>
                 </div>
                 <div className="text-center">
@@ -180,7 +184,7 @@ export const InstagramGallery: React.FC<InstagramGalleryProps> = ({
 
           <div className="lg:col-span-6 h-full min-h-[320px] bg-[#231B26] p-4 flex items-center justify-center">
             <img
-              src={feedInstagram}
+              src={feedInstagramImg}
               alt="Feed Instagram WriticArt"
               className="max-h-[380px] w-auto rounded-2xl object-contain shadow-2xl border border-white/10"
             />

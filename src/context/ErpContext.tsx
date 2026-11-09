@@ -75,9 +75,9 @@ const ErpContext = createContext<ErpContextType | undefined>(undefined);
 const ORDERS_KEY = 'writicart_erp_orders_v3';
 const INVENTORY_KEY = 'writicart_erp_inventory_v2';
 const CLIENTS_KEY = 'writicart_erp_clients_v2';
-const PRODUCTS_KEY = 'writicart_erp_products_v3';
-const ARTICLES_KEY = 'writicart_cms_articles_v1';
-const MEDIA_KEY = 'writicart_cms_media_v1';
+const PRODUCTS_KEY = 'writicart_erp_products_v4';
+const ARTICLES_KEY = 'writicart_cms_articles_v2';
+const MEDIA_KEY = 'writicart_cms_media_v2';
 const SETTINGS_KEY = 'writicart_cms_settings_v2';
 
 export const ErpProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

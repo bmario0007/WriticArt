@@ -3,7 +3,7 @@ import { AtelierManifesto } from '../components/AtelierManifesto';
 import { useNavigation } from '../context/NavigationContext';
 import { useLanguage } from '../context/LanguageContext';
 import { MapPin, PhoneCall, Mail, Clock } from 'lucide-react';
-import feedInstagram from '../assets/brand/feed-instagram.png';
+import { heroEditorialImg } from '../assets/images';
 
 export const AtelierPage: React.FC = () => {
   const { navigateTo } = useNavigation();
@@ -82,11 +82,11 @@ export const AtelierPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="h-full min-h-[300px] bg-[#231B26] rounded-2xl overflow-hidden p-6 flex items-center justify-center border border-[#C5A059]/30">
+        <div className="h-full min-h-[300px] bg-[#231B26] rounded-2xl overflow-hidden p-4 flex items-center justify-center border border-[#C5A059]/30">
           <img
-            src={feedInstagram}
-            alt="Atelier WriticArt"
-            className="max-h-[320px] w-auto rounded-xl object-contain shadow-2xl"
+            src={heroEditorialImg}
+            alt="Atelier WriticArt — Tableaux Acrostiches & Coffrets"
+            className="w-full h-full max-h-[340px] rounded-xl object-cover shadow-2xl"
           />
         </div>
       </div>
