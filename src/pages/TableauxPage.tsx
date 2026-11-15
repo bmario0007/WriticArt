@@ -16,9 +16,10 @@ import { useErp } from '../context/ErpContext';
 import { useNavigation } from '../context/NavigationContext';
 import { atelierAudio } from '../utils/soundEffects';
 import {
-  heroEditorialImg,
   tableauMinimalisteImg,
-  tableauAcrosticheDorureImg
+  tableauAcrosticheDorureImg,
+  tableauMaimounaImg,
+  tableauxSalonDuoImg
 } from '../assets/images';
 import { OrderDispatchBadges } from '../components/OrderDispatchBadges';
 import { TABLEAU_THEMES, buildAcrosticLines } from '../data/acrosticData';
@@ -72,10 +73,10 @@ export const TableauxPage: React.FC = () => {
       title: tr('Poème standard', 'Standard Poem'),
       minFCFA: 10000,
       maxFCFA: 15000,
-      image: heroEditorialImg,
+      image: tableauAcrosticheDorureImg,
       desc: tr(
-        'Acrostiche poétique équilibré autour d’un prénom, d’un mot ou d’une émotion qui mérite de rester.',
-        'Balanced poetic acrostic built around a name, a word, or an emotion meant to last.'
+        'Acrostiche poétique équilibré autour d’un prénom, d’un mot ou d’une émotion qui mérite de rester (ex : tableau spirituel ALLAH en cadre bois texturé).',
+        'Balanced poetic acrostic built around a name, a word, or an emotion meant to last (e.g. ALLAH dark wood frame artwork).'
       ),
       badge: tr('Le plus choisi', 'Most Popular')
     },
@@ -84,10 +85,10 @@ export const TableauxPage: React.FC = () => {
       title: tr('Poème personnalisé', 'Bespoke Poem'),
       minFCFA: 15000,
       maxFCFA: 20000,
-      image: tableauAcrosticheDorureImg,
+      image: tableauMaimounaImg,
       desc: tr(
-        'Œuvre sur mesure écrite intégralement à partir de votre histoire, vos souvenirs et votre message.',
-        'One-of-a-kind poem written entirely from your personal story, memories, and message.'
+        'Œuvre sur mesure écrite intégralement à partir de votre histoire, vos souvenirs et votre message, avec possibilité d’intégrer un portrait (ex : tableau de prestige MAÏMOUNA).',
+        'One-of-a-kind poem written entirely from your personal story, memories, and message, with optional portrait integration (e.g. MAÏMOUNA luxury frame).'
       ),
       badge: tr('Sur-Mesure', 'Bespoke')
     }
@@ -244,8 +245,8 @@ export const TableauxPage: React.FC = () => {
               <div className="rounded-3xl p-2 bg-gradient-to-br from-[#C5A059]/60 via-[#231B26] to-[#E68314]/35 shadow-2xl">
                 <div className="aspect-[4/3] rounded-[20px] overflow-hidden bg-[#18121A]">
                   <img
-                    src={tableauMinimalisteImg}
-                    alt={tr('Tableau personnalisé encadré WriticArt sur travertin', 'Framed bespoke poetic artwork by WriticArt')}
+                    src={tableauxSalonDuoImg}
+                    alt={tr('Duo de tableaux personnalisés encadrés WriticArt sur console', 'Framed bespoke poetic artworks by WriticArt on living room console')}
                     fetchPriority="high"
                     decoding="sync"
                     className="w-full h-full object-cover"

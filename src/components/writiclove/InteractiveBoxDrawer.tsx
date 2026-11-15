@@ -51,13 +51,21 @@ export const InteractiveBoxDrawer: React.FC = () => {
       {
         id: 'c-h-1',
         text: tr(
+          '« Je mesure mes paroles avant de les prononcer. »',
+          '“I weigh my words carefully before speaking them.”'
+        ),
+        tag: tr('Version Homme • Jour 010 (10 Janvier)', 'Men’s Edition • Day 010 (Jan 10)')
+      },
+      {
+        id: 'c-h-2',
+        text: tr(
           'Prendre soin de toi commence par reconnaître chacun de tes efforts silencieux pour notre foyer.',
           'Caring for you begins by honoring every quiet effort you make for our home.'
         ),
         tag: tr('Version Homme • 365 + 1 Cartes', 'Men’s Edition • 365 + 1 Cards')
       },
       {
-        id: 'c-h-2',
+        id: 'c-h-3',
         text: tr(
           'Que notre communication demeure un pont de bienveillance, guidé par la sagesse et le rappel d’ALLAH.',
           'May our communication stay a bridge of kindness, guided by wisdom and remembrance of ALLAH.'
@@ -69,13 +77,21 @@ export const InteractiveBoxDrawer: React.FC = () => {
       {
         id: 'c-f-1',
         text: tr(
+          '« Je me rappelle que "le plus important dans un couple c\'est le respect, l\'acceptation mutuelle et le soutien" » — S.B.B',
+          '“I remind myself that the most important thing in a couple is respect, mutual acceptance, and support” — S.B.B'
+        ),
+        tag: tr('Version Femme • Jour 009 (09 Janvier)', 'Women’s Edition • Day 009 (Jan 09)')
+      },
+      {
+        id: 'c-f-2',
+        text: tr(
           'Ta douceur et ta patience sont une bénédiction quotidienne. Chaque attention sincère renforce notre complicité.',
           'Your gentleness and patience are a daily blessing. Every sincere gesture deepens our bond.'
         ),
         tag: tr('Version Femme • 365 + 1 Cartes', 'Women’s Edition • 365 + 1 Cards')
       },
       {
-        id: 'c-f-2',
+        id: 'c-f-3',
         text: tr(
           'Faisons de chaque matin l’occasion de renouveler nos invocations et notre tendresse mutuelle.',
           'Let every morning be an invitation to renew our prayers and mutual tenderness.'

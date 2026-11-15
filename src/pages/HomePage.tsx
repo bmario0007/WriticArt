@@ -103,8 +103,8 @@ export const HomePage: React.FC = () => {
                 <img
                   src={heroEditorialImg}
                   alt={tr(
-                    'Tableau acrostiche calligraphié à la feuille d’or 24 carats, coffret, sceau de cire et parfum WriticArt',
-                    'Bespoke 24k gold-leaf acrostic framed poem, keepsake box, wax seal, and perfume bottle by WriticArt'
+                    'Duo de tableaux personnalisés WriticArt — « ALLAH » et portrait « FATOUMATA » sur console de salon',
+                    'Bespoke WriticArt framed poems — "ALLAH" and portrait "FATOUMATA" on living room console'
                   )}
                   fetchPriority="high"
                   decoding="sync"
@@ -448,8 +448,8 @@ export const HomePage: React.FC = () => {
               <img
                 src={tableauAcrosticheDorureImg}
                 alt={tr(
-                  'Enluminure et acrostiche à la feuille d’or 24 carats sur papier coton WriticArt',
-                  '24k gold-leaf illumination and cotton rag calligraphy by WriticArt'
+                  'Tableau spirituel « ALLAH » en cadre bois texturé sur papier d’art noble WriticArt',
+                  'Spiritual "ALLAH" acrostic in textured dark wood frame on fine art paper by WriticArt'
                 )}
                 className="w-full h-full max-h-[420px] object-cover"
               />
