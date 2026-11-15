@@ -1,0 +1,1 @@
+var e=new URL(`tableau-maimouna-cadre-rose-or-1bvUSLnx.jpg`,import.meta.url).href;export{e as t};
